@@ -14,3 +14,4 @@ plotly
 setuptools>=65.5.0
 dill
 keras
+tensorflow
