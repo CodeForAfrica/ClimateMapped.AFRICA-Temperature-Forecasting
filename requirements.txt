@@ -2,7 +2,6 @@ streamlit
 pandas
 numpy
 joblib
-pickle
 scikit-learn
 plotly
 #distutils
