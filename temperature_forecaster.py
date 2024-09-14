@@ -40,7 +40,7 @@ st.write("Select countries and years to forecast future temperatures.")
 # Prepare the dataset
 df_country = historical_data.copy()
 #df = df_country.drop('Area', axis=1)
-df_pivot = df.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
+df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
 
 # Scaling the data
 scaler = MinMaxScaler()
