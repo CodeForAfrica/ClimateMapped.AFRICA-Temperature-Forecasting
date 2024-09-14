@@ -90,7 +90,7 @@ if selected_countries:
     for country in selected_countries:
         # Historical data plot
         historical_colors = get_line_colors(df_pivot[country].values)
-        fig.add_trace(go.Scatter(x=df_pivot.index.strftime('%b-%Y'), 
+        fig.add_trace(go.Scatter(x=df_pivot.index, 
                                  y=df_pivot[country], 
                                  name=f'{country} (Historical)', 
                                  mode='lines', 
