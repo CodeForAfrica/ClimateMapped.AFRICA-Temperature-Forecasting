@@ -9,7 +9,7 @@ from plotly.subplots import make_subplots
 # Load the pre-trained model
 model = joblib.load('temperature_forecaster.pkl')
 
-historical_data = pd.read_csv('Monthly Temperature Data.csv')
+historical_data = pd.read_csv('Monthly_Temperature_Sample.csv')
 
 # Function to create sequences
 def create_sequences(data, seq_length):
