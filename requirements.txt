@@ -15,4 +15,6 @@ setuptools>=65.5.0
 dill
 keras==3.4.1
 tensorflow==2.16.2
+openpyxl
+scikeras
 #tensorflow-cpu==2.10.0
