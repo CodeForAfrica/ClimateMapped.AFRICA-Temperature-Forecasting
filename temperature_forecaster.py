@@ -57,9 +57,28 @@ start_year, end_year = year_range
 #start_year = st.slider('Select start year for prediction', min_value=2023, max_value=2049, value=2023)
 #end_year = st.slider('Select end year for prediction', min_value=start_year+1, max_value=2050, value=2050)
 
-def get_line_colors(y_values, low_color='blue', high_color='red'):
-    norm_values = (y_values - np.min(y_values)) / (np.max(y_values) - np.min(y_values))  # Normalize values between 0 and 1
-    return [f'rgba({int(255 * (1 - val))}, 0, {int(255 * val)}, 1)' for val in norm_values]  # Blue to Red gradient
+def get_color_for_temperature(value, min_value, max_value):
+    normalized_value = (value - min_value) / (max_value - min_value)  # Normalize the value between 0 and 1
+    red = int(255 * normalized_value)  # More red for higher values
+    blue = int(255 * (1 - normalized_value))  # More blue for lower values
+    return f'rgba({red}, 0, {blue}, 1)'  # Create color in rgba format (red to blue gradient)
+
+# Function to plot line segments with different colors
+def plot_colored_line(x_values, y_values):
+    min_temp = min(y_values)
+    max_temp = max(y_values)
+    segments = []
+
+    for i in range(len(x_values) - 1):
+        color = get_color_for_temperature(y_values[i], min_temp, max_temp)
+        segments.append(go.Scatter(
+            x=[x_values[i], x_values[i+1]], 
+            y=[y_values[i], y_values[i+1]], 
+            mode='lines', 
+            line=dict(color=color, width=3),
+            showlegend=False
+        ))
+    return segments
 
 
 # Proceed only if countries are selected
@@ -88,23 +107,15 @@ if selected_countries:
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
     
     for country in selected_countries:
-        # Historical data plot
-        historical_colors = get_line_colors(df_pivot[country].values)
-        fig.add_trace(go.Scatter(x=df_pivot.index, 
-                                 y=df_pivot[country], 
-                                 name=f'{country} (Historical)', 
-                                 mode='lines', 
-                                 line=dict(color='rgba(0,0,255,0.8)'),  # Set a single color for historical data
-                                 hoverinfo='x+y'))
+        # Historical data
+        historical_segments = plot_colored_line(df_pivot.index.strftime('%b-%Y'), df_pivot[country].values)
+        for segment in historical_segments:
+            fig.add_trace(segment)
         
-        # Predicted data plot with color gradient
-        predicted_colors = get_line_colors(future_df[country].values)
-        fig.add_trace(go.Scatter(x=future_df.index, 
-                                 y=future_df[country], 
-                                 name=f'{country} (Predicted)', 
-                                 mode='lines', 
-                                 line=dict(color='rgba(255,0,0,0.8)'),  # Color prediction with red for now
-                                 hoverinfo='x+y'))
+        # Predicted data
+        predicted_segments = plot_colored_line(future_df.index, future_df[country].values)
+        for segment in predicted_segments:
+            fig.add_trace(segment)
     
     # Update layout for better visualization
     fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
