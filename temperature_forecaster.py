@@ -108,7 +108,7 @@ if selected_countries:
     
     for country in selected_countries:
         # Historical data
-        historical_segments = plot_colored_line(df_pivot.index.strftime('%b-%Y'), df_pivot[country].values)
+        historical_segments = plot_colored_line(df_pivot.index, df_pivot[country].values)
         for segment in historical_segments:
             fig.add_trace(segment)
         
