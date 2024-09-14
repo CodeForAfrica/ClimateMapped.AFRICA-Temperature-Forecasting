@@ -5,6 +5,7 @@
 #scikit-learn==1.5.1
 #plotly==5.9.0
 #distutils==3.11.7
+pip install --upgrade pip
 pip install tensorflow-cpu
 streamlit==1.35.0
 pandas==2.1.4
