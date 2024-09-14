@@ -57,6 +57,11 @@ start_year, end_year = year_range
 #start_year = st.slider('Select start year for prediction', min_value=2023, max_value=2049, value=2023)
 #end_year = st.slider('Select end year for prediction', min_value=start_year+1, max_value=2050, value=2050)
 
+def get_line_colors(y_values, low_color='blue', high_color='red'):
+    norm_values = (y_values - np.min(y_values)) / (np.max(y_values) - np.min(y_values))  # Normalize values between 0 and 1
+    return [f'rgba({int(255 * (1 - val))}, 0, {int(255 * val)}, 1)' for val in norm_values]  # Blue to Red gradient
+
+
 # Proceed only if countries are selected
 if selected_countries:
     # Prepare the data for the selected range
@@ -84,18 +89,22 @@ if selected_countries:
     
     for country in selected_countries:
         # Historical data plot
-        fig.add_trace(go.Scatter(x=df_pivot.index, 
+        historical_colors = get_line_colors(df_pivot[country].values)
+        fig.add_trace(go.Scatter(x=df_pivot.index.strftime('%b-%Y'), 
                                  y=df_pivot[country], 
                                  name=f'{country} (Historical)', 
-                                 mode='lines'))
+                                 mode='lines', 
+                                 line=dict(color='rgba(0,0,255,0.8)'),  # Set a single color for historical data
+                                 hoverinfo='x+y'))
         
-        # Predicted data plot
+        # Predicted data plot with color gradient
+        predicted_colors = get_line_colors(future_df[country].values)
         fig.add_trace(go.Scatter(x=future_df.index, 
                                  y=future_df[country], 
                                  name=f'{country} (Predicted)', 
                                  mode='lines', 
-                                 ))
-        #line=dict(dash='dash')
+                                 line=dict(color='rgba(255,0,0,0.8)'),  # Color prediction with red for now
+                                 hoverinfo='x+y'))
     
     # Update layout for better visualization
     fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
