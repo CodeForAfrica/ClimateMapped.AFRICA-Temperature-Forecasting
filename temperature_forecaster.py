@@ -33,7 +33,7 @@ def predict_future(model, last_sequence, num_steps, seq_length):
         current_sequence[-1] = prediction
     return np.array(future_predictions)
 
-st.title("Temperature Prediction App")
+st.title("Temperature Forecasting App")
 
 st.write("Select countries and years to forecast future temperatures.")
 
@@ -51,8 +51,11 @@ country_list = df_pivot.columns.tolist()
 
 # Add country and year selectors
 selected_countries = st.multiselect('Select countries to predict', country_list)
-start_year = st.slider('Select start year for prediction', min_value=2023, max_value=2049, value=2023)
-end_year = st.slider('Select end year for prediction', min_value=start_year+1, max_value=2050, value=2050)
+year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
+
+start_year, end_year = year_range
+#start_year = st.slider('Select start year for prediction', min_value=2023, max_value=2049, value=2023)
+#end_year = st.slider('Select end year for prediction', min_value=start_year+1, max_value=2050, value=2050)
 
 # Proceed only if countries are selected
 if selected_countries:
@@ -69,7 +72,7 @@ if selected_countries:
     
     # Create a DataFrame for future predictions
     future_dates = pd.date_range(start=f'{start_year}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
-    future_df = pd.DataFrame(round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
+    future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
     future_df.index.name = 'Year'
     
     # Display the forecasted temperature for selected countries
@@ -78,14 +81,31 @@ if selected_countries:
     
     # Plot historical and predicted data for the selected countries
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
-    for country in selected_countries:
-        fig.add_trace(go.Scatter(x=df_pivot.index.strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
-        fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines', line=dict(dash='dash')))
     
+    for country in selected_countries:
+        # Historical data plot
+        fig.add_trace(go.Scatter(x=df_pivot.index, 
+                                 y=df_pivot[country], 
+                                 name=f'{country} (Historical)', 
+                                 mode='lines'))
+        
+        # Predicted data plot
+        fig.add_trace(go.Scatter(x=future_df.index, 
+                                 y=future_df[country], 
+                                 name=f'{country} (Predicted)', 
+                                 mode='lines', 
+                                 ))
+        #line=dict(dash='dash')
+    
+    # Update layout for better visualization
     fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
-                      xaxis_title='Year', yaxis_title='Temperature (°C)', legend_title='Country')
+                      xaxis_title='Year', 
+                      yaxis_title='Temperature (°C)', 
+                      legend_title='Country',
+                      xaxis=dict(type='category'))  # Ensure categorical x-axis for dates
+    
     st.plotly_chart(fig)
-
+#===========================================================================================================================================
 st.write("Upload a CSV file with monthly temperature data for different countries to forecast 50-years temperatures.")
 
 uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
