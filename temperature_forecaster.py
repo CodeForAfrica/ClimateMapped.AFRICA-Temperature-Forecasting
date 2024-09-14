@@ -9,6 +9,8 @@ from plotly.subplots import make_subplots
 # Load the pre-trained model
 model = joblib.load('temperature_forecaster.pkl')
 
+historical_data = pd.read_csv('Monthly Temperature Data.csv')
+
 # Function to create sequences
 def create_sequences(data, seq_length):
     sequences = []
@@ -32,6 +34,7 @@ def predict_future(model, last_sequence, num_steps, seq_length):
     return np.array(future_predictions)
 
 st.title("Temperature Prediction App")
+
 st.write("Select countries and years to forecast future temperatures.")
 
 # Prepare the dataset
