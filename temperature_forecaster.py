@@ -73,7 +73,8 @@ if selected_countries:
     # Create a DataFrame for future predictions
     future_dates = pd.date_range(start=f'{start_year}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
     future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
-    future_df.index.name = 'Year'
+    #future_df.rename(columns={'Year':'Date})
+    future_df.index.name = 'Date'
     
     # Display the forecasted temperature for selected countries
     st.write("Forecasted Temperature")
