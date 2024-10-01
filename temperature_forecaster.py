@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import joblib
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 
 # Add logo
 st.image('image.png', width=200)  # Adjust the width as needed
@@ -49,7 +50,7 @@ scaled_data = scaler.fit_transform(df_pivot)
 # Get a list of countries from the dataset
 country_list = df_pivot.columns.tolist()
 
-# Add country and year selectors
+# To add country and year selectors
 selected_countries = st.multiselect('Select countries to predict', country_list)
 year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
 
@@ -63,7 +64,6 @@ if selected_countries:
         future_scaled = predict_future(model, last_sequence, num_months, seq_length)
         future_temperatures = scaler.inverse_transform(future_scaled)
 
-    # Create date range
     future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M')
     future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
     future_df.index.name = 'Date'
@@ -76,7 +76,28 @@ if selected_countries:
     csv_data = future_df[selected_countries].to_csv()
     st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
-    # Prepare the data for heatmap plotting by year
+    # Plot historical and predicted data (Line Chart)
+    fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
+    for country in selected_countries:
+        fig.add_trace(go.Scatter(x=df_pivot.index, y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
+        fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
+
+    # Update layout for better visualization
+    fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
+                      xaxis_title='Year', 
+                      yaxis_title='Temperature (°C)', 
+                      legend_title='Country',
+                      xaxis=dict(type='category', title_font=dict(size=18)),
+                      yaxis=dict(title_font=dict(size=18)),
+                      title_font=dict(size=22),
+                      legend=dict(font=dict(size=16)))
+
+    st.plotly_chart(fig)
+
+    # Now, create a heatmap for the forecasted data
+    st.write("Forecasted Temperatures Heatmap")
+
+    # Extract year and month information from the future dates
     future_df['Year'] = future_df.index.year
     future_df['Month'] = future_df.index.strftime('%b')
 
@@ -84,11 +105,8 @@ if selected_countries:
     month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     future_df['Month'] = pd.Categorical(future_df['Month'], categories=month_order, ordered=True)
 
-    # Get unique years to plot the heatmaps separately for each year
-    unique_years = future_df['Year'].unique()
-
-    # Loop through each year to plot the heatmaps
-    for year in unique_years:
+    # Prepare heatmaps by year
+    for year in future_df['Year'].unique():
         st.write(f"Heatmap for {year}")
         heatmap_data = future_df[future_df['Year'] == year][selected_countries + ['Month']]
 
