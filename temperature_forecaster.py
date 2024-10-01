@@ -10,10 +10,10 @@ from plotly.subplots import make_subplots
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.image('path_to_left_logo.png', width=150)
+    st.image('image.png', width=150)
 
 with col2:
-    st.image('path_to_right_logo.png', width=150)
+    st.image('CFA_Logo (1).png', width=150)
 
 # Title
 st.title("Temperature Forecasting App")
