@@ -102,26 +102,27 @@ if selected_countries:
     heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
 
     # Create the heatmap using pivot_table to reshape the data
-    heatmap_pivot = heatmap_data_melted.pivot_table(index='Date', columns='Country', values='Temperature')
+    heatmap_pivot = heatmap_data_melted.pivot_table(index='Country', columns='Date', values='Temperature')
 
-    # Create the heatmap
+    # Create the heatmap with the color scale from blue to red
     heatmap_fig = go.Figure(data=go.Heatmap(
         z=heatmap_pivot.values,
-        x=heatmap_pivot.columns,
-        y=heatmap_pivot.index,
-        colorscale='Viridis',  # You can choose other color scales like 'Blues', 'Reds', etc.
+        x=heatmap_pivot.columns,  # Dates on the x-axis
+        y=heatmap_pivot.index,    # Countries on the y-axis
+        colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
         colorbar=dict(title='Temperature (°C)'),
+        reversescale=True  # Reverse the scale so blue is cold and red is hot
     ))
 
     # Update layout for the heatmap
     heatmap_fig.update_layout(
         title='Forecasted Temperatures Heatmap',
-        xaxis_title='Country',
-        yaxis_title='Date',
-        xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
+        xaxis_title='Date',    # Dates are now on the x-axis
+        yaxis_title='Country', # Countries are on the y-axis
         title_font=dict(size=22),
         xaxis_title_font=dict(size=18),
         yaxis_title_font=dict(size=18),
+        xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
     )
 
     # Display the heatmap
