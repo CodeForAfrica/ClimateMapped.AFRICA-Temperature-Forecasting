@@ -95,3 +95,24 @@ if selected_countries:
                       legend=dict(font=dict(size=16)))
 
     st.plotly_chart(fig)
+
+# Create the heatmap
+    fig = go.Figure(data=go.Heatmap(
+        z=heatmap_data_melted.pivot('Date', 'Country', 'Temperature').values,
+        x=heatmap_data_melted['Country'].unique(),
+        y=heatmap_data_melted['Date'].unique(),
+        colorscale='Viridis',  # You can choose other color scales like 'Blues', 'Reds', etc.
+        colorbar=dict(title='Temperature (°C)'),
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title='Forecasted Temperatures Heatmap',
+        xaxis_title='Country',
+        yaxis_title='Date',
+        yaxis=dict(tickmode='array', tickvals=heatmap_data_melted['Date'].unique(), ticktext=heatmap_data_melted['Date'].unique()),
+        xaxis=dict(tickmode='array', tickvals=heatmap_data_melted['Country'].unique(), ticktext=heatmap_data_melted['Country'].unique())
+    )
+    
+    # Display the heatmap
+    st.plotly_chart(fig)
