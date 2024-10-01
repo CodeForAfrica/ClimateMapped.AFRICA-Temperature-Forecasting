@@ -116,9 +116,9 @@ if selected_countries:
 
     # Update layout for the heatmap
     heatmap_fig.update_layout(
-        title='Forecasted Temperatures Heatmap',
+        #title='Forecasted Temperatures Heatmap',
         xaxis_title='Date',    # Dates are now on the x-axis
-        yaxis_title='Country', # Countries are on the y-axis
+        #yaxis_title='Country', # Countries are on the y-axis
         title_font=dict(size=22),
         xaxis_title_font=dict(size=18),
         yaxis_title_font=dict(size=18),
