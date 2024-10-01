@@ -13,7 +13,7 @@ with col1:
     st.image('image.png', width=150)
 
 with col2:
-    st.image('CFA_Logo (1).png', width=150)
+    st.image('CFA_Logo (1).png', width=100)
 
 # Title
 st.title("Temperature Forecasting App")
