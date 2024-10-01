@@ -97,27 +97,28 @@ if selected_countries:
     st.plotly_chart(fig)
 
 # Create a heatmap for the forecasted data
-    heatmap_data = future_df[selected_countries].reset_index()
-    heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
+heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Date' as a column
+heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
 
+# Create the heatmap using pivot_table to reshape the data
+heatmap_pivot = heatmap_data_melted.pivot_table(index='Date', columns='Country', values='Temperature')
 
 # Create the heatmap
-    fig = go.Figure(data=go.Heatmap(
-        z=heatmap_data_melted.pivot('Date', 'Country', 'Temperature').values,
-        x=heatmap_data_melted['Country'].unique(),
-        y=heatmap_data_melted['Date'].unique(),
-        colorscale='Viridis',  # You can choose other color scales like 'Blues', 'Reds', etc.
-        colorbar=dict(title='Temperature (°C)'),
-    ))
+fig = go.Figure(data=go.Heatmap(
+    z=heatmap_pivot.values,
+    x=heatmap_pivot.columns,
+    y=heatmap_pivot.index,
+    colorscale='Viridis',  # You can choose other color scales like 'Blues', 'Reds', etc.
+    colorbar=dict(title='Temperature (°C)'),
+))
 
-    # Update layout
-    fig.update_layout(
-        title='Forecasted Temperatures Heatmap',
-        xaxis_title='Country',
-        yaxis_title='Date',
-        yaxis=dict(tickmode='array', tickvals=heatmap_data_melted['Date'].unique(), ticktext=heatmap_data_melted['Date'].unique()),
-        xaxis=dict(tickmode='array', tickvals=heatmap_data_melted['Country'].unique(), ticktext=heatmap_data_melted['Country'].unique())
-    )
-    
-    # Display the heatmap
-    st.plotly_chart(fig)
+# Update layout
+fig.update_layout(
+    title='Forecasted Temperatures Heatmap',
+    xaxis_title='Country',
+    yaxis_title='Date',
+    xaxis=dict(tickangle=-45),  # Optional: Rotate x-axis labels for better readability
+)
+
+# Display the heatmap
+st.plotly_chart(fig)
