@@ -96,6 +96,11 @@ if selected_countries:
 
     st.plotly_chart(fig)
 
+# Create a heatmap for the forecasted data
+    heatmap_data = future_df[selected_countries].reset_index()
+    heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
+
+
 # Create the heatmap
     fig = go.Figure(data=go.Heatmap(
         z=heatmap_data_melted.pivot('Date', 'Country', 'Temperature').values,
