@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import joblib
 import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 
 # Add logo
 st.image('image.png', width=200)  # Adjust the width as needed
@@ -50,7 +49,7 @@ scaled_data = scaler.fit_transform(df_pivot)
 # Get a list of countries from the dataset
 country_list = df_pivot.columns.tolist()
 
-# To add country and year selectors
+# Add country and year selectors
 selected_countries = st.multiselect('Select countries to predict', country_list)
 year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
 
@@ -64,7 +63,8 @@ if selected_countries:
         future_scaled = predict_future(model, last_sequence, num_months, seq_length)
         future_temperatures = scaler.inverse_transform(future_scaled)
 
-    future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
+    # Create date range
+    future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M')
     future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
     future_df.index.name = 'Date'
 
@@ -76,54 +76,41 @@ if selected_countries:
     csv_data = future_df[selected_countries].to_csv()
     st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
-    # Plot historical and predicted data (Line Chart)
-    fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
-    for country in selected_countries:
-        fig.add_trace(go.Scatter(x=df_pivot.index, y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
-        fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
+    # Prepare the data for heatmap plotting by year
+    future_df['Year'] = future_df.index.year
+    future_df['Month'] = future_df.index.strftime('%b')
 
-    # Update layout for better visualization
-    fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
-                      xaxis_title='Year', 
-                      yaxis_title='Temperature (°C)', 
-                      legend_title='Country',
-                      xaxis=dict(type='category', title_font=dict(size=18)),
-                      yaxis=dict(title_font=dict(size=18)),
-                      title_font=dict(size=22),
-                      legend=dict(font=dict(size=16)))
+    # Get unique years to plot the heatmaps separately for each year
+    unique_years = future_df['Year'].unique()
 
-    st.plotly_chart(fig)
+    # Loop through each year to plot the heatmaps
+    for year in unique_years:
+        st.write(f"Heatmap for {year}")
+        heatmap_data = future_df[future_df['Year'] == year][selected_countries + ['Month']]
 
-    # Now, create a heatmap for the forecasted data
-    st.write("Forecasted Temperatures Heatmap")
+        # Pivot the data so that the x-axis is the months and y-axis is the countries
+        heatmap_pivot = heatmap_data.pivot_table(index='Country', columns='Month', values=selected_countries)
 
-    # Prepare the data for the heatmap
-    heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Date' as a column
-    heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
+        # Create the heatmap with blue to red color scale
+        heatmap_fig = go.Figure(data=go.Heatmap(
+            z=heatmap_pivot.values,
+            x=heatmap_pivot.columns,  # Months on the x-axis
+            y=heatmap_pivot.index,    # Countries on the y-axis
+            colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
+            colorbar=dict(title='Temperature (°C)'),
+            reversescale=True  # Reverse the scale so blue is cold and red is hot
+        ))
 
-    # Create the heatmap using pivot_table to reshape the data
-    heatmap_pivot = heatmap_data_melted.pivot_table(index='Country', columns='Date', values='Temperature')
+        # Update layout for the heatmap
+        heatmap_fig.update_layout(
+            title=f'Forecasted Temperatures Heatmap for {year}',
+            xaxis_title='Month',
+            yaxis_title='Country',
+            title_font=dict(size=22),
+            xaxis_title_font=dict(size=18),
+            yaxis_title_font=dict(size=18),
+            xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
+        )
 
-    # Create the heatmap with the color scale from blue to red
-    heatmap_fig = go.Figure(data=go.Heatmap(
-        z=heatmap_pivot.values,
-        x=heatmap_pivot.columns,  # Dates on the x-axis
-        y=heatmap_pivot.index,    # Countries on the y-axis
-        colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
-        colorbar=dict(title='Temperature (°C)'),
-        reversescale=True  # Reverse the scale so blue is cold and red is hot
-    ))
-
-    # Update layout for the heatmap
-    heatmap_fig.update_layout(
-        title='Forecasted Temperatures Heatmap',
-        xaxis_title='Date',    # Dates are now on the x-axis
-        yaxis_title='Country', # Countries are on the y-axis
-        title_font=dict(size=22),
-        xaxis_title_font=dict(size=18),
-        yaxis_title_font=dict(size=18),
-        xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
-    )
-
-    # Display the heatmap
-    st.plotly_chart(heatmap_fig)
+        # Display the heatmap for this year
+        st.plotly_chart(heatmap_fig)
