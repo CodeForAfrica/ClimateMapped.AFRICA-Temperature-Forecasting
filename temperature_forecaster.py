@@ -95,48 +95,35 @@ if selected_countries:
     st.plotly_chart(fig)
 
     # Now, create a heatmap for the forecasted data
-    #st.write("Forecasted Temperatures Heatmap")
+    st.write("Forecasted Temperatures Heatmap")
 
-   # Extract year and month information from the future dates
-    future_df['Year'] = future_df.index.year
-    future_df['Month'] = future_df.index.strftime('%b')
+    # Prepare the data for the heatmap
+    heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Date' as a column
+    heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
 
-    # Ensure months are in the correct order (Jan to Dec)
-    month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    future_df['Month'] = pd.Categorical(future_df['Month'], categories=month_order, ordered=True)
+    # Create the heatmap using pivot_table to reshape the data
+    heatmap_pivot = heatmap_data_melted.pivot_table(index='Country', columns='Date', values='Temperature')
 
-    # Year selection for heatmap
-    selected_year = st.selectbox("Select a year for heatmap", future_df['Year'].unique())
+    # Create the heatmap with the color scale from blue to red
+    heatmap_fig = go.Figure(data=go.Heatmap(
+        z=heatmap_pivot.values,
+        x=heatmap_pivot.columns,  # Dates on the x-axis
+        y=heatmap_pivot.index,    # Countries on the y-axis
+        colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
+        colorbar=dict(title='Temperature (°C)'),
+        reversescale=True  # Reverse the scale so blue is cold and red is hot
+    ))
 
-    # Filter data by selected year
-    heatmap_data = future_df[future_df['Year'] == selected_year][selected_countries + ['Month']]
+    # Update layout for the heatmap
+    heatmap_fig.update_layout(
+        title='Forecasted Temperatures Heatmap',
+        xaxis_title='Date',    # Dates are now on the x-axis
+        yaxis_title='Country', # Countries are on the y-axis
+        title_font=dict(size=22),
+        xaxis_title_font=dict(size=18),
+        yaxis_title_font=dict(size=18),
+        xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
+    )
 
-    if not heatmap_data.empty:
-        # Pivot the data so that the x-axis is the months and y-axis is the countries
-        heatmap_pivot = heatmap_data.pivot_table(index='Country', columns='Month', values=selected_countries)
-
-        # Create the heatmap with blue to red color scale
-        heatmap_fig = go.Figure(data=go.Heatmap(
-            z=heatmap_pivot.values,
-            x=heatmap_pivot.columns,  # Months on the x-axis (Jan to Dec)
-            y=heatmap_pivot.index,    # Countries on the y-axis
-            colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
-            colorbar=dict(title='Temperature (°C)'),
-            reversescale=True  # Reverse the scale so blue is cold and red is hot
-        ))
-
-        # Update layout for the heatmap
-        heatmap_fig.update_layout(
-            title=f'Forecasted Temperatures Heatmap for {selected_year}',
-            xaxis_title='Month',
-            yaxis_title='Country',
-            title_font=dict(size=22),
-            xaxis_title_font=dict(size=18),
-            yaxis_title_font=dict(size=18),
-            xaxis=dict(tickangle=-45),  # Rotate x-axis labels for better readability
-        )
-
-        # Display the heatmap for this year
-        st.plotly_chart(heatmap_fig)
-    else:
-        st.write(f"No data available for the selected year: {selected_year}.")
+    # Display the heatmap
+    st.plotly_chart(heatmap_fig)
