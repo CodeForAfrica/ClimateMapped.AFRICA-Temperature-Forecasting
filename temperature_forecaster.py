@@ -95,7 +95,7 @@ if selected_countries:
     st.plotly_chart(fig)
 
     # Now, create a heatmap for the forecasted data
-    st.write("Forecasted Temperatures Heatmap")
+    #st.write("Forecasted Temperatures Heatmap")
 
     # Prepare the data for the heatmap
     heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Date' as a column
