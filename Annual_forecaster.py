@@ -41,7 +41,7 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 
 # Prepare the dataset
 df_country = historical_data.copy()
-df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
+df_pivot = df.pivot_table(index='Year', columns='Country', values='Annual_temperature', aggfunc='first')
 
 # Scaling the data
 scaler = MinMaxScaler()
@@ -55,18 +55,18 @@ selected_countries = st.multiselect('Select countries to predict', country_list)
 year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
 
 if selected_countries:
-    num_months = 12 * (year_range[1] - year_range[0] + 1)
-    seq_length = 12  # Sequence length (1 year)
+    num_years = year_range[1] - year_range[0] + 1
+    seq_length = 1  # Sequence length (1 year)
     last_sequence = scaled_data[-seq_length:]
 
     with st.spinner('Generating forecast...'):
         # Generate predictions
-        future_scaled = predict_future(model, last_sequence, num_months, seq_length)
+        future_scaled = predict_future(model, last_sequence, num_years, seq_length)
         future_temperatures = scaler.inverse_transform(future_scaled)
 
-    future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
+    future_dates = pd.date_range(start=f'{year_range[0]}', periods=num_years, freq='Y').strftime('%Y')
     future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
-    future_df.index.name = 'Date'
+    future_df.index.name = 'Year'
 
     # Display forecasted temperatures
     st.write("Forecasted Temperature")
@@ -94,20 +94,17 @@ if selected_countries:
 
     st.plotly_chart(fig)
 
-    # Now, create a heatmap for the forecasted data
-    #st.write("Forecasted Temperatures Heatmap")
-
     # Prepare the data for the heatmap
-    heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Date' as a column
-    heatmap_data_melted = heatmap_data.melt(id_vars='Date', var_name='Country', value_name='Temperature')
+    heatmap_data = future_df[selected_countries].reset_index()  # Reset index to have 'Year' as a column
+    heatmap_data_melted = heatmap_data.melt(id_vars='Year', var_name='Country', value_name='Temperature')
 
     # Create the heatmap using pivot_table to reshape the data
-    heatmap_pivot = heatmap_data_melted.pivot_table(index='Country', columns='Date', values='Temperature')
+    heatmap_pivot = heatmap_data_melted.pivot_table(index='Country', columns='Year', values='Temperature')
 
     # Create the heatmap with the color scale from blue to red
     heatmap_fig = go.Figure(data=go.Heatmap(
         z=heatmap_pivot.values,
-        x=heatmap_pivot.columns,  # Dates on the x-axis
+        x=heatmap_pivot.columns,  # Years on the x-axis
         y=heatmap_pivot.index,    # Countries on the y-axis
         colorscale='RdBu',  # Color scale from blue (cold) to red (hot)
         colorbar=dict(title='Temperature (°C)'),
@@ -117,7 +114,7 @@ if selected_countries:
     # Update layout for the heatmap
     heatmap_fig.update_layout(
         title='Forecasted Temperatures Heatmap',
-        xaxis_title='Date',    # Dates are now on the x-axis
+        xaxis_title='Year',    # Years are now on the x-axis
         yaxis_title='Country', # Countries are on the y-axis
         title_font=dict(size=22),
         xaxis_title_font=dict(size=18),
