@@ -29,7 +29,7 @@ def create_sequences(data, seq_length):
     return np.array(sequences), np.array(labels)
 
 # Function to predict future values
-def predict_future(model, last_sequence, num_steps, seq_length):
+def predict_future(model, last_sequence, num_steps):
     future_predictions = []
     current_sequence = last_sequence.copy()
     for _ in range(num_steps):
