@@ -41,7 +41,7 @@ def predict_future(model, last_sequence, num_steps):
 
 # Prepare the dataset
 df_country = historical_data.copy()
-df_pivot = df.pivot_table(index='Year', columns='Country', values='Annual_temperature', aggfunc='first')
+df_pivot = df_country.pivot_table(index='Year', columns='Country', values='Annual_temperature', aggfunc='first')
 
 # Scaling the data
 scaler = MinMaxScaler()
