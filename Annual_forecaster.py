@@ -14,7 +14,7 @@ st.title("Temperature Forecasting App")
 st.write("Select countries and years to forecast future temperatures.")
 
 # Load the pre-trained model
-model = joblib.load('climate_map_forecaster.pkl')
+model = joblib.load('climate_country_forecaster.pkl')
 historical_data = pd.read_csv('Country-Level-Temperature.csv')
 
 # Function to create sequences
@@ -37,6 +37,7 @@ def predict_future(model, last_sequence, num_steps):
         future_predictions.append(prediction)
         current_sequence = np.roll(current_sequence, -1, axis=0)
         current_sequence[-1] = prediction
+
     return np.array(future_predictions)
 
 # Prepare the dataset
@@ -54,18 +55,20 @@ country_list = df_pivot.columns.tolist()
 selected_countries = st.multiselect('Select countries to predict', country_list)
 year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
 
-if selected_countries:
-    num_years = year_range[1] - year_range[0] + 1
-    seq_length = 1  # Sequence length (1 year)
+if selected_countries:    
+    seq_length = 10
     last_sequence = scaled_data[-seq_length:]
 
     with st.spinner('Generating forecast...'):
         # Generate predictions
-        future_scaled = predict_future(model, last_sequence, num_years, seq_length)
-        future_temperatures = scaler.inverse_transform(future_scaled)
 
-    future_dates = pd.date_range(start=f'{year_range[0]}', periods=num_years, freq='Y').strftime('%Y')
-    future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
+
+# Inverse transform to get actual temperature values
+        future_scaled = predict_future(model, last_sequence, 2050 - 2022)
+        future_temperatures = scaler.inverse_transform(future_scaled)
+# Create a DataFrame with the predictions
+    future_years = range(2023, 2051)
+    future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_years, columns=df_pivot.columns)
     future_df.index.name = 'Year'
 
     # Display forecasted temperatures
