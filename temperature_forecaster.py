@@ -16,7 +16,7 @@ st.write("Select countries and years to forecast future temperatures.")
 
 # Load the pre-trained model
 model = joblib.load('temperature_forecaster.pkl')
-historical_data = pd.read_csv('Monthly_Temperature_Sample.csv')
+historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
 # Function to create sequences
