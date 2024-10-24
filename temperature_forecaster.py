@@ -148,9 +148,8 @@ st.markdown("---")
 with st.expander("View Methodology"):
     st.write("""
     ### Methodology
-    The analysis aimed to track temperature trends and predict future temperatures for 2023-2050. A baseline period (1961-1990) was used to measure decadal temperature variations, smoothing short-term fluctuations to assess long-term trends. These trends were visualized using line charts across different regions.
-
-    A CNN-LSTM model, combining Convolutional Neural Networks (CNNs) and Long Short-Term Memory (LSTM) networks, was employed for forecasting. This hybrid model captured both spatial and temporal dependencies in the temperature data, outperforming traditional models. Key steps included data normalization, applying a sliding window technique for sequence creation, and splitting data into training (80%) and testing (20%) sets.
-
+    The temperature forecasting model uses historical monthly temperature data from 1901.
+    The model employs a Convolutional Neural Networks (CNNs) and Long Short-Term Memory (LSTM) architecture for time series prediction, using a sequence length of 12 months.
     Model performance was evaluated using Mean Squared Error (MSE), showing good predictive accuracy in capturing temperature trends, though some discrepancies emerged during rapid changes. The approach proved effective for temperature forecasting, with further tuning potentially improving results.
+    For more information about the whole methodology please go this website: https://climatemapped-africa.dev.codeforafrica.org/
     """)
