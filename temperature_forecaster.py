@@ -6,6 +6,9 @@ import joblib
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
+# Page config
+st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
+
 # Add logo
 st.image('climate_map_Africa_logo.png', width=200)  # Adjust the width as needed
 
@@ -100,9 +103,7 @@ if selected_countries:
     #st.write("Forecasted Temperatures Heatmap")
 
     # Monthly temperature heatmap
-st.write("Monthly Temperature Heatmap")
-
-
+#st.write("Monthly Temperature Heatmap")
 
 # Prepare the data for the heatmap, filter for the selected year range
 future_df['Year'] = pd.to_datetime(future_df.index).year
