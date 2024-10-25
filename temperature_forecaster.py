@@ -106,8 +106,8 @@ if selected_countries:
 #st.write("Monthly Temperature Heatmap")
 
 # Prepare the data for the heatmap, filter for the selected year range
-future_df['Year'] = pd.to_datetime(future_df.Date).year
-future_df['Month'] = pd.to_datetime(future_df.Date).month
+future_df['Year'] = pd.to_datetime(future_df.index).year
+future_df['Month'] = pd.to_datetime(future_df.index).month
 heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
 
 # Create a mapping of month numbers to month names
