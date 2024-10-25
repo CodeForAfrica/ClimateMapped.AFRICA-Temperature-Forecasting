@@ -73,6 +73,9 @@ if selected_countries:
     future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
     future_df.index.name = 'Date'
 
+    future_df['Year'] = pd.to_datetime(future_df.index).year
+    future_df['Month'] = pd.to_datetime(future_df.index).month
+
     # Display forecasted temperatures
     st.write("Forecasted Temperature")
     st.write(future_df[selected_countries])
@@ -81,8 +84,8 @@ if selected_countries:
     csv_data = future_df[selected_countries].to_csv()
     st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
-else:
-    st.warning("Please select at least one country to generate the forecast.")
+#else:
+ #   st.warning("Please select at least one country to generate the forecast.")
 
     # Plot historical and predicted data (Line Chart)
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
@@ -109,8 +112,8 @@ else:
 #st.write("Monthly Temperature Heatmap")
 
 # Prepare the data for the heatmap, filter for the selected year range
-future_df['Year'] = pd.to_datetime(future_df.index).year
-future_df['Month'] = pd.to_datetime(future_df.index).month
+#future_df['Year'] = pd.to_datetime(future_df.index).year
+#future_df['Month'] = pd.to_datetime(future_df.index).month
 heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
 
 # Create a mapping of month numbers to month names
