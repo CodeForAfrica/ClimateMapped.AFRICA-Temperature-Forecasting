@@ -201,7 +201,7 @@ if uploaded_file:
     
     # Ensure the uploaded data matches expected structure
     if len(user_data.columns) == len(df_pivot.columns):  # Check column count matches
-        user_data = rename_columns(user_data, df_pivot.columns)  # Rename to match expected columns
+        user_data = process_uploaded_data(user_data, df_pivot.columns)  # Rename to match expected columns
         st.write("Uploaded Data (after renaming columns):")
         st.write(user_data.head())
 
