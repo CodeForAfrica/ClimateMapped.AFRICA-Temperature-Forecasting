@@ -158,3 +158,73 @@ with st.expander("View Methodology"):
     Model performance was evaluated using Mean Squared Error (MSE), showing good predictive accuracy in capturing temperature trends, though some discrepancies emerged during rapid changes. The approach proved effective for temperature forecasting, with further tuning potentially improving results. 
     For more information about the whole methodology please go this website: https://climatemapped-africa.dev.codeforafrica.org/
     """)
+
+st.markdown("---")
+st.subheader("Upload your own data for prediction")
+
+# File uploader for custom data
+uploaded_file = st.file_uploader("Upload a CSV file with monthly temperature data", type=["csv"])
+
+# Load the pre-trained scaler
+scaler = joblib.load('scaler.pkl')  # Ensure scaler.pkl is available in the directory
+
+# Function to rename uploaded data columns to match expected names
+def rename_columns(user_df, expected_columns):
+    user_columns = user_df.columns
+    rename_map = {user_col: expected_col for user_col, expected_col in zip(user_columns, expected_columns)}
+    return user_df.rename(columns=rename_map)
+
+# If a file is uploaded
+if uploaded_file:
+    user_data = pd.read_csv(uploaded_file)
+    
+    # Ensure the uploaded data matches expected structure
+    if len(user_data.columns) == len(df_pivot.columns):  # Check column count matches
+        user_data = rename_columns(user_data, df_pivot.columns)  # Rename to match expected columns
+        st.write("Uploaded Data (after renaming columns):")
+        st.write(user_data.head())
+
+        # Scale user data
+        user_data_scaled = scaler.transform(user_data)
+        
+        # Define sequence length and prepare the last sequence for prediction
+        seq_length = 12  # Adjust as needed
+        last_sequence = user_data_scaled[-seq_length:]
+
+        # Number of prediction steps
+        num_months = st.slider('Number of months to predict', min_value=1, max_value=120, value=12)
+
+        # Generate predictions
+        with st.spinner('Generating forecast for uploaded data...'):
+            future_scaled = predict_future(model, last_sequence, num_months, seq_length)
+            future_temperatures = scaler.inverse_transform(future_scaled)
+
+        # Create a DataFrame for the forecasted data
+        start_date = pd.to_datetime(user_data['Date'].iloc[-1]) + pd.DateOffset(months=1)
+        future_dates = pd.date_range(start=start_date, periods=num_months, freq='M')
+        future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
+
+        # Display the forecasted data
+        st.write("Forecasted Temperature Data")
+        st.write(future_df)
+
+        # Add a download button for the forecasted data
+        csv_data = future_df.to_csv()
+        st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
+
+        # Plot both the original uploaded and predicted data
+        fig = make_subplots(rows=1, cols=1, subplot_titles=['Uploaded and Predicted Temperatures'])
+        for column in df_pivot.columns:
+            fig.add_trace(go.Scatter(x=user_data['Date'], y=user_data[column], name=f'{column} (Uploaded)', mode='lines'))
+            fig.add_trace(go.Scatter(x=future_df.index, y=future_df[column], name=f'{column} (Predicted)', mode='lines'))
+
+        # Customize plot layout
+        fig.update_layout(
+            title='Uploaded and Predicted Temperatures',
+            xaxis_title='Date',
+            yaxis_title='Temperature (°C)',
+            legend_title='Country/Region'
+        )
+        st.plotly_chart(fig)
+    else:
+        st.error("The uploaded file does not match the expected format. Please upload a file with the correct structure.")
