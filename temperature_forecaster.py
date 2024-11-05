@@ -159,33 +159,18 @@ scaler = joblib.load('scaler.pkl')  # Ensure scaler.pkl is available in the dire
 import pandas as pd
 
 def process_uploaded_data(user_df, reference_df):
-    """
-    Processes the uploaded data to match the format of the historical data.
-    
-    Parameters:
-    - user_df (pd.DataFrame): The DataFrame uploaded by the user.
-    - reference_df (pd.DataFrame): The historical DataFrame with the correct structure.
-    
-    Returns:
-    - pd.DataFrame: Processed DataFrame with columns matching the historical data.
-    """
-    # Get the expected columns from the historical data
     expected_columns = reference_df.columns.tolist()
     
-    # Check if any columns from user data match expected columns
     matching_columns = [col for col in user_df.columns if col in expected_columns]
     
     if not matching_columns:
         raise ValueError("No columns in the uploaded data match the historical data columns.")
 
-    # Keep only the matching columns
     user_df = user_df[matching_columns]
     
-    # Rename columns to match expected format (if needed)
     rename_map = {col: col for col in matching_columns if col in expected_columns}
     user_df = user_df.rename(columns=rename_map)
     
-    # Check for any missing columns and add them with NaNs if necessary
     missing_columns = [col for col in expected_columns if col not in user_df.columns]
     for col in missing_columns:
         user_df[col] = pd.NA  # Fill missing columns with NaN
