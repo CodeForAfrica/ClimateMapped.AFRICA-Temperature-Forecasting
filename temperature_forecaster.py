@@ -156,10 +156,44 @@ uploaded_file = st.file_uploader("Upload a CSV file with monthly temperature dat
 scaler = joblib.load('scaler.pkl')  # Ensure scaler.pkl is available in the directory
 
 # Function to rename uploaded data columns to match expected names
-def rename_columns(user_df, expected_columns):
-    user_columns = user_df.columns
-    rename_map = {user_col: expected_col for user_col, expected_col in zip(user_columns, expected_columns)}
-    return user_df.rename(columns=rename_map)
+import pandas as pd
+
+def process_uploaded_data(user_df, reference_df):
+    """
+    Processes the uploaded data to match the format of the historical data.
+    
+    Parameters:
+    - user_df (pd.DataFrame): The DataFrame uploaded by the user.
+    - reference_df (pd.DataFrame): The historical DataFrame with the correct structure.
+    
+    Returns:
+    - pd.DataFrame: Processed DataFrame with columns matching the historical data.
+    """
+    # Get the expected columns from the historical data
+    expected_columns = reference_df.columns.tolist()
+    
+    # Check if any columns from user data match expected columns
+    matching_columns = [col for col in user_df.columns if col in expected_columns]
+    
+    if not matching_columns:
+        raise ValueError("No columns in the uploaded data match the historical data columns.")
+
+    # Keep only the matching columns
+    user_df = user_df[matching_columns]
+    
+    # Rename columns to match expected format (if needed)
+    rename_map = {col: col for col in matching_columns if col in expected_columns}
+    user_df = user_df.rename(columns=rename_map)
+    
+    # Check for any missing columns and add them with NaNs if necessary
+    missing_columns = [col for col in expected_columns if col not in user_df.columns]
+    for col in missing_columns:
+        user_df[col] = pd.NA  # Fill missing columns with NaN
+
+    # Reorder columns to match the historical data
+    user_df = user_df[expected_columns]
+    
+    return user_df
 
 # If a file is uploaded
 if uploaded_file:
