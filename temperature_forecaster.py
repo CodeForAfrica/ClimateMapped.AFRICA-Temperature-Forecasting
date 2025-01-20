@@ -46,8 +46,6 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 # Prepare the dataset
 df_country = historical_data.copy()
 df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
-df_pivot['Year'] = pd.to_datetime(df_pivot.index).year
-df_pivot['Month'] = pd.to_datetime(df_pivot.index).month
 
 # Scaling the data
 scaler = MinMaxScaler()
@@ -88,7 +86,7 @@ if selected_countries:
     # Plot historical and predicted data (Line Chart)
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
     for country in selected_countries:
-        fig.add_trace(go.Scatter(x=df_pivot.index, y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
+        fig.add_trace(go.Scatter(x=df_pivot.index.strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
         fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
 
     # Update layout for better visualization
