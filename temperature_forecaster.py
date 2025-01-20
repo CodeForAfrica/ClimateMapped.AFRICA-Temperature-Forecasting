@@ -103,15 +103,15 @@ if selected_countries:
 
     # Plot a trend line for temperature variation
     future_df_copy = future_df.copy()
-    
+    future_df_copy["temperature_variation"] = future_df_copy["Monthly_temperature"].diff()
     fig1 = make_subplots(rows=1, cols=1, subplot_titles=['Temperature variation for future years'])
     for country in selected_countries:
-        fig1.add_trace(go.Scatter(x=future_df_copy..index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
+        fig1.add_trace(go.Scatter(x=future_df_copy.index, y=future_df_copy[country], name=f'{country} (Predicted)', mode='lines'))
 
     # Update layout for better visualization
-    fig1.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
+    fig1.update_layout(title='Temperature variation for future years',
                       xaxis_title='Year', 
-                      yaxis_title='Temperature (°C)', 
+                      yaxis_title='Temperature Variation(°C)', 
                       legend_title='Country',
                       xaxis=dict(type='category', title_font=dict(size=18)),
                       yaxis=dict(title_font=dict(size=18)),
