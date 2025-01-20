@@ -76,6 +76,9 @@ if selected_countries:
     future_df['Year'] = pd.to_datetime(future_df.index).year
     future_df['Month'] = pd.to_datetime(future_df.index).month
 
+    df_pivot['Year'] = pd.to_datetime(df_pivot.index).year
+    df_pivot['Month'] = pd.to_datetime(df_pivot.index).month
+
     # Display forecasted temperatures
     st.write("Forecasted Temperature")
     st.write(future_df[selected_countries])
