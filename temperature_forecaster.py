@@ -84,7 +84,7 @@ if selected_countries:
     st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
     # Plot historical and predicted data (Line Chart)
-    fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and Predicted Temperatures for Selected Countries'])
+    fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
     for country in selected_countries:
         fig.add_trace(go.Scatter(x=pd.to_datetime(df_pivot.index).strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
         fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
@@ -100,6 +100,25 @@ if selected_countries:
                       legend=dict(font=dict(size=16)))
 
     st.plotly_chart(fig)
+
+    # Plot a trend line for temperature variation
+    future_df_copy = future_df.copy()
+    
+    fig1 = make_subplots(rows=1, cols=1, subplot_titles=['Temperature variation for future years'])
+    for country in selected_countries:
+        fig1.add_trace(go.Scatter(x=future_df_copy..index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
+
+    # Update layout for better visualization
+    fig1.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
+                      xaxis_title='Year', 
+                      yaxis_title='Temperature (°C)', 
+                      legend_title='Country',
+                      xaxis=dict(type='category', title_font=dict(size=18)),
+                      yaxis=dict(title_font=dict(size=18)),
+                      title_font=dict(size=22),
+                      legend=dict(font=dict(size=16)))
+
+    st.plotly_chart(fig1)
 
     # Now, create a heatmap for the forecasted data
     #st.write("Forecasted Temperatures Heatmap")
