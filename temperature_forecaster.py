@@ -46,7 +46,8 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 # Prepare the dataset
 df_country = historical_data.copy()
 df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
-
+df_pivot['Year'] = pd.to_datetime(df_pivot.index).year
+df_pivot['Month'] = pd.to_datetime(df_pivot.index).month
 
 # Scaling the data
 scaler = MinMaxScaler()
@@ -75,9 +76,6 @@ if selected_countries:
 
     future_df['Year'] = pd.to_datetime(future_df.index).year
     future_df['Month'] = pd.to_datetime(future_df.index).month
-
-    df_pivot['Year'] = pd.to_datetime(df_pivot.index).year
-    df_pivot['Month'] = pd.to_datetime(df_pivot.index).month
 
     # Display forecasted temperatures
     st.write("Forecasted Temperature")
