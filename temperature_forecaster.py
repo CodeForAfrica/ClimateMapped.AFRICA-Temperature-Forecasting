@@ -101,37 +101,6 @@ if selected_countries:
 
     st.plotly_chart(fig)
 
-    ## Plot a trend line for temperature variation
-    ## Calculate temperature variation for each country
-    #future_df_copy = future_df.copy()
-    #variation_df = pd.DataFrame(index=future_df_copy.index)
-    #for country in selected_countries:
-     #   variation_df[country] = future_df_copy[country].diff()
-    
-    #fig1 = make_subplots(rows=1, cols=1, subplot_titles=['Temperature variation for future years'])
-    #for country in selected_countries:
-     #   fig1.add_trace(
-      #      go.Scatter(
-       #         x=variation_df.index, 
-        #        y=variation_df[country], 
-         #       name=f'{country} (Variation)', 
-          #      mode='lines'
-           # )
-      #  )
-    
-    #fig1.update_layout(
-        #title='Temperature variation for future years',
-        #xaxis_title='Year', 
-        #yaxis_title='Temperature Variation (°C)', 
-        #legend_title='Country',
-        #xaxis=dict(type='category', title_font=dict(size=18)),
-        #yaxis=dict(title_font=dict(size=18)),
-        #title_font=dict(size=22),
-        #legend=dict(font=dict(size=16))
-    #)
-    
-    ## Display the chart in Streamlit
-    #st.plotly_chart(fig1)
 
     # Create a heatmap for the forecasted data
     #st.write("Forecasted Temperatures Heatmap")
