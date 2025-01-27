@@ -83,7 +83,7 @@ if selected_countries:
     csv_data = future_df[selected_countries].to_csv()
     st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
-    # Plot historical and predicted data (Line Chart)
+    # Plot historical and predicted data (line chart)
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
     for country in selected_countries:
         fig.add_trace(go.Scatter(x=pd.to_datetime(df_pivot.index).strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
@@ -100,7 +100,6 @@ if selected_countries:
                       legend=dict(font=dict(size=16)))
 
     st.plotly_chart(fig)
-
 
     # Create a heatmap for the forecasted data
     #st.write("Forecasted Temperatures Heatmap")
