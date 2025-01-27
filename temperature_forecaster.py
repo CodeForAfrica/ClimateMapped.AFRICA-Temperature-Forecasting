@@ -90,7 +90,7 @@ if selected_countries:
         fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
 
     # Update layout for better visualization
-    fig.update_layout(title='Historical and Predicted Temperatures for Selected Countries',
+    fig.update_layout(title='Historical and predicted temperatures for selected countries',
                       xaxis_title='Year', 
                       yaxis_title='Temperature (°C)', 
                       legend_title='Country',
@@ -102,14 +102,7 @@ if selected_countries:
     st.plotly_chart(fig)
 
     # Create a heatmap for the forecasted data
-    #st.write("Forecasted Temperatures Heatmap")
-
-    # Monthly temperature heatmap
-#st.write("Monthly Temperature Heatmap")
-
-# Prepare the data for the heatmap, filter for the selected year range
-#future_df['Year'] = pd.to_datetime(future_df.index).year
-#future_df['Month'] = pd.to_datetime(future_df.index).month
+   
     heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
 
     # Create a mapping of month numbers to month names
