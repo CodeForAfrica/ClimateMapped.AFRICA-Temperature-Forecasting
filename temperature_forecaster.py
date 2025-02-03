@@ -139,55 +139,83 @@ if selected_countries:
     st.plotly_chart(heatmap_fig)
 
     # =================== New Code: Africa Maps Visualization ===================
+    import pandas as pd
+    
+    def get_nearest_date(selected_date, index):
+        """
+        Given a selected_date (as a Timestamp) and an index of Timestamps,
+        return the date from the index that is nearest to the selected_date.
+        """
+        if selected_date in index:
+            return selected_date
+        else:
+            # Get the index position of the nearest date
+            nearest_idx = index.get_indexer([selected_date], method='nearest')[0]
+            return index[nearest_idx]
+    
     st.markdown("## Africa Temperature Maps")
-
-    # Historical Map: select a date from historical data
+    
+    # Historical Map: let the user select a date (as a string) from the available historical dates
     historical_date_str = st.selectbox(
         "Select a date for the Historical Temperature Map",
-        options=sorted(df_pivot.index.astype(str))  # Convert to string for selection
+        options=sorted(df_pivot.index.astype(str))
     )
-    historical_date = pd.to_datetime(historical_date_str)  # Convert back to datetime
-    # Get temperatures for the selected countries on the chosen historical date
-    historical_temp = df_pivot.loc[historical_date, selected_countries]
-    hist_map_df = pd.DataFrame({
-        'Country': historical_temp.index,
-        'Temperature': historical_temp.values
-    })
+    # Convert the selected string to a datetime object
+    selected_historical_date = pd.to_datetime(historical_date_str)
+    # Get the nearest date from the df_pivot index if needed
+    historical_date = get_nearest_date(selected_historical_date, df_pivot.index)
     
-    fig_hist_map = px.choropleth(
-        hist_map_df,
-        locations='Country',
-        locationmode='country names',
-        color='Temperature',
-        scope='africa',
-        color_continuous_scale='RdBu_r',
-        title=f'Historical Temperatures on {historical_date.strftime("%b-%Y")}'
-    )
-    st.plotly_chart(fig_hist_map)
+    # Retrieve temperatures for the selected countries on the (nearest) historical date
+    try:
+        historical_temp = df_pivot.loc[historical_date, selected_countries]
+    except KeyError:
+        st.error(f"The date {historical_date} is not available in historical data.")
+    else:
+        hist_map_df = pd.DataFrame({
+            'Country': historical_temp.index,
+            'Temperature': historical_temp.values
+        })
     
-    # Predicted Map: select a date from the predicted future data
+        fig_hist_map = px.choropleth(
+            hist_map_df,
+            locations='Country',
+            locationmode='country names',
+            color='Temperature',
+            scope='africa',
+            color_continuous_scale='RdBu_r',
+            title=f'Historical Temperatures on {historical_date.strftime("%b-%Y")}'
+        )
+        st.plotly_chart(fig_hist_map)
+    
+    # Predicted Map: let the user select a date from the predicted future dates
     predicted_date_str = st.selectbox(
         "Select a date for the Predicted Temperature Map",
         options=sorted(future_df.index.astype(str))
     )
-    predicted_date = pd.to_datetime(predicted_date_str)
-    # Get predicted temperatures for the selected countries on the chosen predicted date
-    predicted_temp = future_df.loc[predicted_date, selected_countries]
-    pred_map_df = pd.DataFrame({
-        'Country': predicted_temp.index,
-        'Temperature': predicted_temp.values
-    })
+    selected_predicted_date = pd.to_datetime(predicted_date_str)
+    predicted_date = get_nearest_date(selected_predicted_date, future_df.index)
     
-    fig_pred_map = px.choropleth(
-        pred_map_df,
-        locations='Country',
-        locationmode='country names',
-        color='Temperature',
-        scope='africa',
-        color_continuous_scale='RdBu_r',
-        title=f'Predicted Temperatures on {predicted_date.strftime("%b-%Y")}'
-    )
-    st.plotly_chart(fig_pred_map)
+    try:
+        predicted_temp = future_df.loc[predicted_date, selected_countries]
+    except KeyError:
+        st.error(f"The date {predicted_date} is not available in predicted data.")
+    else:
+        pred_map_df = pd.DataFrame({
+            'Country': predicted_temp.index,
+            'Temperature': predicted_temp.values
+        })
+    
+        fig_pred_map = px.choropleth(
+            pred_map_df,
+            locations='Country',
+            locationmode='country names',
+            color='Temperature',
+            scope='africa',
+            color_continuous_scale='RdBu_r',
+            title=f'Predicted Temperatures on {predicted_date.strftime("%b-%Y")}'
+        )
+        st.plotly_chart(fig_pred_map)
+
     # =================== End New Code ===================
 
 st.markdown("---")
