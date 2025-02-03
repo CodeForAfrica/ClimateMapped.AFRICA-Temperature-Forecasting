@@ -176,7 +176,7 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
-    st.markdown("Africa temperature maps")
+    st.markdown("#### Africa temperature maps")
     
     # Historical map -> choose a historical date
     hist_date = st.selectbox(
@@ -208,7 +208,7 @@ if selected_countries:
     # Display maps side by side
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"### Historical temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
+        st.markdown(f"Historical temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
         fig_hist_map = px.choropleth(
             hist_map_df,
             locations='Country',
@@ -221,7 +221,7 @@ if selected_countries:
         st.plotly_chart(fig_hist_map)
         
     with col2:
-        st.markdown(f"### Predicted temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
+        st.markdown(f"Predicted temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
         fig_pred_map = px.choropleth(
             pred_map_df,
             locations='Country',
