@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 import joblib
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+import plotly.express as px
 
 # Page config
 st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
