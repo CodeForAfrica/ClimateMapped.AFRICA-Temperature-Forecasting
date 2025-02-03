@@ -45,7 +45,7 @@ df_pivot = df_pivot.sort_index()
 all_countries = df_pivot.columns.tolist()
 
 # -----------------------------
-# Country Selector with "All Countries" Option
+# Country selector with "All countries" option
 # -----------------------------
 all_option = "All Countries"
 selected_options = st.multiselect(
@@ -208,7 +208,7 @@ if selected_countries:
     # Display maps side by side
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"Historical temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
+        #st.markdown(f"Historical temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
         fig_hist_map = px.choropleth(
             hist_map_df,
             locations='Country',
@@ -221,7 +221,7 @@ if selected_countries:
         st.plotly_chart(fig_hist_map)
         
     with col2:
-        st.markdown(f"Predicted temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
+        #st.markdown(f"Predicted temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
         fig_pred_map = px.choropleth(
             pred_map_df,
             locations='Country',
