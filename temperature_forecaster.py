@@ -138,9 +138,8 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
-    # =================== New Code: Africa Maps Visualization ===================
-    import pandas as pd
-    
+    # =================== New Code: Africa Maps Visualization ===================    
+
     def get_nearest_date(selected_date, index):
         """
         Given a selected_date (as a Timestamp) and an index of Timestamps,
@@ -149,23 +148,23 @@ if selected_countries:
         if selected_date in index:
             return selected_date
         else:
-            # Get the index position of the nearest date
-            nearest_idx = index.get_indexer([selected_date], method='nearest')[0]
-            return index[nearest_idx]
+            # Ensure the index is sorted
+            sorted_index = index.sort_values()
+            # Get the position of the nearest date
+            nearest_idx = sorted_index.get_indexer([selected_date], method='nearest')[0]
+            return sorted_index[nearest_idx]
     
     st.markdown("## Africa Temperature Maps")
     
-    # Historical Map: let the user select a date (as a string) from the available historical dates
-    historical_date_str = st.selectbox(
+    # Historical Map: use datetime objects directly in the selectbox
+    historical_date = st.selectbox(
         "Select a date for the Historical Temperature Map",
-        options=sorted(df_pivot.index.astype(str))
+        options=sorted(df_pivot.index),
+        format_func=lambda d: d.strftime('%b-%Y')
     )
-    # Convert the selected string to a datetime object
-    selected_historical_date = pd.to_datetime(historical_date_str)
-    # Get the nearest date from the df_pivot index if needed
-    historical_date = get_nearest_date(selected_historical_date, df_pivot.index)
+    # Use the helper function to get the nearest date from the index
+    historical_date = get_nearest_date(historical_date, df_pivot.index)
     
-    # Retrieve temperatures for the selected countries on the (nearest) historical date
     try:
         historical_temp = df_pivot.loc[historical_date, selected_countries]
     except KeyError:
@@ -187,13 +186,13 @@ if selected_countries:
         )
         st.plotly_chart(fig_hist_map)
     
-    # Predicted Map: let the user select a date from the predicted future dates
-    predicted_date_str = st.selectbox(
+    # Predicted Map: similarly, use datetime objects directly in the selectbox
+    predicted_date = st.selectbox(
         "Select a date for the Predicted Temperature Map",
-        options=sorted(future_df.index.astype(str))
+        options=sorted(future_df.index),
+        format_func=lambda d: d.strftime('%b-%Y')
     )
-    selected_predicted_date = pd.to_datetime(predicted_date_str)
-    predicted_date = get_nearest_date(selected_predicted_date, future_df.index)
+    predicted_date = get_nearest_date(predicted_date, future_df.index)
     
     try:
         predicted_temp = future_df.loc[predicted_date, selected_countries]
@@ -216,7 +215,7 @@ if selected_countries:
         )
         st.plotly_chart(fig_pred_map)
 
-    # =================== End New Code ===================
+# =================== End map code ===================
 
 st.markdown("---")
 st.subheader("Upload your own data for prediction")
