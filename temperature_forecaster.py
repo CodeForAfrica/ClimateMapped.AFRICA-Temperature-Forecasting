@@ -142,18 +142,18 @@ if selected_countries:
     st.markdown("## Africa Temperature Maps")
 
     # Historical Map: select a date from historical data
-    historical_date = st.selectbox(
+    historical_date_str = st.selectbox(
         "Select a date for the Historical Temperature Map",
-        options=sorted(df_pivot.index),
-        format_func=lambda d: d.strftime('%b-%Y')
+        options=sorted(df_pivot.index.astype(str))  # Convert to string for selection
     )
+    historical_date = pd.to_datetime(historical_date_str)  # Convert back to datetime
     # Get temperatures for the selected countries on the chosen historical date
     historical_temp = df_pivot.loc[historical_date, selected_countries]
     hist_map_df = pd.DataFrame({
         'Country': historical_temp.index,
         'Temperature': historical_temp.values
     })
-
+    
     fig_hist_map = px.choropleth(
         hist_map_df,
         locations='Country',
@@ -164,20 +164,20 @@ if selected_countries:
         title=f'Historical Temperatures on {historical_date.strftime("%b-%Y")}'
     )
     st.plotly_chart(fig_hist_map)
-
+    
     # Predicted Map: select a date from the predicted future data
-    predicted_date = st.selectbox(
+    predicted_date_str = st.selectbox(
         "Select a date for the Predicted Temperature Map",
-        options=sorted(future_df.index),
-        format_func=lambda d: d.strftime('%b-%Y')
+        options=sorted(future_df.index.astype(str))
     )
+    predicted_date = pd.to_datetime(predicted_date_str)
     # Get predicted temperatures for the selected countries on the chosen predicted date
     predicted_temp = future_df.loc[predicted_date, selected_countries]
     pred_map_df = pd.DataFrame({
         'Country': predicted_temp.index,
         'Temperature': predicted_temp.values
     })
-
+    
     fig_pred_map = px.choropleth(
         pred_map_df,
         locations='Country',
