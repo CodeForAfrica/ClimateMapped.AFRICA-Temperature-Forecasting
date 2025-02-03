@@ -176,7 +176,7 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
-    st.markdown("#### Africa temperature maps")
+    st.markdown("#### Mapping the temperature data")
     
     # Historical map -> choose a historical date
     hist_date = st.selectbox(
