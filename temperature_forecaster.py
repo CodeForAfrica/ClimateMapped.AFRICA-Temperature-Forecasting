@@ -38,26 +38,26 @@ def get_nearest_date(selected_date, date_index):
 historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
-df_country = historical_data.copy()
-df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
-df_pivot.index = pd.to_datetime(df_pivot.index)
-df_pivot = df_pivot.sort_index()
-all_countries = df_pivot.columns.tolist()
+#df_country = historical_data.copy()
+#df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
+#df_pivot.index = pd.to_datetime(df_pivot.index)
+#df_pivot = df_pivot.sort_index()
+#all_countries = df_pivot.columns.tolist()
 
 # -----------------------------
 # Country selector with "All countries" option
 # -----------------------------
-all_option = "All Countries"
-selected_options = st.multiselect(
-    "Select countries for plotting (choose 'All Countries' to display everything)",
-    options=[all_option] + all_countries,
-    default=[all_option]
-)
+#all_option = "All Countries"
+#selected_options = st.multiselect(
+    #"Select countries for plotting (choose 'All Countries' to display everything)",
+    #options=[all_option] + all_countries,
+    #default=[all_option]
+#)
 
-if all_option in selected_options:
-    selected_countries = all_countries
-else:
-    selected_countries = selected_options
+#if all_option in selected_options:
+    #selected_countries = all_countries
+#else:
+    #selected_countries = selected_options
 
 # Function to create sequences
 def create_sequences(data, seq_length):
