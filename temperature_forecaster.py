@@ -207,7 +207,7 @@ if selected_countries:
     # Display maps side by side using Streamlit columns
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"### Historical Temperatures on {hist_date.strftime('%b-%Y')}")
+        st.markdown(f"### Historical Temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
         fig_hist_map = px.choropleth(
             hist_map_df,
             locations='Country',
