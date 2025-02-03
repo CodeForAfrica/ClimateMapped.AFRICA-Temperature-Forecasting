@@ -38,11 +38,11 @@ def get_nearest_date(selected_date, date_index):
 historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
-#df_country = historical_data.copy()
-#df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
-#df_pivot.index = pd.to_datetime(df_pivot.index)
-#df_pivot = df_pivot.sort_index()
-#all_countries = df_pivot.columns.tolist()
+df_country = historical_data.copy()
+df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
+df_pivot.index = pd.to_datetime(df_pivot.index)
+df_pivot = df_pivot.sort_index()
+all_countries = df_pivot.columns.tolist()
 
 # -----------------------------
 # Country selector with "All countries" option
