@@ -202,7 +202,7 @@ if selected_countries:
     pred_temp_all = future_df.loc[pred_date, all_countries]
     pred_map_df = pd.DataFrame({
         'Country': pred_temp_all.index,
-        'Temperature': pred_temp_all.values
+        'Temperature': pd.to_numeric(pred_temp_all.values)
     })
     
     # Display maps side by side
