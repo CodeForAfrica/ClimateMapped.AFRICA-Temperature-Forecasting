@@ -194,7 +194,8 @@ if selected_countries:
     pred_date = st.selectbox(
         "Select a predicted date for the map",
         options=sorted(future_df.index),
-        format_func=lambda d: d.strftime('%b-%Y')
+        format_func=lambda d: pd.to_datetime(d).strftime('%b-%Y')
+
     )
     pred_date = get_nearest_date(pred_date, future_df.index)
     pred_temp_all = future_df.loc[pred_date, all_countries]
