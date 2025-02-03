@@ -216,11 +216,11 @@ if selected_countries:
             color='Temperature',
             scope='africa',
             color_continuous_scale='RdBu_r',
-            title=f'Historical ({hist_date.strftime("%b-%Y")})'
+            title=f'Historical ({pd.to_datetime(hist_date).strftime("%b-%Y")})'
         )
         st.plotly_chart(fig_hist_map)
     with col2:
-        st.markdown(f"### Predicted Temperatures on {pred_date.strftime('%b-%Y')}")
+        st.markdown(f"### Predicted Temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
         fig_pred_map = px.choropleth(
             pred_map_df,
             locations='Country',
@@ -228,7 +228,7 @@ if selected_countries:
             color='Temperature',
             scope='africa',
             color_continuous_scale='RdBu_r',
-            title=f'Predicted ({pred_date.strftime("%b-%Y")})'
+            title=f'Predicted ({pd.to_datetime(pred_date).strftime("%b-%Y")})'
         )
         st.plotly_chart(fig_pred_map)
 
