@@ -18,6 +18,22 @@ st.write("Select countries and years to forecast future temperatures.")
 
 # Load the pre-trained model
 model = joblib.load('temperature_forecaster.pkl')
+
+def get_nearest_date(selected_date, date_index):
+    """
+    Given a selected date (as a Timestamp) and a sorted date_index,
+    return the nearest date from date_index.
+    """
+    # If the date is exactly in the index, return it
+    if selected_date in date_index:
+        return selected_date
+    else:
+        # Ensure the index is sorted
+        sorted_index = date_index.sort_values()
+        # Find the position of the nearest date using the 'nearest' method
+        nearest_idx = sorted_index.get_indexer([selected_date], method='nearest')[0]
+        return sorted_index[nearest_idx]
+        
 historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
