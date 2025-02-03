@@ -165,7 +165,7 @@ if selected_countries:
     hist_date = st.selectbox(
         "Select a historical date for the map",
         options=sorted(df_pivot.index),
-        format_func=lambda d: d.strftime('%b-%Y')
+        format_func=lambda d: pd.to_datetime(d).strftime('%b-%Y')
     )
     hist_date = get_nearest_date(hist_date, df_pivot.index)
     hist_temp_all = df_pivot.loc[hist_date, all_countries]
