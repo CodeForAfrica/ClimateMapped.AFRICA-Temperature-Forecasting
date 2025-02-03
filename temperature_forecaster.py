@@ -178,7 +178,7 @@ if selected_countries:
 
     st.markdown("## Africa Temperature Maps for All Countries")
     
-    # Historical Map: Choose a historical date
+    # Historical map -> choose a historical date
     hist_date = st.selectbox(
         "Select a historical date for the map",
         options=sorted(df_pivot.index),
@@ -191,7 +191,7 @@ if selected_countries:
         'Temperature': hist_temp_all.values
     })
     
-    # Predicted Map: Choose a predicted date
+    # Predicted map -> choose a predicted date
     pred_date = st.selectbox(
         "Select a predicted date for the map",
         options=sorted(future_df.index),
@@ -208,7 +208,7 @@ if selected_countries:
     # Display maps side by side using Streamlit columns
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"### Historical Temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
+        st.markdown(f"### Historical temperatures on {pd.to_datetime(hist_date).strftime('%b-%Y')}")
         fig_hist_map = px.choropleth(
             hist_map_df,
             locations='Country',
@@ -220,7 +220,7 @@ if selected_countries:
         )
         st.plotly_chart(fig_hist_map)
     with col2:
-        st.markdown(f"### Predicted Temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
+        st.markdown(f"### Predicted temperatures on {pd.to_datetime(pred_date).strftime('%b-%Y')}")
         fig_pred_map = px.choropleth(
             pred_map_df,
             locations='Country',
