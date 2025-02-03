@@ -164,7 +164,7 @@ if selected_countries:
     
     
     heatmap_fig.update_layout(
-        title='Monthly Temperature Heatmap by Year',
+        title='Monthly temperature heatmap by year',
         xaxis_title='Year',        # Now just shows Year
         yaxis_title='Month',       # Months are on the y-axis
         title_font=dict(size=22),
@@ -176,7 +176,7 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
-    st.markdown("## Africa temperature maps")
+    st.markdown("Africa temperature maps")
     
     # Historical map -> choose a historical date
     hist_date = st.selectbox(
