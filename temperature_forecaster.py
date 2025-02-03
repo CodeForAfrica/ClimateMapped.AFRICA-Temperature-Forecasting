@@ -138,6 +138,58 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
+    # =================== New Code: Africa Maps Visualization ===================
+    st.markdown("## Africa Temperature Maps")
+
+    # Historical Map: select a date from historical data
+    historical_date = st.selectbox(
+        "Select a date for the Historical Temperature Map",
+        options=sorted(df_pivot.index),
+        format_func=lambda d: d.strftime('%b-%Y')
+    )
+    # Get temperatures for the selected countries on the chosen historical date
+    historical_temp = df_pivot.loc[historical_date, selected_countries]
+    hist_map_df = pd.DataFrame({
+        'Country': historical_temp.index,
+        'Temperature': historical_temp.values
+    })
+
+    fig_hist_map = px.choropleth(
+        hist_map_df,
+        locations='Country',
+        locationmode='country names',
+        color='Temperature',
+        scope='africa',
+        color_continuous_scale='RdBu_r',
+        title=f'Historical Temperatures on {historical_date.strftime("%b-%Y")}'
+    )
+    st.plotly_chart(fig_hist_map)
+
+    # Predicted Map: select a date from the predicted future data
+    predicted_date = st.selectbox(
+        "Select a date for the Predicted Temperature Map",
+        options=sorted(future_df.index),
+        format_func=lambda d: d.strftime('%b-%Y')
+    )
+    # Get predicted temperatures for the selected countries on the chosen predicted date
+    predicted_temp = future_df.loc[predicted_date, selected_countries]
+    pred_map_df = pd.DataFrame({
+        'Country': predicted_temp.index,
+        'Temperature': predicted_temp.values
+    })
+
+    fig_pred_map = px.choropleth(
+        pred_map_df,
+        locations='Country',
+        locationmode='country names',
+        color='Temperature',
+        scope='africa',
+        color_continuous_scale='RdBu_r',
+        title=f'Predicted Temperatures on {predicted_date.strftime("%b-%Y")}'
+    )
+    st.plotly_chart(fig_pred_map)
+    # =================== End New Code ===================
+
 st.markdown("---")
 st.subheader("Upload your own data for prediction")
 
