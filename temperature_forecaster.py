@@ -119,7 +119,7 @@ if selected_countries:
 
     # Add download button for CSV
     csv_data = future_df[selected_countries].to_csv()
-    st.download_button(label="Download Forecasted Data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
+    st.download_button(label="Download forecasted data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
     # Plot historical and predicted data (line chart)
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
