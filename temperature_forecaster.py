@@ -176,6 +176,7 @@ if selected_countries:
     # Display the heatmap
     st.plotly_chart(heatmap_fig)
 
+    # Mapping the temperature data
     st.markdown("#### Mapping the temperature data")
     
     # Historical map -> choose a historical date
@@ -204,6 +205,10 @@ if selected_countries:
         'Country': pred_temp_all.index,
         'Temperature': pd.to_numeric(pred_temp_all.values)
     })
+
+    # Determine the common min and max temperature values across both historical and predicted datasets
+    common_min = min(hist_map_df['Temperature'].min(), pred_map_df['Temperature'].min())
+    common_max = max(hist_map_df['Temperature'].max(), pred_map_df['Temperature'].max())
     
     # Display maps side by side
     col1, col2 = st.columns(2)
@@ -216,6 +221,7 @@ if selected_countries:
             color='Temperature',
             scope='africa',
             color_continuous_scale='RdBu_r',
+            range_color=(common_min, common_max),
             title=f'Historical ({pd.to_datetime(hist_date).strftime("%b-%Y")})'
         )
         st.plotly_chart(fig_hist_map)
@@ -229,6 +235,7 @@ if selected_countries:
             color='Temperature',
             scope='africa',
             color_continuous_scale='RdBu_r',
+            range_color=(common_min, common_max),
             title=f'Predicted ({pd.to_datetime(pred_date).strftime("%b-%Y")})'
         )
         st.plotly_chart(fig_pred_map)
