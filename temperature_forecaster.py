@@ -11,7 +11,7 @@ import plotly.express as px
 st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
 
 # Add logo
-image = 'Colour_IBMPlex.png'
+image = 'Black Bkgd Coloured.png'
 st.image(image, width=200)  # Adjust the width as needed
 
 # Title
