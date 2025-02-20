@@ -182,7 +182,7 @@ if selected_countries:
     
     # Historical map -> choose a historical date
     hist_date = st.selectbox(
-        "Select a historical date for the map",
+        "Select a historical date",
         options=sorted(df_pivot.index),
         format_func=lambda d: pd.to_datetime(d).strftime('%b-%Y')
     )
@@ -195,7 +195,7 @@ if selected_countries:
     
     # Predicted map -> choose a predicted date
     pred_date = st.selectbox(
-        "Select a predicted date for the map",
+        "Select a predicted date",
         options=sorted(future_df.index),
         format_func=lambda d: pd.to_datetime(d).strftime('%b-%Y')
 
