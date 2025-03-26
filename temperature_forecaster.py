@@ -95,7 +95,7 @@ country_list = df_pivot.columns.tolist()
 
 # To add country and year selectors
 selected_countries = st.multiselect('Select countries to predict', country_list)
-year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
+year_range = st.slider('Select the range of years for prediction', min_value=2024, max_value=2050, value=(2023, 2050))
 
 if selected_countries:
     num_months = 12 * (year_range[1] - year_range[0] + 1)
