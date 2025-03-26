@@ -36,7 +36,7 @@ def get_nearest_date(selected_date, date_index):
         nearest_idx = sorted_index.get_indexer([selected_date], method='nearest')[0]
         return sorted_index[nearest_idx]
         
-historical_data = pd.read_csv('country_annual_temp.csv')
+historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
 df_country = historical_data.copy()
@@ -96,7 +96,7 @@ country_list = df_pivot.columns.tolist()
 
 # To add country and year selectors
 selected_countries = st.multiselect('Select countries to predict', country_list)
-year_range = st.slider('Select the range of years for prediction', min_value=2024, max_value=2050, value=(2024, 2050))
+year_range = st.slider('Select the range of years for prediction', min_value=2023, max_value=2050, value=(2023, 2050))
 
 if selected_countries:
     num_months = 12 * (year_range[1] - year_range[0] + 1)
