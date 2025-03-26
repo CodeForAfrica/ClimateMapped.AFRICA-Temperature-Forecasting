@@ -19,7 +19,7 @@ st.title("Temperature Forecasting App")
 st.write("Select countries and years to forecast future temperatures.")
 
 # Load the pre-trained model
-model = joblib.load('temperature_forecaster.pkl')
+model = joblib.load('temperature_forecaster_032025.pkl')
 
 def get_nearest_date(selected_date, date_index):
     """
