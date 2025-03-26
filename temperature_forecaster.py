@@ -40,8 +40,8 @@ historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
 #historical_data = historical_data[historical_data.Date>='2010']
 
 df_country = historical_data.copy()
-df_country.drop('Unnamed: 0', axis=1, inplace=True)
-df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Average_temperature', aggfunc='first')
+#df_country.drop('Unnamed: 0', axis=1, inplace=True)
+df_pivot = df_country.pivot_table(index='Date', columns='Country', values='Monthly_temperature', aggfunc='first')
 df_pivot.index = pd.to_datetime(df_pivot.index)
 df_pivot = df_pivot.sort_index()
 all_countries = df_pivot.columns.tolist()
