@@ -11,7 +11,7 @@ import plotly.express as px
 st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
 
 # Add logo
-image = 'climatemap_logo.png'
+image = 'images/climatemap_logo.png'
 st.image(image, width=200)  # Adjust the width as needed
 
 # Title
