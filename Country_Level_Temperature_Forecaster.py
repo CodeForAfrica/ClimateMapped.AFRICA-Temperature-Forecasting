@@ -36,7 +36,8 @@ def get_nearest_date(selected_date, date_index):
         nearest_idx = sorted_index.get_indexer([selected_date], method='nearest')[0]
         return sorted_index[nearest_idx]
         
-historical_data = pd.read_csv('Monthly_Temperature_Data_2010.csv')
+path = 'data/Monthly_Temperature_Data_2010.csv'
+historical_data = pd.read_csv(path)
 #historical_data = historical_data[historical_data.Date>='2010']
 
 df_country = historical_data.copy()
