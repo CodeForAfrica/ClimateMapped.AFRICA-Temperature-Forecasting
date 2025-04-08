@@ -250,7 +250,7 @@ st.subheader("Upload your own data for prediction")
 uploaded_file = st.file_uploader("Upload a CSV file with monthly temperature data", type=["csv"])
 
 # Load the pre-trained scaler
-scaler = joblib.load('scaler.pkl')  # Ensure scaler.pkl is available in the directory
+scaler = joblib.load('models/scaler.pkl')  # Ensure scaler.pkl is available in the directory
 
 # Function to rename uploaded data columns to match expected names
 import pandas as pd
