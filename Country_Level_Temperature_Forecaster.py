@@ -15,7 +15,7 @@ image = 'images/climatemap_logo.png'
 st.image(image, width=200)  # Adjust the width as needed
 
 # Title
-st.title("Temperature Forecasting App")
+st.title("Country Level Temperature Forecasting App")
 st.write("Select countries and years to forecast future temperatures.")
 
 # Load the pre-trained model
