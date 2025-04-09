@@ -16,7 +16,7 @@ image = 'images/climatemap_logo.png'
 st.image(image, width=200)  # Adjust the width as needed
 
 # Title
-st.title("Temperature Forecasting App")
+st.title("Regions Level Temperature Forecasting App")
 
 # Footer section for Methodology
 st.markdown("---")
