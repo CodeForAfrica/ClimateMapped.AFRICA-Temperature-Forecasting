@@ -65,6 +65,8 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 
     return np.array(future_predictions)
 
+with st.spinner('Generating forecast...'):
+
 # Predict for all regions once
 future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
 future_all = scaler.inverse_transform(future_scaled_all)
