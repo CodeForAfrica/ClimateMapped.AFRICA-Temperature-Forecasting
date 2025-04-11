@@ -8,7 +8,7 @@ keras==3.4.1
 tensorflow==2.16.2
 #tensorflow-cpu
 plotly==5.24.1
-keras_tuner
+keras_tuner=='1.4.7'
 #setuptools>=65.5.0
 
 
