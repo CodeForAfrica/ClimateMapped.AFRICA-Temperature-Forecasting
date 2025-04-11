@@ -17,7 +17,9 @@ st.image(image, width=200)  # Adjust the width as needed
 
 # Title
 st.title("Regions Level Temperature Forecasting App")
-st.write('Curious about how temperature will vary in your region in the future? Please select your country and region.')
+st.write('Curious about how temperature will vary in your region in the future? Select your country and region.')
+
+
 
 # Footer section for Methodology
 st.markdown("---")
