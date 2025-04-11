@@ -9,7 +9,7 @@ tensorflow==2.16.2
 tensorflow-cpu
 plotly==5.24.1
 #setuptools>=65.5.0
-dill
+
 
 #streamlit==1.39.0
 #pandas==2.1.4
