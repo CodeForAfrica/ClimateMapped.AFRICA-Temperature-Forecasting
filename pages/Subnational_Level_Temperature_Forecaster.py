@@ -26,6 +26,7 @@ model = joblib.load(model_path)
 # Import the data
 path = 'data/subnational_monthly_temp_1990.csv'
 historical_data = pd.read_csv(path)
+historical_data['Date'] = pd.to_datetime(historical_data['Date'])
 
 df = historical_data.copy()
 df_pivot = df.pivot_table(index='Date', columns=['Country','Area'], values='Monthly_temperature', aggfunc='first')
