@@ -65,11 +65,11 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 
     return np.array(future_predictions)
 
-    with st.spinner('Generating forecast...'):
+with st.spinner('Generating forecast...'):
 
-# Predict for all regions once
-future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
-future_all = scaler.inverse_transform(future_scaled_all)
+    # Predict for all regions once
+    future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
+    future_all = scaler.inverse_transform(future_scaled_all)
 
 # Create full future DataFrame
 last_date = df_pivot.index[-1]
@@ -99,8 +99,10 @@ st.plotly_chart(fig)
 
 #Create heatmap
 # --- Extract Year and Month from index ---
+future_df.index = pd.to_datetime(future_df.index, format='%Y-%m_%d', errors='coerce')
 future_df['Year'] = future_df.index.year
 future_df['Month'] = future_df.index.month
+future_df['Month_Name'] = future_df['Month'].map(month_names)
 
 # --- Mapping of month numbers to names ---
 month_names = {
