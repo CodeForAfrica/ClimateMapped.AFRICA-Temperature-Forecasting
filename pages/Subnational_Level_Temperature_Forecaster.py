@@ -26,8 +26,8 @@ st.write('Curious about how temperature will vary in your region in the future? 
 path = 'data/subnational_monthly_temp_1990.csv'
 historical_data = pd.read_csv(path)
 
-df_region = historical_data.copy()
-df_pivot = df_region.pivot_table(index='Date', columns=['Country','Area'], values='Monthly_temperature', aggfunc='first')
+df = historical_data.copy()
+df_pivot = df.pivot_table(index='Date', columns=['Country','Area'], values='Monthly_temperature', aggfunc='first')
 df_pivot = df_pivot.sort_index()
 
 # --- Select Country ---
