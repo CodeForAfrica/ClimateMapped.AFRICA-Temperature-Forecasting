@@ -22,8 +22,7 @@ st.write('Curious about how temperature will vary in your region in the future? 
 # Load the pre-trained model
 model_path = 'models/subnational_temp_forecaster.pkl'
 model = joblib.load(model_path)
-model = model_bundle["model"]
-scaler = model_bundle["scaler"]
+
 
 path = 'data/subnational_monthly_temp_1990.csv'
 historical_data = pd.read_csv(path)
@@ -46,7 +45,8 @@ year_range = st.slider("Select forecast range (years)", 2023, 2050, (2023, 2030)
 num_months = 12 * (year_range[1] - year_range[0] + 1)
 
 # Normalize full data
-scaled_data = scaler.transform(df_pivot)
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(df_pivot)
 seq_length = 12
 full_last_sequence = scaled_data[-seq_length:]  # shape: (12, num_regions)
 
