@@ -2,9 +2,9 @@ streamlit==1.39.0
 pandas==2.1.4
 numpy==1.26.4
 joblib==1.4.2
-h5py>=3.10.0
+h5py
 scikit-learn==1.5.2
-tensorflow==2.16.2
+tensorflow<=2.11
 keras==3.4.1
 ##tensorflow-cpu
 plotly==5.24.1
