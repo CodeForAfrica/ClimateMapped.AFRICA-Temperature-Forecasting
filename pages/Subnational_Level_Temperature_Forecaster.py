@@ -9,7 +9,7 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 
 # Page config
-st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
+#st.set_page_config(layout="wide", page_title="Temperature Forecasting App")
 
 # Add logo
 image = 'images/climatemap_logo.png'
