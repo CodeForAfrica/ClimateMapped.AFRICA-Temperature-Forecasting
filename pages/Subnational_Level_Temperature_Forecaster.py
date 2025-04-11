@@ -20,8 +20,9 @@ st.title("🌡️ Regions Level Temperature Forecasting App")
 st.write('Curious about how temperature will vary in your region in the future? Select your country and region.')
 
 # Load the pre-trained model
-model_path = 'models/subnational_temp_forecaster.pkl'
-model = joblib.load(model_path)
+model_path = 'models/subnational_temp_forecaster.h5'
+#model = joblib.load(model_path)
+model = model_load(model_path)
 
 # Import the data
 path = 'data/subnational_monthly_temp_1990.csv'
