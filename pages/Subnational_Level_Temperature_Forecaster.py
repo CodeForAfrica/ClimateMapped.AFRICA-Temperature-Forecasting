@@ -84,7 +84,7 @@ historical_df = df_pivot[selected_columns]
 # -------------------------------
 # Display Forecast
 # -------------------------------
-st.subheader("Forecasted Monthly Temperatures")
+#st.subheader("Forecasted Monthly Temperatures")
 st.dataframe(future_df)
 
 # Plot historical and forecast
@@ -102,7 +102,6 @@ st.plotly_chart(fig)
 future_df.index = pd.to_datetime(future_df.index, format='%Y-%m_%d', errors='coerce')
 future_df['Year'] = future_df.index.year
 future_df['Month'] = future_df.index.month
-future_df['Month_Name'] = future_df['Month'].map(month_names)
 
 # --- Mapping of month numbers to names ---
 month_names = {
