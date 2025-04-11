@@ -95,6 +95,53 @@ for col in selected_columns:
 fig.update_layout(title="Subnational Temperature Forecast", xaxis_title="Date", yaxis_title="Temperature (°C)")
 st.plotly_chart(fig)
 
+#Create heatmap
+# --- Extract Year and Month from index ---
+future_df['Year'] = future_df.index.year
+future_df['Month'] = future_df.index.month
+
+# --- Mapping of month numbers to names ---
+month_names = {
+    1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
+    7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
+}
+future_df['Month_Name'] = future_df['Month'].map(month_names)
+
+# --- Melt data for plotting ---
+heatmap_data = future_df[
+    (future_df['Year'] >= year_range[0]) & 
+    (future_df['Year'] <= year_range[1])
+]
+
+for region_col in selected_columns:
+    region_df = heatmap_data[[region_col, 'Year', 'Month']].copy()
+    region_df = region_df.rename(columns={region_col: 'Temperature'})
+    
+    heatmap_pivot = region_df.pivot_table(index='Month', columns='Year', values='Temperature')
+
+    heatmap_fig = go.Figure(data=go.Heatmap(
+        z=heatmap_pivot.values,
+        x=heatmap_pivot.columns,
+        y=[month_names[m] for m in heatmap_pivot.index],
+        colorscale='RdBu',
+        colorbar=dict(title='Temperature (°C)'),
+        reversescale=True,
+        hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>'
+    ))
+
+    heatmap_fig.update_layout(
+        title=f"Monthly Temperature Heatmap for {region_col.replace('_', ', ')}",
+        xaxis_title='Year',
+        yaxis_title='Month',
+        title_font=dict(size=22),
+        xaxis_title_font=dict(size=18),
+        yaxis_title_font=dict(size=18),
+        xaxis=dict(tickangle=-45),
+    )
+
+    st.plotly_chart(heatmap_fig)
+
+
 # CSV Download
 csv = future_df.to_csv()
 st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
