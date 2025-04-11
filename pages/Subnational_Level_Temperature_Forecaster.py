@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.externals import joblib
+import joblib
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
