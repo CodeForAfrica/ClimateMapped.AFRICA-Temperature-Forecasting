@@ -65,7 +65,7 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 
     return np.array(future_predictions)
 
-with st.spinner('Generating forecast...'):
+    with st.spinner('Generating forecast...'):
 
 # Predict for all regions once
 future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
