@@ -23,7 +23,7 @@ st.write('Curious about how temperature will vary in your region in the future? 
 model_path = 'models/subnational_temp_forecaster.pkl'
 model = joblib.load(model_path)
 
-
+# Import the data
 path = 'data/subnational_monthly_temp_1990.csv'
 historical_data = pd.read_csv(path)
 
@@ -96,8 +96,6 @@ st.plotly_chart(fig)
 # CSV Download
 csv = future_df.to_csv()
 st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
-
-
 
 # Footer section for Methodology
 st.markdown("---")
