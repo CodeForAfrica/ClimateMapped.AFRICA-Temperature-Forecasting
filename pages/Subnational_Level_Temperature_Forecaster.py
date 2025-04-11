@@ -23,55 +23,24 @@ st.write('Curious about how temperature will vary in your region in the future? 
 model_path = 'models/subnational_temp_forecaster.pkl'
 model = joblib.load(model_path)
 
-def get_nearest_date(selected_date, date_index):
-    """
-    Given a selected date (as a Timestamp) and a sorted date_index,
-    return the nearest date from date_index.
-    """
-    # If the date is exactly in the index, return it
-    if selected_date in date_index:
-        return selected_date
-    else:
-        # Ensure the index is sorted
-        sorted_index = date_index.sort_values()
-        # Find the position of the nearest date using the 'nearest' method
-        nearest_idx = sorted_index.get_indexer([selected_date], method='nearest')[0]
-        return sorted_index[nearest_idx]
-
 path = 'data/subnational_monthly_temp_1990.csv'
 historical_data = pd.read_csv(path)
 
 df_region = historical_data.copy()
 df_pivot = df_region.pivot_table(index='Date', columns=['Country','Area'], values='Monthly_temperature', aggfunc='first')
-df_pivot.index = pd.to_datetime(df_pivot.index)
 df_pivot = df_pivot.sort_index()
-all_regions = df_pivot.columns.tolist()
 
-# Function to create sequences
-def create_sequences(data, seq_length):
-    sequences = []
-    labels = []
-    for i in range(len(data) - seq_length):
-        seq = data[i:i+seq_length]
-        label = data[i+seq_length]
-        sequences.append(seq)
-        labels.append(label)
-    return np.array(sequences), np.array(labels)
+# --- Select Country ---
+available_countries = df['Country'].unique().tolist()
+selected_country = st.selectbox('Select a country:', available_countries)
 
-# Function to predict future values
-def predict_future(model, last_sequence, num_steps, seq_length):
-    future_predictions = []
-    current_sequence = last_sequence.copy()
+# --- Select Regions ---
+available_regions = df[df['Country'] == selected_country]['Area'].unique().tolist()
+selected_regions = st.multiselect('Select regions to forecast:', available_regions)
 
-    for _ in range(num_steps):
-        prediction = model.predict(current_sequence.reshape(1, seq_length, -1))[0]
-        future_predictions.append(prediction)
-        current_sequence = np.roll(current_sequence, -1, axis=0)  # Shift sequence left
-        current_sequence[-1] = prediction  # Replace last value with the new prediction
-
-    return np.array(future_predictions)
-    
-# Prepare the dataset
+# --- Select Forecast Range ---
+year_range = st.slider("Select forecast range (years)", 2023, 2050, (2023, 2030))
+num_months = 12 * (year_range[1] - year_range[0] + 1)
 
 
 
