@@ -163,8 +163,8 @@ if selected_countries:
         # Create pivot table for heatmap (Months vs. Years)
         heatmap_pivot = country_df.pivot_table(index='Month', columns='Year', values='Temperature')
 
-        sorted_months = sorted(heatmap_pivot.index)  # Ensures months go Jan -> Dec
-
+        sorted_months = sorted(heatmap_pivot.index)
+        sorted_months = sorted_months[::-1]
     
         # Build heatmap figure
         heatmap_fig = go.Figure(data=go.Heatmap(
