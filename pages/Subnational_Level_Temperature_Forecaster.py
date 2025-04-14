@@ -59,6 +59,8 @@ if selected_regions:
 
         future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
         future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
+        future_df_all.index = future_df_all.index.strftime('%Y-%m-%d')
+
 
         selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
         future_df = future_df_all[selected_columns]
