@@ -69,6 +69,10 @@ if selected_regions:
 
         # Show forecast table
         #st.subheader("Forecasted Monthly Temperatures")
+        display_df = future_df.copy()
+        display_df.index = display_df.index.strftime('%b-%Y')  
+        st.dataframe(display_df)
+
         st.dataframe(future_df)
 
         # Historical + Forecast Plot
