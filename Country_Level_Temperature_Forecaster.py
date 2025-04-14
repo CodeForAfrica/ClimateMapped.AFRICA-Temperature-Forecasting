@@ -150,34 +150,41 @@ if selected_countries:
         month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
                        7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
         future_df['Month_Name'] = future_df['Month'].map(month_names)
+
+        for country in [selected_countries]:
+            country_df = heatmap_data[[country, 'Year', 'Month']].copy()
+            country_df = region_df.rename(columns={country: 'Temperature'})
+
+            heatmap_pivot = country_df.pivot_table(index='Month', columns='Year', values='Temperature')
+
         
-        heatmap_data_melted = heatmap_data.melt(id_vars=['Year', 'Month'], var_name='Country', value_name='Temperature')
+        #heatmap_data_melted = heatmap_data.melt(id_vars=['Year', 'Month'], var_name='Country', value_name='Temperature')
         
-        heatmap_pivot = heatmap_data_melted.pivot_table(index='Month', columns=['Year'], values='Temperature')
+        #heatmap_pivot = heatmap_data_melted.pivot_table(index='Month', columns=['Year'], values='Temperature')
         
-        heatmap_fig = go.Figure(data=go.Heatmap(
-            z=heatmap_pivot.values,
-            x=heatmap_pivot.columns,   # Years on the x-axis
-            y=[month_names[month] for month in heatmap_pivot.index],  # Month names on the y-axis
-            colorscale='RdBu',         # Color scale from blue (cold) to red (hot)
-            colorbar=dict(title='Temperature (°C)'),
-            reversescale=True,         # Reverse the scale so blue is cold and red is hot
-            hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>' # Custom hover template
-        ))
-        
-        
-        heatmap_fig.update_layout(
-            title='Monthly temperature heatmap by year',
-            xaxis_title='Year',        # Now just shows Year
-            yaxis_title='Month',       # Months are on the y-axis
-            title_font=dict(size=22),
-            xaxis_title_font=dict(size=18),
-            yaxis_title_font=dict(size=18),
-            xaxis=dict(tickangle=-45), # Rotate x-axis labels for better readability
-        )
-        
-        # Display the heatmap
-        st.plotly_chart(heatmap_fig)
+            heatmap_fig = go.Figure(data=go.Heatmap(
+                z=heatmap_pivot.values,
+                x=heatmap_pivot.columns,   # Years on the x-axis
+                y=[month_names[month] for month in heatmap_pivot.index],  # Month names on the y-axis
+                colorscale='RdBu',         # Color scale from blue (cold) to red (hot)
+                colorbar=dict(title='Temperature (°C)'),
+                reversescale=True,         # Reverse the scale so blue is cold and red is hot
+                hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>' # Custom hover template
+            ))
+            
+            
+            heatmap_fig.update_layout(
+                title='Monthly temperature heatmap by year',
+                xaxis_title='Year',        # Now just shows Year
+                yaxis_title='Month',       # Months are on the y-axis
+                title_font=dict(size=22),
+                xaxis_title_font=dict(size=18),
+                yaxis_title_font=dict(size=18),
+                xaxis=dict(tickangle=-45), # Rotate x-axis labels for better readability
+            )
+            
+            # Display the heatmap
+            st.plotly_chart(heatmap_fig)
 
     # Mapping the temperature data
     st.markdown("#### Mapping the temperature data")
