@@ -17,7 +17,7 @@ image = 'images/climatemap_logo.png'
 st.image(image, width=200)  # Adjust the width as needed
 
 # Title
-st.title("🌡️ Regions Level Temperature Forecasting App")
+st.title("Regions Level Temperature Forecasting")
 st.write('Curious about how temperature will vary in your region in the future? Select your country and region.')
 
 # Load the pre-trained model
@@ -64,12 +64,11 @@ def predict_future(model, last_sequence, num_steps, seq_length):
         current_sequence[-1] = pred
 
     return np.array(future_predictions)
-
-with st.spinner('Generating forecast...'):
-
-    # Predict for all regions once
-    future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
-    future_all = scaler.inverse_transform(future_scaled_all)
+if selected_regions:
+    with st.spinner('Generating forecast...'):
+        # Predict for all regions once
+        future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
+        future_all = scaler.inverse_transform(future_scaled_all)
 
 # Create full future DataFrame
 last_date = df_pivot.index[-1]
