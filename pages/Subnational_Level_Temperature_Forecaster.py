@@ -81,58 +81,58 @@ if selected_regions:
     future_df = future_df_all[selected_columns]
     historical_df = df_pivot[selected_columns]
 
-    # -------------------------------
-    # Display Forecast
-    # -------------------------------
-    #st.subheader("Forecasted Monthly Temperatures")
-    st.dataframe(future_df)
+# -------------------------------
+# Display Forecast
+# -------------------------------
+#st.subheader("Forecasted Monthly Temperatures")
+st.dataframe(future_df)
     
-    # Plot historical and forecast
-    fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
+# Plot historical and forecast
+fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
     
-    for col in selected_columns:
-        fig.add_trace(go.Scatter(x=historical_df.index, y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
-        fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
+for col in selected_columns:
+    fig.add_trace(go.Scatter(x=historical_df.index, y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
+    fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
     
     fig.update_layout(title="Subnational Temperature Forecast", xaxis_title="Date", yaxis_title="Temperature (°C)")
     st.plotly_chart(fig)
     
-    #Create heatmap
-    # --- Extract Year and Month from index ---
-    future_df.index = pd.to_datetime(future_df.index, format='%Y-%m_%d', errors='coerce')
-    future_df['Year'] = future_df.index.year
-    future_df['Month'] = future_df.index.month
+#Create heatmap
+# --- Extract Year and Month from index ---
+future_df.index = pd.to_datetime(future_df.index, format='%Y-%m_%d', errors='coerce')
+future_df['Year'] = future_df.index.year
+future_df['Month'] = future_df.index.month
     
-    # --- Mapping of month numbers to names ---
-    month_names = {
+# --- Mapping of month numbers to names ---
+month_names = {
         1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
         7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
     }
-    future_df['Month_Name'] = future_df['Month'].map(month_names)
+future_df['Month_Name'] = future_df['Month'].map(month_names)
     
-    # --- Melt data for plotting ---
-    heatmap_data = future_df[
-        (future_df['Year'] >= year_range[0]) & 
-        (future_df['Year'] <= year_range[1])
+# --- Melt data for plotting ---
+heatmap_data = future_df[
+    (future_df['Year'] >= year_range[0]) & 
+    (future_df['Year'] <= year_range[1])
     ]
     
-    for region_col in selected_columns:
-        region_df = heatmap_data[[region_col, 'Year', 'Month']].copy()
-        region_df = region_df.rename(columns={region_col: 'Temperature'})
+for region_col in selected_columns:
+    region_df = heatmap_data[[region_col, 'Year', 'Month']].copy()
+    region_df = region_df.rename(columns={region_col: 'Temperature'})
         
-        heatmap_pivot = region_df.pivot_table(index='Month', columns='Year', values='Temperature')
+    heatmap_pivot = region_df.pivot_table(index='Month', columns='Year', values='Temperature')
     
-        heatmap_fig = go.Figure(data=go.Heatmap(
-            z=heatmap_pivot.values,
-            x=heatmap_pivot.columns,
-            y=[month_names[m] for m in heatmap_pivot.index],
-            colorscale='RdBu',
-            colorbar=dict(title='Temperature (°C)'),
-            reversescale=True,
-            hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>'
+    heatmap_fig = go.Figure(data=go.Heatmap(
+        z=heatmap_pivot.values,
+        x=heatmap_pivot.columns,
+        y=[month_names[m] for m in heatmap_pivot.index],
+        colorscale='RdBu',
+        colorbar=dict(title='Temperature (°C)'),
+        reversescale=True,
+        hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>'
         ))
     
-        heatmap_fig.update_layout(
+    heatmap_fig.update_layout(
             title=f"Monthly Temperature Heatmap for {region_col.replace('_', ', ')}",
             xaxis_title='Year',
             yaxis_title='Month',
@@ -142,7 +142,7 @@ if selected_regions:
             xaxis=dict(tickangle=-45),
         )
     
-        st.plotly_chart(heatmap_fig)
+    st.plotly_chart(heatmap_fig)
 
 else:
     st.warning("Please select at least one region to generate a forecast.")
