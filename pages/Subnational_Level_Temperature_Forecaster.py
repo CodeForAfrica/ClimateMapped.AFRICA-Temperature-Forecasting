@@ -27,7 +27,7 @@ df_pivot = df.pivot_table(index='Date', columns=['Country', 'Area'], values='Mon
 df_pivot.columns = ['_'.join(col).strip() for col in df_pivot.columns.values]
 df_pivot = df_pivot.sort_index()
 
-# --- UI Elements ---
+# --- filters ---
 selected_country = st.selectbox('Select a country:', df['Country'].unique().tolist())
 available_regions = df[df['Country'] == selected_country]['Area'].unique().tolist()
 selected_regions = st.multiselect('Select regions to forecast:', available_regions)
@@ -56,10 +56,13 @@ if selected_regions:
 
         future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
         future_all = scaler.inverse_transform(future_scaled_all)
+        
+        future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
 
-        future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
+        #future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
         future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
-        future_df_all.index = future_df_all.index.strftime('%Y-%m-%d')
+        future_df_all.index.name = 'Date'
+
 
 
         selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
