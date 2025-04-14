@@ -128,7 +128,7 @@ if selected_countries:
     fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
     for country in selected_countries:
         fig.add_trace(go.Scatter(x=pd.to_datetime(df_pivot.index).strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
-        fig.add_trace(go.Scatter(x=future_df.index, y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
+        fig.add_trace(go.Scatter(x=pd.to_datetime(future_df.index).strftime('%b-%Y'), y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
 
     # Update layout for better visualization
     fig.update_layout(title='Historical and predicted temperatures for selected countries',
