@@ -72,11 +72,6 @@ if selected_regions:
         display_df = future_df.copy()
         display_df.index = display_df.index.strftime('%b-%Y')  
         st.dataframe(display_df)
-        
-        # CSV Download
-        csv = future_df.drop(columns=['Year', 'Month', 'Month_Name']).to_csv()
-        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
-
 
 
         # Historical + Forecast Plot
