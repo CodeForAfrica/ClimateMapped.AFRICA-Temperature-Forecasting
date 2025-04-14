@@ -84,7 +84,7 @@ if selected_regions:
 
         for col in selected_columns:
             fig.add_trace(go.Scatter(x=pd.to_datetime(historical_df.index).strftime('%b-%Y'), y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
-            fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
+            fig.add_trace(go.Scatter(x=pd.to_datetime(future_df.index).strftime('%b-%Y'), y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
 
         fig.update_layout(
             title="Subnational Temperature Forecast",
