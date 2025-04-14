@@ -168,7 +168,6 @@ if selected_countries:
     
         # Build heatmap figure
         heatmap_fig = go.Figure(data=go.Heatmap(
-            z=heatmap_pivot.values,
             x=heatmap_pivot.columns,  # Years
             #y=[month_names[m] for m in heatmap_pivot.index],  # Month names
             z=heatmap_pivot.loc[sorted_months].values,
