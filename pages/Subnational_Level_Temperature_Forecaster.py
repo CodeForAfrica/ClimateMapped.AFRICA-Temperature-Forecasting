@@ -138,8 +138,8 @@ if selected_regions:
             st.plotly_chart(heatmap_fig)
 
     # CSV Download
-        csv = future_df.drop(columns=['Year', 'Month', 'Month_Name']).to_csv()
-        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
+        #csv = future_df.drop(columns=['Year', 'Month', 'Month_Name']).to_csv()
+        #st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
 
         
 else:
