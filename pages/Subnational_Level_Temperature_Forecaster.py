@@ -83,7 +83,7 @@ if selected_regions:
         fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
 
         for col in selected_columns:
-            fig.add_trace(go.Scatter(x=pd.datetime(historical_df.index).strftime('%b-%Y'), y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
+            fig.add_trace(go.Scatter(x=pd.to_datetime(historical_df.index).strftime('%b-%Y'), y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
             fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
 
         fig.update_layout(
