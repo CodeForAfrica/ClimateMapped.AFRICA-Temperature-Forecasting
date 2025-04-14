@@ -119,10 +119,15 @@ if selected_regions:
 
             heatmap_pivot = region_df.pivot_table(index='Month', columns='Year', values='Temperature')
 
+            sorted_months = sorted(heatmap_pivot.index)
+            sorted_months = sorted_months[::-1]
+
             heatmap_fig = go.Figure(data=go.Heatmap(
-                z=heatmap_pivot.values,
+                #z=heatmap_pivot.values,
                 x=heatmap_pivot.columns,
-                y=[month_names[m] for m in heatmap_pivot.index],
+                z=heatmap_pivot.loc[sorted_months].values,
+                y=[month_names[m] for m in sorted_months],
+                #y=[month_names[m] for m in heatmap_pivot.index],
                 colorscale='RdBu',
                 reversescale=True,
                 colorbar=dict(title='Temperature (°C)'),
