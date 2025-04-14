@@ -74,6 +74,11 @@ if selected_regions:
         display_df.index.name = 'Date'
         st.dataframe(display_df)
 
+        # CSV Download
+        csv = display_df..to_csv()
+        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
+
+
         # Add download button for CSV
         #csv_data = future_df[selected_countries].to_csv()
         #st.download_button(label="Download forecasted data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
