@@ -31,7 +31,7 @@ df_pivot = df_pivot.sort_index()
 selected_country = st.selectbox('Select a country:', df['Country'].unique().tolist())
 available_regions = df[df['Country'] == selected_country]['Area'].unique().tolist()
 selected_regions = st.multiselect('Select regions to forecast:', available_regions)
-year_range = st.slider("Select forecast range (years)", 2023, 2050, (2023, 2030))
+year_range = st.slider("Select forecast range", 2023, 2050, (2023, 2030))
 num_months = 12 * (year_range[1] - year_range[0] + 1)
 
 # Define prediction function
@@ -57,20 +57,18 @@ if selected_regions:
         future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
         future_all = scaler.inverse_transform(future_scaled_all)
         
-        future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
+        #future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
 
-        #future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
+        future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
         future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
-        future_df_all.index.name = 'Date'
-
-
+        #future_df_all.index.name = 'Date'
 
         selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
         future_df = future_df_all[selected_columns]
         historical_df = df_pivot[selected_columns]
 
         # Show forecast table
-        st.subheader("Forecasted Monthly Temperatures")
+        #st.subheader("Forecasted Monthly Temperatures")
         st.dataframe(future_df)
 
         # Historical + Forecast Plot
