@@ -73,6 +73,11 @@ if selected_regions:
         display_df.index = display_df.index.strftime('%b-%Y')  
         st.dataframe(display_df)
 
+        # CSV Download
+        csv = future_df.drop(columns=['Year', 'Month', 'Month_Name']).to_csv()
+        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
+
+
         # Historical + Forecast Plot
         fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
 
@@ -126,9 +131,6 @@ if selected_regions:
             )
             st.plotly_chart(heatmap_fig)
 
-        # CSV Download
-        csv = future_df.drop(columns=['Year', 'Month', 'Month_Name']).to_csv()
-        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
-
+        
 else:
     st.warning("Please select at least one region to generate a forecast.")
