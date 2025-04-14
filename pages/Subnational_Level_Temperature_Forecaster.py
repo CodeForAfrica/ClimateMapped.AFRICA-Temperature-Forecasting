@@ -70,15 +70,18 @@ if selected_regions:
         future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
         future_all = scaler.inverse_transform(future_scaled_all)
 
-# Create full future DataFrame
-last_date = df_pivot.index[-1]
-future_dates = pd.date_range(start=last_date + pd.DateOffset(months=1), periods=num_months, freq='M')
-future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
+    # Create full future DataFrame
+    last_date = df_pivot.index[-1]
+    future_dates = pd.date_range(start=last_date + pd.DateOffset(months=1), periods=num_months, freq='M')
+    future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
+    
+    # Filter relevant columns
+    selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
+    future_df = future_df_all[selected_columns]
+    historical_df = df_pivot[selected_columns]
 
-# Filter relevant columns
-selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
-future_df = future_df_all[selected_columns]
-historical_df = df_pivot[selected_columns]
+else:
+    st.warning("Please select at least one region to generate a forecast.")
 
 # -------------------------------
 # Display Forecast
