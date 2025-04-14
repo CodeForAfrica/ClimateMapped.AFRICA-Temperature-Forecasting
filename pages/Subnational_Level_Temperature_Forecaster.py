@@ -47,7 +47,6 @@ def predict_future(model, last_sequence, num_steps, seq_length):
 
     return np.array(future_predictions)
 
-# Only proceed if regions are selected
 if selected_regions:
     with st.spinner('Generating forecast...'):
         scaler = MinMaxScaler()
@@ -57,13 +56,14 @@ if selected_regions:
 
         future_scaled_all = predict_future(model, full_last_sequence, num_months, seq_length)
         future_all = scaler.inverse_transform(future_scaled_all)
-
-        # Create proper future datetime index
-        future_dates_dt = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M')
-        future_dates_str = future_dates_dt.strftime('%Y-%m-%d')
         
-        future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates_str, columns=df_pivot.columns)
+        future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
+
+        #future_dates = pd.date_range(start=df_pivot.index[-1] + pd.DateOffset(months=1), periods=num_months, freq='MS')
+        future_df_all = pd.DataFrame(np.round(future_all, 2), index=future_dates, columns=df_pivot.columns)
         future_df_all.index.name = 'Date'
+
+
 
         selected_columns = [f"{selected_country}_{region}" for region in selected_regions]
         future_df = future_df_all[selected_columns]
@@ -75,6 +75,7 @@ if selected_regions:
 
         # Historical + Forecast Plot
         fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
+
         for col in selected_columns:
             fig.add_trace(go.Scatter(x=historical_df.index, y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
             fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
@@ -87,8 +88,7 @@ if selected_regions:
         )
         st.plotly_chart(fig)
 
-        # Prepare heatmap data
-        future_df = future_df.copy()
+        # Heatmaps
         future_df['Year'] = future_df.index.year
         future_df['Month'] = future_df.index.month
         month_names = {
@@ -105,6 +105,7 @@ if selected_regions:
         for region_col in selected_columns:
             region_df = heatmap_data[[region_col, 'Year', 'Month']].copy()
             region_df = region_df.rename(columns={region_col: 'Temperature'})
+
             heatmap_pivot = region_df.pivot_table(index='Month', columns='Year', values='Temperature')
 
             heatmap_fig = go.Figure(data=go.Heatmap(
