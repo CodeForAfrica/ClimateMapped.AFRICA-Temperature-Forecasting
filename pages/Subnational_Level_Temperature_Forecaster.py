@@ -73,8 +73,6 @@ if selected_regions:
         display_df.index = display_df.index.strftime('%b-%Y')  
         st.dataframe(display_df)
 
-        st.dataframe(future_df)
-
         # Historical + Forecast Plot
         fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
 
