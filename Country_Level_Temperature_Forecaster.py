@@ -109,75 +109,75 @@ if selected_countries:
         future_scaled = predict_future(model, last_sequence, num_months, seq_length)
         future_temperatures = scaler.inverse_transform(future_scaled)
 
-    future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
-    future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
-    future_df.index.name = 'Date'
-
-    future_df['Year'] = pd.to_datetime(future_df.index).year
-    future_df['Month'] = pd.to_datetime(future_df.index).month
-
-    # Display forecasted temperatures
-    st.write("Forecasted Temperature")
-    st.write(future_df[selected_countries])
-
-    # Add download button for CSV
-    csv_data = future_df[selected_countries].to_csv()
-    st.download_button(label="Download forecasted data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
-
-    # Plot historical and predicted data (line chart)
-    fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
-    for country in selected_countries:
-        fig.add_trace(go.Scatter(x=pd.to_datetime(df_pivot.index).strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
-        fig.add_trace(go.Scatter(x=pd.to_datetime(future_df.index).strftime('%b-%Y'), y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
-
-    # Update layout for better visualization
-    fig.update_layout(title='Historical and predicted temperatures for selected countries',
-                      xaxis_title='Year', 
-                      yaxis_title='Temperature (°C)', 
-                      legend_title='Country',
-                      xaxis=dict(type='category', title_font=dict(size=18)),
-                      yaxis=dict(title_font=dict(size=18)),
-                      title_font=dict(size=22),
-                      legend=dict(font=dict(size=16)))
-
-    st.plotly_chart(fig)
-
-    # Create a heatmap for the forecasted data
-   
-    heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
-
-    # Create a mapping of month numbers to month names
-    month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
-                   7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
-    future_df['Month_Name'] = future_df['Month'].map(month_names)
+        future_dates = pd.date_range(start=f'{year_range[0]}-01-01', periods=num_months, freq='M').strftime('%b-%Y')
+        future_df = pd.DataFrame(np.round(future_temperatures, 2), index=future_dates, columns=df_pivot.columns)
+        future_df.index.name = 'Date'
     
-    heatmap_data_melted = heatmap_data.melt(id_vars=['Year', 'Month'], var_name='Country', value_name='Temperature')
+        future_df['Year'] = pd.to_datetime(future_df.index).year
+        future_df['Month'] = pd.to_datetime(future_df.index).month
     
-    heatmap_pivot = heatmap_data_melted.pivot_table(index='Month', columns=['Year'], values='Temperature')
+        # Display forecasted temperatures
+        st.write("Forecasted Temperature")
+        st.write(future_df[selected_countries])
     
-    heatmap_fig = go.Figure(data=go.Heatmap(
-        z=heatmap_pivot.values,
-        x=heatmap_pivot.columns,   # Years on the x-axis
-        y=[month_names[month] for month in heatmap_pivot.index],  # Month names on the y-axis
-        colorscale='RdBu',         # Color scale from blue (cold) to red (hot)
-        colorbar=dict(title='Temperature (°C)'),
-        reversescale=True,         # Reverse the scale so blue is cold and red is hot
-        hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>' # Custom hover template
-    ))
+        # Add download button for CSV
+        csv_data = future_df[selected_countries].to_csv()
+        st.download_button(label="Download forecasted data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
     
+        # Plot historical and predicted data (line chart)
+        fig = make_subplots(rows=1, cols=1, subplot_titles=['Historical and predicted temperatures for selected countries'])
+        for country in selected_countries:
+            fig.add_trace(go.Scatter(x=pd.to_datetime(df_pivot.index).strftime('%b-%Y'), y=df_pivot[country], name=f'{country} (Historical)', mode='lines'))
+            fig.add_trace(go.Scatter(x=pd.to_datetime(future_df.index).strftime('%b-%Y'), y=future_df[country], name=f'{country} (Predicted)', mode='lines'))
     
-    heatmap_fig.update_layout(
-        title='Monthly temperature heatmap by year',
-        xaxis_title='Year',        # Now just shows Year
-        yaxis_title='Month',       # Months are on the y-axis
-        title_font=dict(size=22),
-        xaxis_title_font=dict(size=18),
-        yaxis_title_font=dict(size=18),
-        xaxis=dict(tickangle=-45), # Rotate x-axis labels for better readability
-    )
+        # Update layout for better visualization
+        fig.update_layout(title='Historical and predicted temperatures for selected countries',
+                          xaxis_title='Year', 
+                          yaxis_title='Temperature (°C)', 
+                          legend_title='Country',
+                          xaxis=dict(type='category', title_font=dict(size=18)),
+                          yaxis=dict(title_font=dict(size=18)),
+                          title_font=dict(size=22),
+                          legend=dict(font=dict(size=16)))
     
-    # Display the heatmap
-    st.plotly_chart(heatmap_fig)
+        st.plotly_chart(fig)
+    
+        # Create a heatmap for the forecasted data
+       
+        heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
+    
+        # Create a mapping of month numbers to month names
+        month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
+                       7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
+        future_df['Month_Name'] = future_df['Month'].map(month_names)
+        
+        heatmap_data_melted = heatmap_data.melt(id_vars=['Year', 'Month'], var_name='Country', value_name='Temperature')
+        
+        heatmap_pivot = heatmap_data_melted.pivot_table(index='Month', columns=['Year'], values='Temperature')
+        
+        heatmap_fig = go.Figure(data=go.Heatmap(
+            z=heatmap_pivot.values,
+            x=heatmap_pivot.columns,   # Years on the x-axis
+            y=[month_names[month] for month in heatmap_pivot.index],  # Month names on the y-axis
+            colorscale='RdBu',         # Color scale from blue (cold) to red (hot)
+            colorbar=dict(title='Temperature (°C)'),
+            reversescale=True,         # Reverse the scale so blue is cold and red is hot
+            hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>' # Custom hover template
+        ))
+        
+        
+        heatmap_fig.update_layout(
+            title='Monthly temperature heatmap by year',
+            xaxis_title='Year',        # Now just shows Year
+            yaxis_title='Month',       # Months are on the y-axis
+            title_font=dict(size=22),
+            xaxis_title_font=dict(size=18),
+            yaxis_title_font=dict(size=18),
+            xaxis=dict(tickangle=-45), # Rotate x-axis labels for better readability
+        )
+        
+        # Display the heatmap
+        st.plotly_chart(heatmap_fig)
 
     # Mapping the temperature data
     st.markdown("#### Mapping the temperature data")
