@@ -144,47 +144,49 @@ if selected_countries:
     
         # Create a heatmap for the forecasted data
        
-        heatmap_data = future_df[(future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])][selected_countries + ['Year', 'Month']]
+    heatmap_data = future_df[
+        (future_df['Year'] >= year_range[0]) & (future_df['Year'] <= year_range[1])
+    ][selected_countries + ['Year', 'Month']]
     
-        # Create a mapping of month numbers to month names
-        month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
-                       7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
-        future_df['Month_Name'] = future_df['Month'].map(month_names)
+    # Map numeric months to month names
+    month_names = {
+        1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
+        7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
+    }
+    future_df['Month_Name'] = future_df['Month'].map(month_names)
+    
+    # Loop through selected countries to generate heatmaps
+    for country in selected_countries:
+        country_df = heatmap_data[[country, 'Year', 'Month']].copy()
+        country_df = country_df.rename(columns={country: 'Temperature'})
+    
+        # Create pivot table for heatmap (Months vs. Years)
+        heatmap_pivot = country_df.pivot_table(index='Month', columns='Year', values='Temperature')
+    
+        # Build heatmap figure
+        heatmap_fig = go.Figure(data=go.Heatmap(
+            z=heatmap_pivot.values,
+            x=heatmap_pivot.columns,  # Years
+            y=[month_names[m] for m in heatmap_pivot.index],  # Month names
+            colorscale='RdBu',
+            colorbar=dict(title='Temperature (°C)'),
+            reversescale=True,
+            hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>'
+        ))
+    
+        heatmap_fig.update_layout(
+            title=f'Monthly Temperature Heatmap by Year - {country}',
+            xaxis_title='Year',
+            yaxis_title='Month',
+            title_font=dict(size=22),
+            xaxis_title_font=dict(size=18),
+            yaxis_title_font=dict(size=18),
+            xaxis=dict(tickangle=-45)
+        )
+    
+        # Display the heatmap in Streamlit
+        st.plotly_chart(heatmap_fig)
 
-        for country in [selected_countries]:
-            country_df = heatmap_data[[country, 'Year', 'Month']].copy()
-            country_df = region_df.rename(columns={country: 'Temperature'})
-
-            heatmap_pivot = country_df.pivot_table(index='Month', columns='Year', values='Temperature')
-
-        
-        #heatmap_data_melted = heatmap_data.melt(id_vars=['Year', 'Month'], var_name='Country', value_name='Temperature')
-        
-        #heatmap_pivot = heatmap_data_melted.pivot_table(index='Month', columns=['Year'], values='Temperature')
-        
-            heatmap_fig = go.Figure(data=go.Heatmap(
-                z=heatmap_pivot.values,
-                x=heatmap_pivot.columns,   # Years on the x-axis
-                y=[month_names[month] for month in heatmap_pivot.index],  # Month names on the y-axis
-                colorscale='RdBu',         # Color scale from blue (cold) to red (hot)
-                colorbar=dict(title='Temperature (°C)'),
-                reversescale=True,         # Reverse the scale so blue is cold and red is hot
-                hovertemplate='Year: %{x}<br>Month: %{y}<br>Temperature: %{z}°C<extra></extra>' # Custom hover template
-            ))
-            
-            
-            heatmap_fig.update_layout(
-                title='Monthly temperature heatmap by year',
-                xaxis_title='Year',        # Now just shows Year
-                yaxis_title='Month',       # Months are on the y-axis
-                title_font=dict(size=22),
-                xaxis_title_font=dict(size=18),
-                yaxis_title_font=dict(size=18),
-                xaxis=dict(tickangle=-45), # Rotate x-axis labels for better readability
-            )
-            
-            # Display the heatmap
-            st.plotly_chart(heatmap_fig)
 
     # Mapping the temperature data
     st.markdown("#### Mapping the temperature data")
