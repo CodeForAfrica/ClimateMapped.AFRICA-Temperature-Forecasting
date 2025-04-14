@@ -76,7 +76,7 @@ if selected_regions:
 
         # CSV Download
         csv = display_df.to_csv()
-        st.download_button("Download Forecast CSV", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
+        st.download_button("Download forecast data in CSV format", data=csv, file_name="subnational_forecast.csv", mime="text/csv")
 
 
         # Add download button for CSV
