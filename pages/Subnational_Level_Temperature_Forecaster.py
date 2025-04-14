@@ -70,15 +70,20 @@ if selected_regions:
         # Show forecast table
         #st.subheader("Forecasted Monthly Temperatures")
         display_df = future_df.copy()
-        display_df.index = display_df.index.strftime('%b-%Y')  
+        display_df.index = display_df.index.strftime('%b-%Y')
+        display_df.index.name = 'Date'
         st.dataframe(display_df)
+
+        # Add download button for CSV
+        csv_data = future_df[selected_countries].to_csv()
+        st.download_button(label="Download forecasted data as CSV", data=csv_data, file_name='forecasted_temperature.csv', mime='text/csv')
 
 
         # Historical + Forecast Plot
         fig = make_subplots(rows=1, cols=1, subplot_titles=["Historical and Forecasted Temperatures"])
 
         for col in selected_columns:
-            fig.add_trace(go.Scatter(x=historical_df.index, y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
+            fig.add_trace(go.Scatter(x=pd.datetime(historical_df.index).strftime('%b-%Y'), y=historical_df[col], name=f"{col} (Historical)", mode='lines'))
             fig.add_trace(go.Scatter(x=future_df.index, y=future_df[col], name=f"{col} (Forecast)", mode='lines'))
 
         fig.update_layout(
