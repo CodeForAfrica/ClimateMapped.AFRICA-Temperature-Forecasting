@@ -8,12 +8,15 @@ import joblib
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
+# Page config
+st.set_page_config(layout="wide", page_title="Regions Level Temperature Forecasting")
+
 # Add logo
 image = 'images/climatemap_logo.png'
 st.image(image, width=200)
 
 # Title
-st.title("Regions Level Temperature Forecasting")
+#st.title("Regions Level Temperature Forecasting")
 st.write('Curious about how temperature will vary in your region in the future? Select your country and region.')
 
 # Load the model
@@ -22,6 +25,8 @@ model = joblib.load('models/subnational_temp_forecaster.pkl')
 # Load and prepare data
 df = pd.read_csv('data/subnational_monthly_temp_1990.csv')
 df['Date'] = pd.to_datetime(df['Date'])
+df = df[df['Date'] >= '2010-01-01']
+
 
 df_pivot = df.pivot_table(index='Date', columns=['Country', 'Area'], values='Monthly_temperature', aggfunc='first')
 df_pivot.columns = ['_'.join(col).strip() for col in df_pivot.columns.values]
