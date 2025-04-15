@@ -16,7 +16,7 @@ image = 'images/climatemap_logo.png'
 st.image(image, width=200)
 
 # Title
-#st.title("Regions Level Temperature Forecasting")
+st.title("Regions Level Temperature Forecasting")
 st.write('Curious about how temperature will vary in your region in the future? Select your country and region.')
 
 # Load the model
