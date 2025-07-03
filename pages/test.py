@@ -6,7 +6,8 @@ import plotly.express as px
 # Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv("annual_temp_1950-2025 (1).csv")
+    path = "data/annual_temp_1950-2025 (1).csv"
+    df = pd.read_csv(path)
     # Ensure consistent column names
     df.columns = df.columns.str.lower()
     if 'latitude' not in df.columns:
