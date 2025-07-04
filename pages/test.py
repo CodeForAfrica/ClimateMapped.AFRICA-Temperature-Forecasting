@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import geopandas as gpd
 import plotly.express as px
+from shapely.geometry import Point
 
 # Load Data
 @st.cache_data
 def load_data():
-    path = "data/sample_temp_1950-2025.csv"
-    df = pd.read_csv(path)
+    df = pd.read_csv("data/sample_temp_1950-2025.csv")
     df.columns = df.columns.str.lower()
     if 'latitude' not in df.columns:
         df['latitude'] = df['lat']
@@ -15,71 +15,47 @@ def load_data():
 
 df = load_data()
 
-st.title("🌡️ Global Temperature Dashboard (African Data)")
+st.title("🌡️ Choropleth Temperature Map of African Cities")
 
-# Sidebar filters
+# Sidebar filter
 st.sidebar.header("Filters")
 year_selected = st.sidebar.slider("Select Year", int(df['year'].min()), int(df['year'].max()), step=1)
 
-# 1. Global Map with Climate Stripes Coloring (Simulated Choropleth)
-st.subheader("Temperature Map (Simulated Choropleth View)")
+# Filter data
+df_year = df[df['year'] == year_selected].copy()
 
-df_year = df[df['year'] == year_selected]
-
-fig_map = px.scatter_geo(
+# Convert to GeoDataFrame
+gdf = gpd.GeoDataFrame(
     df_year,
-    lat='latitude',
-    lon='lng',
+    geometry=gpd.points_from_xy(df_year['lng'], df_year['latitude']),
+    crs="EPSG:4326"
+)
+
+# Project to meters (for buffer calculation)
+gdf = gdf.to_crs(epsg=3857)
+gdf['geometry'] = gdf.buffer(50000)  # 50 km buffer
+gdf = gdf.to_crs(epsg=4326)
+
+# Convert to GeoJSON-like structure
+gjson = gdf.__geo_interface__
+
+# Plot as a true choropleth using Plotly
+fig = px.choropleth_mapbox(
+    gdf,
+    geojson=gjson,
+    locations=gdf.index,
     color='temperature',
     hover_name='city',
-    color_continuous_scale='RdBu_r',
-    projection="natural earth",
-    size=np.full(len(df_year), 20),  # Uniform size for choropleth effect
+    color_continuous_scale='RdBu_r',  # Climate stripes style
+    mapbox_style='carto-positron',
+    zoom=2.5,
+    center={"lat": 0, "lon": 20},
+    opacity=0.7
 )
 
-fig_map.update_geos(
-    showcoastlines=True,
-    showland=True,
-    landcolor="white",
-    oceancolor="lightblue",
-    bgcolor="white",
-    fitbounds="locations"
-)
-
-fig_map.update_traces(marker=dict(line=dict(width=0)))  # No marker borders
-
-st.plotly_chart(fig_map, use_container_width=True)
-
-# 2. Heatmap (City vs Year)
-st.subheader("Temperature Heatmap Over Years")
-
-pivot = df.pivot_table(index='city', columns='year', values='temperature')
-fig_heatmap = px.imshow(
-    pivot,
-    labels=dict(x="Year", y="City", color="Temperature"),
-    aspect="auto",
-    color_continuous_scale='RdBu_r'
-)
-
-st.plotly_chart(fig_heatmap, use_container_width=True)
-
-# 3. Line Chart: Temperature Anomaly by Decade
-st.subheader("Average Temperature Anomaly by Decade")
-
-df['decade'] = (df['year'] // 10) * 10
-decade_anomaly = df.groupby('decade')['temperature_anomaly'].mean().reset_index()
-
-fig_line = px.line(
-    decade_anomaly,
-    x='decade',
-    y='temperature_anomaly',
-    markers=True,
-    title="Average Temperature Anomaly by Decade"
-)
-
-fig_line.update_traces(line_color='crimson')
-st.plotly_chart(fig_line, use_container_width=True)
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+st.plotly_chart(fig, use_container_width=True)
 
 # Footer
-st.markdown("📊 Data Source: `sample_temp_1950-2025.csv`")
-st.markdown("💡 Map styled with white land, light blue oceans, and climate stripes color scale (blue = cold, red = warm).")
+st.markdown("🧭 This map shows each city as a 50 km zone colored by its average temperature.")
+st.markdown("📊 Data source: `sample_temp_1950-2025.csv`")
