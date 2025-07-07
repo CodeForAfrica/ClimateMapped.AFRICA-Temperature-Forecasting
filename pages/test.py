@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 # Country code to country name mapping for African countries
-COUNTRY_MAPPING = {
+country_mapping = {
     'DZ': 'Algeria', 'AO': 'Angola', 'BJ': 'Benin', 'BW': 'Botswana',
     'BF': 'Burkina Faso', 'BI': 'Burundi', 'CM': 'Cameroon', 'CV': 'Cape Verde',
     'CF': 'Central African Republic', 'TD': 'Chad', 'KM': 'Comoros', 'CG': 'Congo',
@@ -35,7 +35,7 @@ def load_data():
     
     # Add country names based on country codes
     if 'country_code' in df.columns:
-        df['country'] = df['country_code'].map(COUNTRY_MAPPING)
+        df['country'] = df['country_code'].map(country_mapping)
         # Fill any missing country names with the country code
         df['country'] = df['country'].fillna(df['country_code'])
     elif 'country' not in df.columns:
@@ -104,7 +104,7 @@ fig_map = px.scatter_mapbox(
     hover_name="city",
     zoom=3,
     mapbox_style="open-street-map",
-    color_continuous_scale="RdBu_r",  # Climate strip style: blue to red
+    color_continuous_scale="RdBu_r",  
     title=f"Temperatures in African Cities ({latest_year})"
 )
 # Force marker size
@@ -160,11 +160,11 @@ else:
     st.info("Please select at least one city to display the temperature trends and heatmap.")
 
 # Display country-city information
-if selected_countries:
-    st.subheader("Selected Countries and Cities")
-    for country in selected_countries:
-        cities_in_country = df[df['country'] == country]['city'].unique()
-        st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
+#if selected_countries:
+ #   st.subheader("Selected Countries and Cities")
+ #   for country in selected_countries:
+  #      cities_in_country = df[df['country'] == country]['city'].unique()
+  #      st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
 
 # Footer
-st.markdown("Data source: `africa_temperatures.csv`")
+st.markdown("Data source: https://cds.climate.copernicus.eu/")
