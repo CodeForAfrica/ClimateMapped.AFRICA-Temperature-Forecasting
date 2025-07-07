@@ -107,4 +107,4 @@ fig_heatmap.update_layout(
 st.plotly_chart(fig_heatmap, use_container_width=True)
 
 # Footer
-st.markdown("🗂Data source: `data/sample_temp_1950-2025.csv`")
+st.markdown("Data source: `data/sample_temp_1950-2025.csv`")
