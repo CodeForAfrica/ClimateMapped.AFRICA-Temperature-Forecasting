@@ -123,22 +123,7 @@ fig_map.update_traces(marker=dict(size=6))
 st.plotly_chart(fig_map, use_container_width=True)
 
 # 2. Hierarchical filters: Country -> Cities
-st.markdown("""
-        <style>
-            .subtitle {
-                background-color: #f0f0f0;
-                padding: 10px;
-                border-radius: 8px;
-                text-align: center;
-                color: #333333;
-                font-size: 20px;
-                font-weight: normal;
-                margin-top: 10px;
-                margin-bottom: 20px;
-            }
-        </style>
-        <div class="subtitle">Temperature trend over the years by city</div>
-    """, unsafe_allow_html=True)
+
 #st.subheader("Temperature trend over the years by city")
 
 # Country selection
