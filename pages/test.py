@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 
+st.set_page_config(layout="wide")
+
 # Country code to country name mapping for African countries
 country_mapping = {
     'DZ': 'Algeria', 'AO': 'Angola', 'BJ': 'Benin', 'BW': 'Botswana',
@@ -86,14 +88,29 @@ def create_climate_heatmap(df, selected_cities):
 # Load data
 df = load_data()
 
-st.title("Africa Temperature 2025")
+
+st.markdown("""
+    <style>
+        .main-title {
+            background-color: #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+    <div class="main-title">Africa Temperature</div>
+""", unsafe_allow_html=True)
 
 # Get latest year in the dataset
 latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
 # 1. OpenStreetMap showing city temperatures as fixed-size points
-st.subheader(f"Temperature map of african cities ({latest_year})")
+st.subheader(f"Average Temperature 2025 ({latest_year})")
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
