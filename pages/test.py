@@ -97,23 +97,27 @@ latest_data = df[df['year'] == latest_year]
 
 # 1. OpenStreetMap showing city temperatures as fixed-size points
 st.subheader(f"Temperature map of african cities ({latest_year})")
-fig_map = px.scatter_mapbox(
-    latest_data,
-    lat="latitude",
-    lon="lng",
-    color="temperature",
-    size_max=5,
-    size=[5] * len(latest_data),  # fixed point size
-    hover_name="city",
-    hover_data={"temperature": ":.1f", "country": True, "latitude": False, "lng": False},
-    zoom=3,
-    mapbox_style="open-street-map",
-    color_continuous_scale="RdBu_r",  
-    title=f"Temperatures in African Cities ({latest_year})"
-)
-# Force marker size
-fig_map.update_traces(marker=dict(size=6))
-st.plotly_chart(fig_map, use_container_width=True)
+
+# Check if we have data to display
+if len(latest_data) > 0:
+    fig_map = px.scatter_mapbox(
+        latest_data,
+        lat="latitude",
+        lon="lng",
+        color="temperature",
+        size_max=10,
+        hover_name="city",
+        hover_data={"temperature": ":.1f", "country": True, "latitude": False, "lng": False},
+        zoom=3,
+        mapbox_style="open-street-map",
+        color_continuous_scale="RdBu_r",  
+        title=f"Temperatures in African Cities ({latest_year})"
+    )
+    # Force marker size to be consistent
+    fig_map.update_traces(marker=dict(size=8))
+    st.plotly_chart(fig_map, use_container_width=True)
+else:
+    st.warning("No temperature data available for the map display.")
 
 # 2. Hierarchical filters: Country -> Cities (Side by side alignment)
 st.subheader("Temperature trend over the years by city")
@@ -123,16 +127,18 @@ col1, col2 = st.columns(2)
 
 with col1:
     # Country selection - only show mapped country names
-    countries = sorted([country for country in df['country'].unique() if country in COUNTRY_MAPPING.values()])
+    available_countries = [country for country in df['country'].unique() if country in COUNTRY_MAPPING.values()]
+    countries = sorted(available_countries) if available_countries else ['No countries available']
+    
     selected_countries = st.multiselect(
         "Select countries:", 
         countries, 
-        default=countries[:3] if len(countries) > 3 else countries
+        default=countries[:3] if len(countries) > 3 and countries[0] != 'No countries available' else (countries[:1] if countries[0] != 'No countries available' else [])
     )
 
 with col2:
     # Filter cities based on selected countries
-    if selected_countries:
+    if selected_countries and 'No countries available' not in selected_countries:
         available_cities = df[df['country'].isin(selected_countries)]['city'].sort_values().unique()
     else:
         available_cities = []
@@ -141,7 +147,7 @@ with col2:
     selected_cities = st.multiselect(
         "Select cities to display:", 
         available_cities, 
-        default=available_cities[:5] if len(available_cities) > 5 else available_cities
+        default=available_cities[:5] if len(available_cities) > 5 else list(available_cities)
     )
 
 if selected_cities:
@@ -172,11 +178,14 @@ else:
     st.info("Please select at least one city to display the temperature trends and heatmap.")
 
 # Display country-city information
-if selected_countries:
+if selected_countries and 'No countries available' not in selected_countries:
     st.subheader("Selected Countries and Cities")
     for country in selected_countries:
         cities_in_country = df[df['country'] == country]['city'].unique()
-        st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
+        if len(cities_in_country) > 0:
+            st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
+        else:
+            st.write(f"**{country}**: No cities found")
 
 # Footer
 st.markdown("Data source: https://cds.climate.copernicus.eu/")
