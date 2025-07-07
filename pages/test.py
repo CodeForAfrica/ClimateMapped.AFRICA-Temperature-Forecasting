@@ -18,7 +18,7 @@ def load_data():
 
 df = load_data()
 
-st.title("🌍 African Cities Temperature Dashboard")
+st.title("African Temperature")
 
 # Find the most recent year in the dataset
 latest_year = df['year'].max()
@@ -27,7 +27,7 @@ latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
 # 1. OpenStreetMap showing temperatures by city
-st.subheader(f"📍 City Temperatures in Africa ({latest_year})")
+st.subheader(f"City Temperatures in Africa ({latest_year})")
 
 # Plotting city points on an OpenStreetMap using Plotly
 fig_map = px.scatter_mapbox(
@@ -46,7 +46,7 @@ fig_map = px.scatter_mapbox(
 st.plotly_chart(fig_map, use_container_width=True)
 
 # 2. Temperature trend over the years
-st.subheader("📈 Average Temperature Over the Years")
+st.subheader("Average temperature variation")
 
 # Group by year and calculate average temperature
 avg_temp_per_year = df.groupby('year')['temperature'].mean().reset_index()
