@@ -36,15 +36,9 @@ def load_data():
         df['lng'] = df['longitude']
     
     # Add country names based on country codes
-    if 'country_code' in df.columns:
-        df['country'] = df['country_code'].map(country_mapping)
-        # Fill any missing country names with the country code
-        df['country'] = df['country'].fillna(df['country_code'])
-    elif 'country' not in df.columns:
-        # If no country info, create a default
-        df['country'] = 'Unknown'
     
-    return df
+    df['country'] = df['country_code'].map(country_mapping)
+    
 
 def create_climate_heatmap(df, selected_cities):
     """Create a climate stripes style heatmap for selected cities"""
@@ -122,14 +116,30 @@ fig_map = px.scatter_mapbox(
     zoom=3,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",  
-    title=f"Temperatures in African Cities ({latest_year})"
+    title=f" Average temperature in ({latest_year})"
 )
 # Force marker size
 fig_map.update_traces(marker=dict(size=6))
 st.plotly_chart(fig_map, use_container_width=True)
 
 # 2. Hierarchical filters: Country -> Cities
-st.subheader("Temperature trend over the years by city")
+st.markdown("""
+        <style>
+            .subtitle {
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 8px;
+                text-align: center;
+                color: #333333;
+                font-size: 20px;
+                font-weight: normal;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+        </style>
+        <div class="subtitle">Temperature trend over the years by city</div>
+    """, unsafe_allow_html=True)
+#st.subheader("Temperature trend over the years by city")
 
 # Country selection
 countries = sorted(df['country'].unique())
