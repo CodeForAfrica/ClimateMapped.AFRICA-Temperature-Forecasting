@@ -37,7 +37,7 @@ def load_data():
     
     # Add country names based on country codes
     
-    df['country'] = df['country_code'].map(country_mapping)
+    df['country_name'] = df['country'].map(country_mapping)
     
 
 def create_climate_heatmap(df, selected_cities):
@@ -123,6 +123,21 @@ fig_map.update_traces(marker=dict(size=6))
 st.plotly_chart(fig_map, use_container_width=True)
 
 # 2. Hierarchical filters: Country -> Cities
+st.markdown("""
+    <style>
+        .main-title {
+            background-color: #ADD8E6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+    <div class="main-title">Temperature Trends</div>
+""", unsafe_allow_html=True)
 
 #st.subheader("Temperature trend over the years by city")
 
