@@ -3,6 +3,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Set the layout as wide (must be the FIRST Streamlit command)
+st.set_page_config(layout="wide")
+
 # Load and prepare the dataset
 @st.cache_data
 def load_data():
