@@ -5,7 +5,7 @@ import plotly.express as px
 # Load and prepare the dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv("africa_temperatures.csv")
+    df = pd.read_csv("data/sample_temp_1950-2025.csv")
     df.columns = df.columns.str.lower()
 
     # Ensure latitude and longitude columns exist
