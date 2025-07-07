@@ -102,7 +102,7 @@ st.markdown("""
             margin-bottom: 20px;
         }
     </style>
-    <div class="main-title">Africa Temperature</div>
+    <div class="main-title">Climate Map Africa</div>
 """, unsafe_allow_html=True)
 
 # Get latest year in the dataset
@@ -110,7 +110,7 @@ latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
 # 1. OpenStreetMap showing city temperatures as fixed-size points
-st.subheader(f"Average Temperature 2025 ({latest_year})")
+#st.subheader(f"Average Temperature 2025 ({latest_year})")
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
