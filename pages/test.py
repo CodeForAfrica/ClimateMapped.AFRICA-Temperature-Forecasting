@@ -142,7 +142,7 @@ st.markdown("""
 #st.subheader("Temperature trend over the years by city")
 
 # Country selection
-countries = sorted(df['country'].unique())
+countries = sorted(df['country_name'].unique())
 selected_countries = st.multiselect(
     "Select countries:", 
     countries, 
@@ -150,7 +150,7 @@ selected_countries = st.multiselect(
 )
 
 # Filter cities based on selected countries
-available_cities = df[df['country'].isin(selected_countries)]['city'].sort_values().unique()
+available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
 
 # City selection (multiselect within selected countries)
 selected_cities = st.multiselect(
