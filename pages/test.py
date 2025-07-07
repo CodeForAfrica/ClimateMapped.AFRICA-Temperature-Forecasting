@@ -92,7 +92,7 @@ df = load_data()
 st.markdown("""
     <style>
         .main-title {
-            background-color: #28a745;
+            background-color: #ADD8E6;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
