@@ -54,12 +54,18 @@ def create_climate_heatmap(df, selected_cities):
         aggfunc='mean'
     )
     
-    # Create heatmap with climate stripes colors
+    # Determine global temperature range for color consistency
+    global_min = df['temperature'].min()
+    global_max = df['temperature'].max()
+    
+    # Create heatmap with global temperature scale
     fig = go.Figure(data=go.Heatmap(
         z=pivot_df.values,
         x=pivot_df.columns,
         y=pivot_df.index,
-        colorscale='RdBu_r',  # Climate stripes: blue (cold) to red (hot)
+        zmin=global_min,
+        zmax=global_max,
+        colorscale='RdBu_r',
         showscale=True,
         colorbar=dict(title="Temperature (°C)"),
         hovertemplate='<b>%{y}</b><br>' +
@@ -69,10 +75,10 @@ def create_climate_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="Temperature by city and year",
+        title="Temperature by City and Year (Standardized Scale)",
         xaxis_title="Year",
         yaxis_title="City",
-        height=max(300, len(selected_cities) * 40)  # Adjust height based on number of cities
+        height=max(300, len(selected_cities) * 40)
     )
     
     return fig
