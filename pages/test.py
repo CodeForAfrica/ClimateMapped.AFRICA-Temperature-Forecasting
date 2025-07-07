@@ -94,7 +94,7 @@ st.markdown("""
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            color: white;
+            color: black;
             font-size: 36px;
             font-weight: bold;
             margin-bottom: 20px;
@@ -128,19 +128,20 @@ st.plotly_chart(fig_map, use_container_width=True)
 
 # 2. Hierarchical filters: Country -> Cities
 st.markdown("""
-    <style>
-        .main-title {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-    </style>
-    <div class="main-title">Temperature Trends</div>
+        <style>
+            .subtitle {
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 8px;
+                text-align: center;
+                color: #333333;
+                font-size: 20px;
+                font-weight: normal;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+        </style>
+        <div class="subtitle">Temperature Trends</div>
 """, unsafe_allow_html=True)
 
 #st.subheader("Temperature trend over the years by city")
