@@ -44,7 +44,7 @@ def load_data():
     
     return df
 
-def create_climate_stripes_heatmap(df, selected_cities):
+def create_climate_heatmap(df, selected_cities):
     """Create a climate stripes style heatmap for selected cities"""
     if not selected_cities:
         return go.Figure()
@@ -75,7 +75,7 @@ def create_climate_stripes_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="Climate Stripes Heatmap - Temperature by City and Year",
+        title="Temperature by city and year",
         xaxis_title="Year",
         yaxis_title="City",
         height=max(300, len(selected_cities) * 40)  # Adjust height based on number of cities
@@ -133,27 +133,27 @@ selected_cities = st.multiselect(
 )
 
 if selected_cities:
-    # Filter data based on selected cities
-    filtered_df = df[df['city'].isin(selected_cities)]
+    ## Filter data based on selected cities
+    #filtered_df = df[df['city'].isin(selected_cities)]
     
-    # Plot line chart with dashed trend lines
-    fig_trend = px.line(
-        filtered_df,
-        x="year",
-        y="temperature",
-        color="city",  # Color by city for clarity
-        markers=True,
-        title="Temperature Evolution by City"
-    )
+    ## Plot line chart with dashed trend lines
+    #fig_trend = px.line(
+        #filtered_df,
+        #x="year",
+        #y="temperature",
+        #color="city",  # Color by city for clarity
+        #markers=True,
+        #title="Temperature va by City"
+    #)
     
-    # Make all lines dashed
-    fig_trend.update_traces(line=dict(dash="dash"))
+    ## Make all lines dashed
+    #fig_trend.update_traces(line=dict(dash="dash"))
     
-    st.plotly_chart(fig_trend, use_container_width=True)
+    #st.plotly_chart(fig_trend, use_container_width=True)
     
-    # 3. Climate Stripes Heatmap
-    st.subheader("Climate Stripes Heatmap")
-    fig_heatmap = create_climate_stripes_heatmap(df, selected_cities)
+    # 3. Climate Heatmap
+    st.subheader("Climate Heatmap")
+    fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
     
 else:
