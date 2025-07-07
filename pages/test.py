@@ -28,16 +28,14 @@ country_mapping = {
 def load_data():
     df = pd.read_csv("data/sample_temp_1950-2025.csv")
     df.columns = df.columns.str.lower()
-    
-    # Ensure latitude and longitude columns exist
+
     if 'latitude' not in df.columns:
         df['latitude'] = df['lat']
     if 'lng' not in df.columns and 'longitude' in df.columns:
         df['lng'] = df['longitude']
-    
-    # Add country names based on country codes
-    
-    df['country_name'] = df['country'].map(country_mapping)
+
+    df['country_name'] = df['country'].map(country_mapping).fillna(df['country'])
+    return df
     
 
 def create_climate_heatmap(df, selected_cities):
@@ -111,12 +109,12 @@ fig_map = px.scatter_mapbox(
     lon="lng",
     color="temperature",
     size_max=5,
-    size=[5] * len(latest_data),  # fixed point size
+    size=[5] * len(latest_data),
     hover_name="city",
     zoom=3,
     mapbox_style="open-street-map",
-    color_continuous_scale="RdBu_r",  
-    title=f" Average temperature in ({latest_year})"
+    color_continuous_scale="RdBu_r",
+    title=f"Average Temperature in {latest_year}"
 )
 # Force marker size
 fig_map.update_traces(marker=dict(size=6))
