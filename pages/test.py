@@ -124,7 +124,7 @@ st.plotly_chart(fig_map, use_container_width=True)
 st.markdown("""
     <style>
         .main-title {
-            background-color: #ADD8E6;
+            background-color: #f0f0f0;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -144,7 +144,7 @@ countries = sorted(df['country_name'].unique())
 selected_countries = st.multiselect(
     "Select countries:", 
     countries, 
-    default=countries[:3] if len(countries) > 3 else countries
+    default=countries[:1] if len(countries) > 1 else countries
 )
 
 # Filter cities based on selected countries
@@ -152,9 +152,9 @@ available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_
 
 # City selection (multiselect within selected countries)
 selected_cities = st.multiselect(
-    "Select cities to display:", 
+    "Select cities :", 
     available_cities, 
-    default=available_cities[:5] if len(available_cities) > 5 else available_cities
+    default=available_cities[:1] if len(available_cities) > 1 else available_cities
 )
 
 if selected_cities:
@@ -177,7 +177,7 @@ if selected_cities:
     #st.plotly_chart(fig_trend, use_container_width=True)
     
     # 3. Climate Heatmap
-    st.subheader("Climate Heatmap")
+    #st.subheader("Climate Heatmap")
     fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
     
