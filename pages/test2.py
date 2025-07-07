@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 # Country code to country name mapping for African countries
-COUNTRY_MAPPING = {
+country_mapping = {
     'DZ': 'Algeria', 'AO': 'Angola', 'BJ': 'Benin', 'BW': 'Botswana',
     'BF': 'Burkina Faso', 'BI': 'Burundi', 'CM': 'Cameroon', 'CV': 'Cape Verde',
     'CF': 'Central African Republic', 'TD': 'Chad', 'KM': 'Comoros', 'CG': 'Congo',
@@ -35,7 +35,7 @@ def load_data():
     
     # Add country names based on country codes
     if 'country_code' in df.columns:
-        df['country'] = df['country_code'].map(COUNTRY_MAPPING)
+        df['country'] = df['country_code'].map(country_mapping)
         # Fill any missing country names with the country code
         df['country'] = df['country'].fillna(df['country_code'])
     elif 'country' not in df.columns:
@@ -44,8 +44,8 @@ def load_data():
     
     return df
 
-def create_climate_stripes_heatmap(df, selected_cities):
-    """Create a climate stripes style heatmap for selected cities"""
+def create_climate_heatmap(df, selected_cities):
+    """Create a climate heatmap for selected cities"""
     if not selected_cities:
         return go.Figure()
     
@@ -65,7 +65,7 @@ def create_climate_stripes_heatmap(df, selected_cities):
         z=pivot_df.values,
         x=pivot_df.columns,
         y=pivot_df.index,
-        colorscale='RdBu_r',  # Climate stripes: blue (cold) to red (hot)
+        colorscale='RdBu_r',  
         showscale=True,
         colorbar=dict(title="Temperature (°C)"),
         hovertemplate='<b>%{y}</b><br>' +
@@ -75,7 +75,7 @@ def create_climate_stripes_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="Climate Stripes Heatmap - Temperature by City and Year",
+        title="Temperature by city and year",
         xaxis_title="Year",
         yaxis_title="City",
         height=max(300, len(selected_cities) * 40)  # Adjust height based on number of cities
@@ -94,7 +94,7 @@ latest_data = df[df['year'] == latest_year]
 
 # 1. OpenStreetMap showing city temperatures as fixed-size points
 st.subheader(f"Temperature map of african cities ({latest_year})")
-st.info("💡 Use the city selector below the map to choose cities, or select cities directly from the filters!")
+st.info("Use the city selector below the map to choose cities, or select cities directly from the filters!")
 
 fig_map = px.scatter_mapbox(
     latest_data,
