@@ -422,7 +422,7 @@ with col2:
     )
 
 # Dynamic country selection feedback (moved under the filters)
-if selected_countries:
+ # if selected_countries:
    # st.markdown(f"""
        # <div class="climate-info">
        #     <p><strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
