@@ -715,4 +715,4 @@ st.markdown("""
         <p><strong>Community Actions:</strong> Advocate for climate policies, support local environmental initiatives, educate others</p>
         <p><strong>Global Actions:</strong> Support international climate agreements, sustainable development projects, and climate research</p>
     </div>
-""", unsafe_allow_html
+""", unsafe_allow_html)
