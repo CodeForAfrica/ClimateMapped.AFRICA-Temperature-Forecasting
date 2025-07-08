@@ -323,7 +323,7 @@ with col1:
     st.markdown(f"""
         <div class="stats-card">
             <h5>Cities Monitored</h5>
-            <h3>{len(df['city'].unique())}</h3>
+            <h1>{len(df['city'].unique())}</h1>
         </div>
     """, unsafe_allow_html=True)
 
