@@ -5,13 +5,13 @@ import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
 
-st.set_page_config(layout="wide", page_title="Climate Action Africa", page_icon="🌍")
+st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="🌍")
 
 # Enhanced CSS styling with SDG colors and climate imagery
 st.markdown("""
     <style>
         .main-title {
-            background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);
+            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
@@ -260,7 +260,7 @@ def create_climate_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="🌡️ Temperature Anomalies by City and Year (1961-1990 Baseline)",
+        title="🌡️ Temperature Anomalies by city and year",
         xaxis_title="Year",
         yaxis_title="City",
         height=max(400, len(selected_cities) * 50),
@@ -399,9 +399,9 @@ st.markdown("""
 # Country selection
 countries = sorted(df['country_name'].unique())
 selected_countries = st.multiselect(
-    "🌍 Select countries to analyze:", 
+    "Select countries to analyze:", 
     countries, 
-    default=countries[:2] if len(countries) > 1 else countries,
+    default=countries[:1] if len(countries) > 1 else countries,
     help="Choose one or more African countries to examine their climate data"
 )
 
@@ -419,9 +419,9 @@ available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_
 
 # City selection
 selected_cities = st.multiselect(
-    "🏙️ Select cities for detailed analysis:", 
+    "Select cities for detailed analysis:", 
     available_cities, 
-    default=available_cities[:3] if len(available_cities) > 2 else available_cities,
+    default=available_cities[:1] if len(available_cities) > 2 else available_cities,
     help="Choose specific cities to analyze temperature trends and anomalies"
 )
 
@@ -437,7 +437,7 @@ if selected_cities:
     # Climate Heatmap
     st.markdown("""
         <div class="subtitle">
-            🌡️ Temperature Anomaly Heatmap
+            Temperature Anomaly Heatmap
         </div>
     """, unsafe_allow_html=True)
     
