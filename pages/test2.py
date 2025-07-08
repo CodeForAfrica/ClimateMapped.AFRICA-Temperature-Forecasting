@@ -427,7 +427,6 @@ with col2:
         default=available_cities[:1] if len(available_cities) > 2 else available_cities,
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
-
 # Dynamic country selection feedback (moved under the filters)
 if selected_countries:
     st.markdown(f"""
@@ -444,12 +443,7 @@ if selected_cities:
         narrative = generate_climate_narrative(city_data, city, country_name)
         if narrative:
             st.markdown(narrative, unsafe_allow_html=True)
-    # Climate Heatmap
-    #st.markdown("""
-       # <div class="subtitle">
-       #     Temperature Anomaly Heatmap
-       # </div>
-   # """, unsafe_allow_html=True)
+            
     
     fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
