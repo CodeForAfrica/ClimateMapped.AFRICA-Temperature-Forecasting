@@ -4,234 +4,165 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 
+st.set_page_config(layout="wide")
+
 # Country code to country name mapping for African countries
-country_mapping = {
-    'DZ': 'Algeria', 'AO': 'Angola', 'BJ': 'Benin', 'BW': 'Botswana',
-    'BF': 'Burkina Faso', 'BI': 'Burundi', 'CM': 'Cameroon', 'CV': 'Cape Verde',
-    'CF': 'Central African Republic', 'TD': 'Chad', 'KM': 'Comoros', 'CG': 'Congo',
-    'CD': 'Democratic Republic of Congo', 'CI': 'Côte d\'Ivoire', 'DJ': 'Djibouti',
-    'EG': 'Egypt', 'GQ': 'Equatorial Guinea', 'ER': 'Eritrea', 'ET': 'Ethiopia',
-    'GA': 'Gabon', 'GM': 'Gambia', 'GH': 'Ghana', 'GN': 'Guinea', 'GW': 'Guinea-Bissau',
-    'KE': 'Kenya', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'MG': 'Madagascar',
-    'MW': 'Malawi', 'ML': 'Mali', 'MR': 'Mauritania', 'MU': 'Mauritius',
-    'MA': 'Morocco', 'MZ': 'Mozambique', 'NA': 'Namibia', 'NE': 'Niger',
-    'NG': 'Nigeria', 'RW': 'Rwanda', 'ST': 'São Tomé and Príncipe', 'SN': 'Senegal',
-    'SC': 'Seychelles', 'SL': 'Sierra Leone', 'SO': 'Somalia', 'ZA': 'South Africa',
-    'SS': 'South Sudan', 'SD': 'Sudan', 'SZ': 'Eswatini', 'TZ': 'Tanzania',
-    'TG': 'Togo', 'TN': 'Tunisia', 'UG': 'Uganda', 'ZM': 'Zambia', 'ZW': 'Zimbabwe'
-}
+country_mapping = { ... }  # (keep your existing dictionary)
 
 # Load and prepare the dataset
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/sample_temp_1950-2025.csv")
     df.columns = df.columns.str.lower()
-    
-    # Ensure latitude and longitude columns exist
+
     if 'latitude' not in df.columns:
         df['latitude'] = df['lat']
     if 'lng' not in df.columns and 'longitude' in df.columns:
         df['lng'] = df['longitude']
-    
-    # Add country names based on country codes
-    if 'country_code' in df.columns:
-        df['country'] = df['country_code'].map(country_mapping)
-        # Fill any missing country names with the country code
-        df['country'] = df['country'].fillna(df['country_code'])
-    elif 'country' not in df.columns:
-        # If no country info, create a default
-        df['country'] = 'Unknown'
-    
+
+    df['country_name'] = df['country'].map(country_mapping).fillna(df['country'])
+
+    # Calculate baseline average (1961-1990)
+    baseline = df[(df['year'] >= 1961) & (df['year'] <= 1990)]
+    baseline_avg = baseline.groupby('city')['temperature'].mean().reset_index()
+    baseline_avg.rename(columns={'temperature': 'baseline_temp'}, inplace=True)
+
+    # Merge to main df to compute anomaly
+    df = df.merge(baseline_avg, on='city', how='left')
+    df['temp_anomaly'] = df['temperature'] - df['baseline_temp']
+
     return df
 
 def create_climate_heatmap(df, selected_cities):
-    """Create a climate heatmap for selected cities"""
     if not selected_cities:
         return go.Figure()
-    
-    # Filter data for selected cities
+
     filtered_df = df[df['city'].isin(selected_cities)]
-    
-    # Create pivot table for heatmap
-    pivot_df = filtered_df.pivot_table(
-        index='city', 
-        columns='year', 
-        values='temperature',
-        aggfunc='mean'
-    )
-    
-    # Create heatmap with climate stripes colors
+    pivot_df = filtered_df.pivot_table(index='city', columns='year', values='temperature', aggfunc='mean')
+    global_min = df['temperature'].min()
+    global_max = df['temperature'].max()
+
     fig = go.Figure(data=go.Heatmap(
         z=pivot_df.values,
         x=pivot_df.columns,
         y=pivot_df.index,
-        colorscale='RdBu_r',  
+        zmin=global_min,
+        zmax=global_max,
+        colorscale='RdBu_r',
         showscale=True,
-        colorbar=dict(title="Temperature (°C)"),
-        hovertemplate='<b>%{y}</b><br>' +
-                      'Year: %{x}<br>' +
-                      'Temperature: %{z:.1f}°C<br>' +
-                      '<extra></extra>'
+        colorbar=dict(title="Temperature (\u00b0C)"),
+        hovertemplate='<b>%{y}</b><br>Year: %{x}<br>Temperature: %{z:.1f}\u00b0C<extra></extra>'
     ))
-    
+
     fig.update_layout(
-        title="Temperature by city and year",
+        title="Climate Stripes Heatmap",
         xaxis_title="Year",
         yaxis_title="City",
-        height=max(300, len(selected_cities) * 40)  # Adjust height based on number of cities
+        height=max(300, len(selected_cities) * 40)
     )
-    
+
     return fig
 
 # Load data
 df = load_data()
 
-st.title("Africa Temperature 2025")
+# Hero section
+st.markdown("""
+    <style>
+        .main-title {
+            background-color: #DFF0FF;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #003366;
+            font-size: 38px;
+            font-weight: bold;
+        }
+    </style>
+    <div class="main-title">Africa Climate Dashboard 🌍</div>
+""", unsafe_allow_html=True)
 
-# Get latest year in the dataset
+st.markdown("""
+Welcome to the Africa Climate Dashboard. This tool helps explore long-term temperature trends across African cities.
+It integrates SDG 13 (Climate Action) and presents temperature anomalies relative to a 1961-1990 baseline.
+""")
+
 latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
-# 1. OpenStreetMap showing city temperatures as fixed-size points
-st.subheader(f"Temperature map of african cities ({latest_year})")
-st.info("Use the city selector below the map to choose cities, or select cities directly from the filters!")
-
+st.subheader(f"📍 Map of African Cities ({latest_year})")
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
     lon="lng",
     color="temperature",
-    size_max=5,
-    size=[5] * len(latest_data),  # fixed point size
+    size=[5] * len(latest_data),
     hover_name="city",
-    hover_data={"temperature": ":.1f", "country": True, "latitude": False, "lng": False},
     zoom=3,
     mapbox_style="open-street-map",
-    color_continuous_scale="RdBu_r",  # Climate strip style: blue to red
-    title=f"Temperatures in African Cities ({latest_year})"
+    color_continuous_scale="RdBu_r",
+    title=f"Average Temperature in {latest_year}"
 )
-# Force marker size and improve hover
-fig_map.update_traces(marker=dict(size=8))
-fig_map.update_layout(height=500)
-st.plotly_chart(fig_map, use_container_width=True)
+fig_map.update_traces(marker=dict(size=6))
+st.plotly_chart(fig_map, use_container_width=True, height=700)
 
-# Quick city selection from map data
-st.subheader("Quick City Selection")
-col1, col2 = st.columns([3, 1])
+st.markdown("""
+---
+### 🌡️ Explore Trends by Country and City
+""")
 
-with col1:
-    # Create a searchable selectbox for cities
-    city_options = sorted(latest_data['city'].unique())
-    quick_selected = st.multiselect(
-        "🎯 Quickly select cities from the map:",
-        city_options,
-        help="Start typing to search for cities",
-        key="quick_city_select"
-    )
-
-with col2:
-    if st.button("🔄 Use Quick Selection", disabled=not quick_selected):
-        st.session_state.use_quick_selection = True
-        st.session_state.quick_cities = quick_selected
-        st.rerun()
-
-# Initialize session state
-if 'use_quick_selection' not in st.session_state:
-    st.session_state.use_quick_selection = False
-if 'quick_cities' not in st.session_state:
-    st.session_state.quick_cities = []
-
-# 2. Hierarchical filters: Country -> Cities OR Quick Selection
-st.subheader("Temperature trend over the years by city")
-
-# Create tabs for different selection methods
-tab1, tab2 = st.tabs(["🌍 Filter by Country", "⚡ Quick Selection"])
-
-with tab1:
-    # Country selection
-    countries = sorted(df['country'].unique())
-    selected_countries = st.multiselect(
-        "Select countries:", 
-        countries, 
-        default=countries[:3] if len(countries) > 3 else countries,
-        key="country_filter"
-    )
-    
-    # Filter cities based on selected countries
-    available_cities = df[df['country'].isin(selected_countries)]['city'].sort_values().unique()
-    
-    # City selection (multiselect within selected countries)
-    filter_selected_cities = st.multiselect(
-        "Select cities to display:", 
-        available_cities, 
-        default=available_cities[:5] if len(available_cities) > 5 else available_cities,
-        key="city_filter"
-    )
-
-with tab2:
-    if st.session_state.use_quick_selection and st.session_state.quick_cities:
-        st.success(f"Using quick selection: {', '.join(st.session_state.quick_cities)}")
-        if st.button("Clear Quick Selection"):
-            st.session_state.use_quick_selection = False
-            st.session_state.quick_cities = []
-            st.rerun()
-    else:
-        st.info("Use the 'Quick City Selection' section above to select cities from the map!")
-
-# Determine which cities to display (prioritize quick selection if available)
-if st.session_state.use_quick_selection and st.session_state.quick_cities:
-    selected_cities = st.session_state.quick_cities
-    selection_method = "Quick Selection"
-else:
-    selected_cities = filter_selected_cities
-    selection_method = "Filter Selection"
-
-# Display current selection method
-if selected_cities:
-    st.info(f"Currently showing: **{selection_method}** ({len(selected_cities)} cities)")
-else:
-    st.info("No cities selected. Use either the country filters or quick city selection above.")
+countries = sorted(df['country_name'].unique())
+selected_countries = st.multiselect("Select countries:", countries, default=countries[:1])
+available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
+selected_cities = st.multiselect("Select cities:", available_cities, default=available_cities[:1])
 
 if selected_cities:
-    # Filter data based on selected cities
     filtered_df = df[df['city'].isin(selected_cities)]
-    
-    # Plot line chart with dashed trend lines
-    fig_trend = px.line(
-        filtered_df,
-        x="year",
-        y="temperature",
-        color="city",  # Color by city for clarity
-        markers=True,
-        title="Temperature Evolution by City"
+
+    # Line chart for anomaly
+    st.subheader("🔍 Temperature Trends and Anomalies")
+    fig_line = go.Figure()
+    warning_shown = False
+
+    for city in selected_cities:
+        city_data = filtered_df[filtered_df['city'] == city]
+        fig_line.add_trace(go.Scatter(
+            x=city_data['year'],
+            y=city_data['temp_anomaly'],
+            mode='lines+markers',
+            name=city,
+            line=dict(dash='dash')
+        ))
+
+        # Warning if anomaly > 1.5C in last 5 years
+        recent_anomaly = city_data[city_data['year'] >= latest_year - 5]['temp_anomaly'].mean()
+        if recent_anomaly >= 1.5:
+            st.warning(f"Warning: Temperature anomaly in **{city}** over the last 5 years exceeds **1.5°C**! 🚨")
+            warning_shown = True
+
+    fig_line.update_layout(
+        title="Temperature Anomalies (relative to 1961-1990 baseline)",
+        xaxis_title="Year",
+        yaxis_title="Temperature Anomaly (°C)",
+        template="plotly_white"
     )
-    
-    # Make all lines dashed
-    fig_trend.update_traces(line=dict(dash="dash"))
-    
-    st.plotly_chart(fig_trend, use_container_width=True)
-    
-    # 3. Climate Stripes Heatmap
-    st.subheader("Climate Stripes Heatmap")
-    fig_heatmap = create_climate_stripes_heatmap(df, selected_cities)
+
+    st.plotly_chart(fig_line, use_container_width=True)
+
+    # Heatmap
+    st.subheader("🌌 Climate Stripes View")
+    fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
-    
+
+    if not warning_shown:
+        st.success("No critical anomalies detected in selected cities. 🌿")
+
 else:
-    st.info("Please select at least one city to display the temperature trends and heatmap.")
+    st.info("Please select at least one city to see trends and heatmaps.")
 
-# Display country-city information
-if st.session_state.use_quick_selection and st.session_state.quick_cities:
-    st.subheader("Quick Selected Cities")
-    # Group quick selected cities by country
-    quick_cities_df = df[df['city'].isin(st.session_state.quick_cities)][['country', 'city']].drop_duplicates()
-    for country in quick_cities_df['country'].unique():
-        cities_in_country = quick_cities_df[quick_cities_df['country'] == country]['city'].unique()
-        st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
-elif selected_countries:
-    st.subheader("Selected Countries and Cities")
-    for country in selected_countries:
-        cities_in_country = df[df['country'] == country]['city'].unique()
-        st.write(f"**{country}**: {', '.join(sorted(cities_in_country))}")
-
-# Footer
-st.markdown("Data source: `africa_temperatures.csv`")
+st.markdown("""
+---
+#### 🌍 Learn More
+- [UN SDG 13 - Climate Action](https://sdgs.un.org/goals/goal13)
+- [Copernicus Climate Data Store](https://cds.climate.copernicus.eu/)
+""")
