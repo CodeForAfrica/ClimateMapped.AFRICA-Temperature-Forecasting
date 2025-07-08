@@ -260,7 +260,7 @@ def create_climate_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        #title="🌡️ Temperature Anomalies by city and year",
+        title="Temperature Anomalies by city and year",
         xaxis_title="Year",
         yaxis_title="City",
         height=max(400, len(selected_cities) * 50),
@@ -322,8 +322,8 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h4>Cities Monitored</h4>
-            <h2>{len(df['city'].unique())}</h2>
+            <h5>Cities Monitored</h5>
+            <h3>{len(df['city'].unique())}</h3>
         </div>
     """, unsafe_allow_html=True)
 
