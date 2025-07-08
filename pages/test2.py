@@ -20,7 +20,7 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 30px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            border: 2px solid #FFD700;
+            #border: 2px solid #FFD700;
         }
         
         .sdg-header {
@@ -74,7 +74,7 @@ st.markdown("""
         }
         
         .subtitle {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
@@ -322,7 +322,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h5>Cities Monitored</h5>
+            <h4>Cities Monitored</h4>
             <h2>{len(df['city'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
