@@ -428,7 +428,22 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Rest of your code remains the same...
+# Dynamic country selection feedback (moved under the filters)
+if selected_countries:
+    st.markdown(f"""
+        <div class="climate-info">
+            <p> <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
+            <p> <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
+        </div>
+    """, unsafe_allow_html=True)
+if selected_cities:
+    # Generate climate narratives for each selected city
+    for city in selected_cities:
+        city_data = df[df['city'] == city]
+        country_name = city_data['country_name'].iloc[0]
+        narrative = generate_climate_narrative(city_data, city, country_name)
+        if narrative:
+            st.markdown(narrative, unsafe_allow_html=True)
     # Climate Heatmap
     #st.markdown("""
        # <div class="subtitle">
