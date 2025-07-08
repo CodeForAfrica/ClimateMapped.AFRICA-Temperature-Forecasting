@@ -7,11 +7,11 @@ from datetime import datetime
 
 st.set_page_config(layout="wide", page_title="Climate Action Africa", page_icon="🌍")
 
-# Enhanced CSS styling with harmonized blue colors
+# Enhanced CSS styling with SDG colors and climate imagery
 st.markdown("""
     <style>
         .main-title {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
@@ -20,10 +20,13 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 30px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid #FFD700;
         }
         
         .sdg-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -32,6 +35,12 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .climate-warning {
@@ -77,16 +86,12 @@ st.markdown("""
         }
         
         .sdg-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             margin: 15px 0;
-            box-shadow: 0 6px 20px rgba(102,126,234,0.3);
-            height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            box-shadow: 0 6px 20px rgba(240,147,251,0.3);
         }
         
         .stats-card {
@@ -97,16 +102,6 @@ st.markdown("""
             text-align: center;
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(79,172,254,0.3);
-        }
-        
-        .info-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            border-radius: 8px;
-            color: white;
-            margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
-            text-align: center;
         }
         
         .footer {
@@ -188,40 +183,43 @@ def generate_climate_narrative(city_data, city_name, country_name):
         # Generate narrative based on temperature trends
         if temp_change > 2.0:
             narrative_class = "climate-warning"
+            emoji = "🔥"
             title = "CRITICAL TEMPERATURE RISE DETECTED"
             message = f"""
             <div class="{narrative_class}">
-                <h3>{title}</h3>
+                <h3>{emoji} {title} {emoji}</h3>
                 <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
-                <p><strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
+                <p>🌍 This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
+                <p>💡 <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
             </div>
             """
         elif temp_change > 1.0:
             narrative_class = "climate-info"
+            emoji = "⚠️"
             title = "MODERATE WARMING TREND"
             message = f"""
             <div class="{narrative_class}">
-                <h3>{title}</h3>
+                <h3>{emoji} {title} {emoji}</h3>
                 <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p>This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
-                <p>Monitor trends closely and implement adaptation strategies.</p>
+                <p>🎯 This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
+                <p>📊 Monitor trends closely and implement adaptation strategies.</p>
             </div>
             """
         else:
             narrative_class = "climate-good"
+            emoji = "✅"
             title = "STABLE TEMPERATURE PATTERN"
             message = f"""
             <div class="{narrative_class}">
-                <h3>{title}</h3>
+                <h3>{emoji} {title} {emoji}</h3>
                 <p><strong>{city_name}, {country_name}</strong> shows relatively stable temperatures with a change of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> compared to the 1961-1990 baseline</p>
-                <p>Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
+                <p>🌱 Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
             </div>
             """
         
@@ -262,7 +260,7 @@ def create_climate_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="Temperature Anomalies by City and Year (1961-1990 Baseline)",
+        title="🌡️ Temperature Anomalies by City and Year (1961-1990 Baseline)",
         xaxis_title="Year",
         yaxis_title="City",
         height=max(400, len(selected_cities) * 50),
@@ -274,14 +272,14 @@ def create_climate_heatmap(df, selected_cities):
 # Main App
 st.markdown("""
     <div class="main-title">
-        Climate Action Africa Dashboard
+        🌍 Climate Action Africa Dashboard 🌍
     </div>
 """, unsafe_allow_html=True)
 
 # SDG Information Section
 st.markdown("""
     <div class="sdg-header">
-        Supporting UN Sustainable Development Goals
+        🎯 Supporting UN Sustainable Development Goals 🎯
     </div>
 """, unsafe_allow_html=True)
 
@@ -290,7 +288,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""
         <div class="sdg-card">
-            <h3>SDG 13: Climate Action</h3>
+            <h3>🌍 SDG 13: Climate Action</h3>
             <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -298,7 +296,7 @@ with col1:
 with col2:
     st.markdown("""
         <div class="sdg-card">
-            <h3>SDG 11: Sustainable Cities</h3>
+            <h3>🏙️ SDG 11: Sustainable Cities</h3>
             <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -306,7 +304,7 @@ with col2:
 with col3:
     st.markdown("""
         <div class="sdg-card">
-            <h3>SDG 17: Partnerships</h3>
+            <h3>🤝 SDG 17: Partnerships</h3>
             <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -324,7 +322,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Cities Monitored</h3>
+            <h3>📊 Cities Monitored</h3>
             <h2>{len(df['city'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -332,7 +330,7 @@ with col1:
 with col2:
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Countries Covered</h3>
+            <h3>🌍 Countries Covered</h3>
             <h2>{len(df['country_name'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -341,7 +339,7 @@ with col3:
     avg_temp = latest_data['temperature'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Average Temperature {latest_year}</h3>
+            <h3>🌡️ Average Temperature {latest_year}</h3>
             <h2>{avg_temp:.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -350,15 +348,15 @@ with col4:
     avg_anomaly = latest_data['temperature_anomaly'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Average Anomaly {latest_year}</h3>
+            <h3>📈 Average Anomaly {latest_year}</h3>
             <h2>{avg_anomaly:+.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
 
-# Interactive Map with average temperature
+# Interactive Map
 st.markdown("""
     <div class="subtitle">
-        Interactive Climate Map of Africa
+        🗺️ Interactive Climate Map of Africa
     </div>
 """, unsafe_allow_html=True)
 
@@ -384,13 +382,13 @@ st.plotly_chart(fig_map, use_container_width=True)
 # Enhanced filtering section
 st.markdown("""
     <div class="subtitle">
-        Detailed Climate Analysis
+        📊 Detailed Climate Analysis
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
     <div class="climate-info">
-        <h4>How to Use This Dashboard:</h4>
+        <h4>🔍 How to Use This Dashboard:</h4>
         <p>1. Select countries from the dropdown below</p>
         <p>2. Choose specific cities to analyze temperature trends</p>
         <p>3. View the climate heatmap showing temperature anomalies over time</p>
@@ -398,50 +396,34 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Aligned filters
-col1, col2 = st.columns(2)
+# Country selection
+countries = sorted(df['country_name'].unique())
+selected_countries = st.multiselect(
+    "🌍 Select countries to analyze:", 
+    countries, 
+    default=countries[:2] if len(countries) > 1 else countries,
+    help="Choose one or more African countries to examine their climate data"
+)
 
-with col1:
-    # Country selection
-    countries = sorted(df['country_name'].unique())
-    selected_countries = st.multiselect(
-        "Select countries to analyze:", 
-        countries, 
-        default=['Nigeria'] if 'Nigeria' in countries else countries[:1],
-        help="Choose one or more African countries to examine their climate data"
-    )
-
-with col2:
-    # Filter cities based on selected countries
-    available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
-    
-    # City selection
-    selected_cities = st.multiselect(
-        "Select cities for detailed analysis:", 
-        available_cities, 
-        default=available_cities[:1] if len(available_cities) > 0 else [],
-        help="Choose specific cities to analyze temperature trends and anomalies"
-    )
-
-# Information cards below filters
-col1, col2 = st.columns(2)
-
-with col1:
+# Dynamic country selection feedback
+if selected_countries:
     st.markdown(f"""
-        <div class="info-card">
-            <h4>Selected Countries</h4>
-            <p>{', '.join(selected_countries) if selected_countries else 'None selected'}</p>
+        <div class="climate-info">
+            <p>📍 <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
+            <p>🏙️ <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
         </div>
     """, unsafe_allow_html=True)
 
-with col2:
-    total_cities = len(df[df['country_name'].isin(selected_countries)]['city'].unique()) if selected_countries else 0
-    st.markdown(f"""
-        <div class="info-card">
-            <h4>Total Cities Available</h4>
-            <p>{total_cities}</p>
-        </div>
-    """, unsafe_allow_html=True)
+# Filter cities based on selected countries
+available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
+
+# City selection
+selected_cities = st.multiselect(
+    "🏙️ Select cities for detailed analysis:", 
+    available_cities, 
+    default=available_cities[:3] if len(available_cities) > 2 else available_cities,
+    help="Choose specific cities to analyze temperature trends and anomalies"
+)
 
 if selected_cities:
     # Generate climate narratives for each selected city
@@ -455,7 +437,7 @@ if selected_cities:
     # Climate Heatmap
     st.markdown("""
         <div class="subtitle">
-            Temperature Anomaly Heatmap
+            🌡️ Temperature Anomaly Heatmap
         </div>
     """, unsafe_allow_html=True)
     
@@ -465,7 +447,7 @@ if selected_cities:
     # Additional insights
     st.markdown("""
         <div class="climate-info">
-            <h4>Understanding Temperature Anomalies:</h4>
+            <h4>📖 Understanding Temperature Anomalies:</h4>
             <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
             <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
             <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
@@ -476,7 +458,7 @@ if selected_cities:
 else:
     st.markdown("""
         <div class="climate-info">
-            <h4>Get Started:</h4>
+            <h4>🎯 Get Started:</h4>
             <p>Please select at least one country and city to begin your climate analysis journey!</p>
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
@@ -485,7 +467,7 @@ else:
 # Call to Action
 st.markdown("""
     <div class="sdg-card">
-        <h3>Take Climate Action Today!</h3>
+        <h3>🌱 Take Climate Action Today!</h3>
         <p><strong>Individual Actions:</strong> Reduce energy consumption, use renewable energy, support sustainable transportation</p>
         <p><strong>Community Actions:</strong> Advocate for climate policies, support local environmental initiatives, educate others</p>
         <p><strong>Global Actions:</strong> Support international climate agreements, sustainable development projects, and climate research</p>
@@ -495,9 +477,9 @@ st.markdown("""
 # Enhanced Footer
 st.markdown("""
     <div class="footer">
-        <h4>Climate Action Africa Dashboard</h4>
+        <h4>🌍 Climate Action Africa Dashboard</h4>
         <p>Data source: <a href="https://cds.climate.copernicus.eu/" target="_blank" style="color: #4ECDC4;">Copernicus Climate Data Store</a></p>
         <p>Supporting UN SDGs: Climate Action (13) • Sustainable Cities (11) • Partnerships (17)</p>
-        <p>Together, we can build a sustainable future for Africa and the world!</p>
+        <p>🤝 Together, we can build a sustainable future for Africa and the world!</p>
     </div>
 """, unsafe_allow_html=True)
