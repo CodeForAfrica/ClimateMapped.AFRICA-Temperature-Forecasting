@@ -400,16 +400,6 @@ st.markdown("""
 countries = sorted(df['country_name'].unique())
 
 # Create two columns for aligned filters
-# Custom CSS to change multiselect background to #4ECDC4
-st.markdown("""
-<style>
-.stMultiSelect > div > div {
-    background-color: #4ECDC4 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# Create two columns for aligned filters
 col1, col2 = st.columns(2)
 
 with col1:
