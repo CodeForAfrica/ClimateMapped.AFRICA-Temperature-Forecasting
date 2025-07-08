@@ -322,7 +322,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Cities Monitored</h3>
+            <h4>Cities Monitored</h4>
             <h2>{len(df['city'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -330,7 +330,7 @@ with col1:
 with col2:
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Countries Covered</h3>
+            <h4>Countries Covered</h4>
             <h2>{len(df['country_name'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -339,7 +339,7 @@ with col3:
     avg_temp = latest_data['temperature'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Average Temperature {latest_year}</h3>
+            <h4>Average Temperature {latest_year}</h4>
             <h2>{avg_temp:.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -348,7 +348,7 @@ with col4:
     avg_anomaly = latest_data['temperature_anomaly'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h3>Average Anomaly {latest_year}</h3>
+            <h4>Average Anomaly {latest_year}</h4>
             <h2>{avg_anomaly:+.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
