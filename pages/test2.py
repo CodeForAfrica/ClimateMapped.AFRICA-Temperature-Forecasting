@@ -411,30 +411,35 @@ st.markdown("""
 
 # Create two columns for aligned filters
 col1, col2 = st.columns(2)
+
 with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
         countries, 
-        default=['Senegal'] if 'Senegal' in countries else countries[:1],
+        default=['Nigeria', 'South Africa'] if 'Nigeria' in countries and 'South Africa' in countries else countries[:2],
         help="Choose one or more African countries to examine their climate data"
     )
+
 # Filter cities based on selected countries
 available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
+
 with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
         available_cities, 
-        default=available_cities[:1] if len(available_cities) > 2 else available_cities,
+        default=available_cities[:2] if len(available_cities) > 2 else available_cities,
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
+
 # Dynamic country selection feedback (moved under the filters)
 if selected_countries:
     st.markdown(f"""
         <div class="climate-info">
-            <p> <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
-            <p> <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
+            <p>📍 <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
+            <p>🏙️ <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
         </div>
     """, unsafe_allow_html=True)
+
 if selected_cities:
     # Generate climate narratives for each selected city
     for city in selected_cities:
@@ -443,7 +448,12 @@ if selected_cities:
         narrative = generate_climate_narrative(city_data, city, country_name)
         if narrative:
             st.markdown(narrative, unsafe_allow_html=True)
-            
+
+    #st.markdown("""
+      #  <div class="subtitle">
+       #     Temperature Anomaly Heatmap
+      #  </div>
+   # """, unsafe_allow_html=True)
     
     fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
