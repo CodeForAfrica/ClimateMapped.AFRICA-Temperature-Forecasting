@@ -386,8 +386,7 @@ fig_map.add_trace(go.Scattermapbox(
         color=latest_data["temperature"],
         colorscale="RdYlBu_r",
         showscale=True,
-        colorbar=dict(title="Temperature (°C)", x=1.02),
-        line=dict(width=2, color='white')
+        colorbar=dict(title="Temperature (°C)", x=1.02)
     ),
     text=latest_data["city"],
     textposition="top center",
