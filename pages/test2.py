@@ -322,8 +322,8 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h5>Cities Monitored</h5>
-            <h1>{len(df['city'].unique())}</h1>
+            <h5>Cities and Towns Monitored</h5>
+            <h2>{len(df['city'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
 
