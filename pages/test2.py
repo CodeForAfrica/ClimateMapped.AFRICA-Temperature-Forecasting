@@ -440,11 +440,11 @@ if selected_cities:
             st.markdown(narrative, unsafe_allow_html=True)
     
     # Climate Heatmap
-    st.markdown("""
-        <div class="subtitle">
-            Temperature Anomaly Heatmap
-        </div>
-    """, unsafe_allow_html=True)
+    #st.markdown("""
+       # <div class="subtitle">
+       #     Temperature Anomaly Heatmap
+       # </div>
+   # """, unsafe_allow_html=True)
     
     fig_heatmap = create_climate_heatmap(df, selected_cities)
     st.plotly_chart(fig_heatmap, use_container_width=True)
