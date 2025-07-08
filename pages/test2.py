@@ -425,8 +425,8 @@ with col2:
 if selected_countries:
     st.markdown(f"""
         <div class="climate-info">
-            <p>📍 <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
-            <p>🏙️ <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
+            <p><strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
+            <p><strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
         </div>
     """, unsafe_allow_html=True)
 
