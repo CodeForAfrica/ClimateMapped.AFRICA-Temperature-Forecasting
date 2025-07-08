@@ -406,7 +406,7 @@ with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
         countries, 
-        default=['Nigeria', 'South Africa'] if 'Nigeria' in countries and 'South Africa' in countries else countries[:2],
+        default=['Senegal'] if 'Senegal' in countries else countries[:1],
         help="Choose one or more African countries to examine their climate data"
     )
 
@@ -417,7 +417,7 @@ with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
         available_cities, 
-        default=available_cities[:2] if len(available_cities) > 2 else available_cities,
+        default=available_cities[:1] if len(available_cities) > 2 else available_cities,
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
