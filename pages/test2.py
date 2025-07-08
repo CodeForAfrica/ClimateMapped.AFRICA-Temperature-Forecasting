@@ -360,24 +360,53 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-fig_map = px.scatter_mapbox(
+# Create a more prominent city visualization using density mapbox
+fig_map = px.density_mapbox(
     latest_data,
     lat="latitude",
     lon="lng",
-    color="temperature_anomaly",
-    size_max=8,
-    size=[8] * len(latest_data),
-    hover_name="city",
-    hover_data={"temperature": ":.1f", "temperature_anomaly": ":.2f"},
+    z="temperature",
+    radius=25,
+    center=dict(lat=0, lon=20),
     zoom=3,
     mapbox_style="open-street-map",
-    color_continuous_scale="RdBu_r",
-    title=f"🌡️ Temperature Anomalies in {latest_year} (vs 1961-1990 baseline)",
-    color_continuous_midpoint=0
+    color_continuous_scale="RdYlBu_r",
+    title=f"🌡️ Average Temperature Distribution in {latest_year}",
+    hover_name="city",
+    hover_data={"temperature": ":.1f", "temperature_anomaly": ":.2f"}
 )
 
-fig_map.update_traces(marker=dict(size=8))
-fig_map.update_layout(height=600)
+# Add city markers on top of the heatmap
+fig_map.add_trace(go.Scattermapbox(
+    lat=latest_data["latitude"],
+    lon=latest_data["lng"],
+    mode='markers+text',
+    marker=dict(
+        size=12,
+        color=latest_data["temperature"],
+        colorscale="RdYlBu_r",
+        showscale=True,
+        colorbar=dict(title="Temperature (°C)", x=1.02),
+        line=dict(width=2, color='white')
+    ),
+    text=latest_data["city"],
+    textposition="top center",
+    textfont=dict(size=10, color="black"),
+    hovertemplate='<b>%{text}</b><br>' +
+                  'Temperature: %{marker.color:.1f}°C<br>' +
+                  '<extra></extra>',
+    showlegend=False
+))
+
+fig_map.update_layout(
+    height=600,
+    font=dict(size=12),
+    mapbox=dict(
+        center=dict(lat=0, lon=20),
+        zoom=3
+    )
+)
+
 st.plotly_chart(fig_map, use_container_width=True)
 
 # Enhanced filtering section
@@ -448,11 +477,11 @@ if selected_cities:
     # Additional insights
     st.markdown("""
         <div class="climate-info">
-            <h4>📖 Understanding Temperature Anomalies:</h4>
-            <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
-            <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
-            <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
-            <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+            <h4>🗺️ Understanding the Temperature Map:</h4>
+            <p>• <strong>Colored areas</strong>: Show temperature distribution across regions</p>
+            <p>• <strong>City markers</strong>: Specific temperature readings for each monitored city</p>
+            <p>• <strong>Color scale</strong>: Red/Orange = Hotter, Blue = Cooler temperatures</p>
+            <p>• <strong>Hover information</strong>: Click on cities to see detailed temperature data</p>
         </div>
     """, unsafe_allow_html=True)
     
