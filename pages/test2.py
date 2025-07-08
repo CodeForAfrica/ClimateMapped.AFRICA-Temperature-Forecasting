@@ -288,7 +288,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""
         <div class="sdg-card">
-            <h3>🌍 SDG 13: Climate Action</h3>
+            <h4>🌍 SDG 13: Climate Action</h4>
             <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -296,7 +296,7 @@ with col1:
 with col2:
     st.markdown("""
         <div class="sdg-card">
-            <h3>🏙️ SDG 11: Sustainable Cities</h3>
+            <h4>🏙️ SDG 11: Sustainable Cities</h4>
             <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -304,7 +304,7 @@ with col2:
 with col3:
     st.markdown("""
         <div class="sdg-card">
-            <h3>🤝 SDG 17: Partnerships</h3>
+            <h4>🤝 SDG 17: Partnerships</h4>
             <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -330,7 +330,7 @@ with col1:
 with col2:
     st.markdown(f"""
         <div class="stats-card">
-            <h3>🌍 Countries Covered</h3>
+            <h3>Countries Covered</h3>
             <h2>{len(df['country_name'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
