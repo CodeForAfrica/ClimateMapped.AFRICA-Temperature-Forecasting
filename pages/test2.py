@@ -400,8 +400,17 @@ st.markdown("""
 countries = sorted(df['country_name'].unique())
 
 # Create two columns for aligned filters
-col1, col2 = st.columns(2)
+# Custom CSS to change multiselect background to #4ECDC4
+st.markdown("""
+<style>
+.stMultiSelect > div > div {
+    background-color: #4ECDC4 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
+# Create two columns for aligned filters
+col1, col2 = st.columns(2)
 with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
@@ -409,10 +418,8 @@ with col1:
         default=['Senegal'] if 'Senegal' in countries else countries[:1],
         help="Choose one or more African countries to examine their climate data"
     )
-
 # Filter cities based on selected countries
 available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
-
 with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
@@ -421,24 +428,7 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Dynamic country selection feedback (moved under the filters)
-if selected_countries:
-    st.markdown(f"""
-        <div class="climate-info">
-            <p> <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
-            <p> <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-if selected_cities:
-    # Generate climate narratives for each selected city
-    for city in selected_cities:
-        city_data = df[df['city'] == city]
-        country_name = city_data['country_name'].iloc[0]
-        narrative = generate_climate_narrative(city_data, city, country_name)
-        if narrative:
-            st.markdown(narrative, unsafe_allow_html=True)
-    
+# Rest of your code remains the same...
     # Climate Heatmap
     #st.markdown("""
        # <div class="subtitle">
