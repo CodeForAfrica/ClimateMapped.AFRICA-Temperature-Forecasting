@@ -356,7 +356,7 @@ with col4:
 # Interactive Map
 st.markdown("""
     <div class="subtitle">
-        🗺️ Interactive Climate Map of Africa
+        Interactive Climate Map of Africa
     </div>
 """, unsafe_allow_html=True)
 
@@ -382,7 +382,7 @@ st.plotly_chart(fig_map, use_container_width=True)
 # Enhanced filtering section
 st.markdown("""
     <div class="subtitle">
-        📊 Detailed Climate Analysis
+        Detailed Climate Analysis
     </div>
 """, unsafe_allow_html=True)
 
@@ -396,34 +396,39 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Country selection
+# Aligned Country and City selection
 countries = sorted(df['country_name'].unique())
-selected_countries = st.multiselect(
-    "Select countries to analyze:", 
-    countries, 
-    default=countries[:1] if len(countries) > 1 else countries,
-    help="Choose one or more African countries to examine their climate data"
-)
 
-# Dynamic country selection feedback
-if selected_countries:
-    st.markdown(f"""
-        <div class="climate-info">
-            <p>📍 <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
-            <p>🏙️ <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
-        </div>
-    """, unsafe_allow_html=True)
+# Create two columns for aligned filters
+col1, col2 = st.columns(2)
+
+with col1:
+    selected_countries = st.multiselect(
+        "Select countries to analyze:", 
+        countries, 
+        default=['Nigeria', 'South Africa'] if 'Nigeria' in countries and 'South Africa' in countries else countries[:2],
+        help="Choose one or more African countries to examine their climate data"
+    )
 
 # Filter cities based on selected countries
 available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
 
-# City selection
-selected_cities = st.multiselect(
-    "Select cities for detailed analysis:", 
-    available_cities, 
-    default=available_cities[:1] if len(available_cities) > 2 else available_cities,
-    help="Choose specific cities to analyze temperature trends and anomalies"
-)
+with col2:
+    selected_cities = st.multiselect(
+        "Select cities for detailed analysis:", 
+        available_cities, 
+        default=available_cities[:2] if len(available_cities) > 2 else available_cities,
+        help="Choose specific cities to analyze temperature trends and anomalies"
+    )
+
+# Dynamic country selection feedback (moved under the filters)
+if selected_countries:
+    st.markdown(f"""
+        <div class="climate-info">
+            <p> <strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
+            <p> <strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 if selected_cities:
     # Generate climate narratives for each selected city
