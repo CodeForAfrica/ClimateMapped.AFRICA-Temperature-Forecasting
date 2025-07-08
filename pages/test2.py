@@ -339,7 +339,7 @@ with col3:
     avg_temp = latest_data['temperature'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h4>Average Temperature {latest_year}</h4>
+            <h5>Average Temperature {latest_year}</h5>
             <h2>{avg_temp:.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
