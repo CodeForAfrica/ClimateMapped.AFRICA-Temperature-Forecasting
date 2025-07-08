@@ -423,12 +423,12 @@ with col2:
 
 # Dynamic country selection feedback (moved under the filters)
 if selected_countries:
-    st.markdown(f"""
+   # st.markdown(f"""
        # <div class="climate-info">
        #     <p><strong>Selected Countries:</strong> {', '.join(selected_countries)}</p>
         #    <p><strong>Total Cities Available:</strong> {len(df[df['country_name'].isin(selected_countries)]['city'].unique())}</p>
        # </div>
-    #""", unsafe_allow_html=True)
+    # """, unsafe_allow_html=True)
 
 if selected_cities:
     # Generate climate narratives for each selected city
