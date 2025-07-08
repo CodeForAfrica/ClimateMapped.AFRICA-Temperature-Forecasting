@@ -322,7 +322,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
         <div class="stats-card">
-            <h4>Cities Monitored</h4>
+            <h5>Cities Monitored</h5>
             <h2>{len(df['city'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -330,7 +330,7 @@ with col1:
 with col2:
     st.markdown(f"""
         <div class="stats-card">
-            <h4>Countries Covered</h4>
+            <h5>Countries Covered</h5>
             <h2>{len(df['country_name'].unique())}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -348,7 +348,7 @@ with col4:
     avg_anomaly = latest_data['temperature_anomaly'].mean()
     st.markdown(f"""
         <div class="stats-card">
-            <h4>Average Anomaly {latest_year}</h4>
+            <h5>Average Anomaly {latest_year}</h5>
             <h2>{avg_anomaly:+.1f}°C</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -396,7 +396,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Aligned Country and City selection
+# Country and City selection
 countries = sorted(df['country_name'].unique())
 
 # Create two columns for aligned filters
@@ -406,7 +406,7 @@ with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
         countries, 
-        default=['Nigeria', 'South Africa'] if 'Nigeria' in countries and 'South Africa' in countries else countries[:2],
+        default=['Senegal'] if 'Senegal' in countries else countries[:1],
         help="Choose one or more African countries to examine their climate data"
     )
 
@@ -417,7 +417,7 @@ with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
         available_cities, 
-        default=available_cities[:2] if len(available_cities) > 2 else available_cities,
+        default=available_cities[:1] if len(available_cities) > 2 else available_cities,
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
