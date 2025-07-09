@@ -22,6 +22,12 @@ st.markdown("""
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             #border: 2px solid #FFD700;
         }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
         .sdg-header {
             background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
