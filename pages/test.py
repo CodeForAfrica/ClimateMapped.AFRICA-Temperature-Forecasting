@@ -460,23 +460,6 @@ if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
     
     # Find the city based on the clicked point's hover_name
-    city_list = sorted(df['city'].unique())
-
-    # If no city has been selected yet (initial page load), set a default
-    if 'selected_city' not in st.session_state:
-        st.session_state.selected_city = city_list[0]
-
-    # Allow user to search/select a city manually
-    selected_city_search = st.selectbox(
-        "Search or select a city:",
-        city_list,
-        index=city_list.index(st.session_state.selected_city) if st.session_state.selected_city in city_list else 0
-    )
-    
-    # Optional: Add a "Search" button if you want user to confirm
-    if st.button("Search"):
-        st.session_state.selected_city = selected_city_search
-    
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
         st.session_state.selected_city = clicked_city
