@@ -192,8 +192,8 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p>🌍 This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
-                <p>💡 <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
+                <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
+                <p> <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
             </div>
             """
         elif temp_change > 1.0:
@@ -206,8 +206,8 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p>🎯 This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
-                <p>📊 Monitor trends closely and implement adaptation strategies.</p>
+                <p> This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
+                <p> Monitor trends closely and implement adaptation strategies.</p>
             </div>
             """
         else:
