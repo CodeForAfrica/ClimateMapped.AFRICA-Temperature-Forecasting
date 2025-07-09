@@ -494,14 +494,14 @@ with col1:
     st.markdown(f"""
         <div class="stats-card">
             <h5>Cities and Towns Monitored</h5>
-            <h2>{len(df['city'].unique())}</h2>
+            <h4>{len(df['city'].unique())}</h4>
         </div>
     """, unsafe_allow_html=True)
 with col2:
     st.markdown(f"""
         <div class="stats-card">
             <h5>Countries Covered</h5>
-            <h2>{len(df['country_name'].unique())}</h2>
+            <h4>{len(df['country_name'].unique())}</h4>
         </div>
     """, unsafe_allow_html=True)
 with col3:
@@ -509,7 +509,7 @@ with col3:
     st.markdown(f"""
         <div class="stats-card">
             <h5>Average Temperature {latest_year}</h5>
-            <h2>{avg_temp:.1f}°C</h2>
+            <h4>{avg_temp:.1f}°C</h4>
         </div>
     """, unsafe_allow_html=True)
 with col4:
@@ -517,7 +517,7 @@ with col4:
     st.markdown(f"""
         <div class="stats-card">
             <h5>Average Anomaly {latest_year}</h5>
-            <h2>{avg_anomaly:+.1f}°C</h2>
+            <h4>{avg_anomaly:+.1f}°C</h4>
         </div>
     """, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
