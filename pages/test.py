@@ -382,6 +382,7 @@ with st.container():
         st.markdown("""
             <div class="sdg-card">
                 <h4>🌍 SDG 13: Climate Action</h4>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png" alt="SDG 1" style="width:100px; height:auto;" />
                 <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
             </div>
         """, unsafe_allow_html=True)
