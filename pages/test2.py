@@ -1,4 +1,4 @@
-import streamlit as st
+ximport streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -273,7 +273,7 @@ def create_climate_heatmap(df, selected_cities):
 # Main App
 st.markdown("""
     <div class="main-title">
-        🌍 Climate Action Africa Dashboard 🌍
+        🌍 Climate Map Africa 🌍
     </div>
 """, unsafe_allow_html=True)
 
@@ -482,7 +482,7 @@ st.markdown("""
 # Enhanced Footer
 st.markdown("""
     <div class="footer">
-        <h4>🌍 Climate Action Africa Dashboard</h4>
+        #<h4>🌍 Climate Action Africa Dashboard</h4>
         <p>Data source: <a href="https://cds.climate.copernicus.eu/" target="_blank" style="color: #4ECDC4;">Copernicus Climate Data Store</a></p>
         <p>Supporting UN SDGs: Climate Action (13) • Sustainable Cities (11) • Partnerships (17)</p>
         <p>🤝 Together, we can build a sustainable future for Africa and the world!</p>
