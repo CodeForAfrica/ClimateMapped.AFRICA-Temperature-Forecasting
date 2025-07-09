@@ -273,7 +273,7 @@ def create_climate_heatmap(df, selected_city):
         title=f"Temperature Anomalies for {selected_city}",
         xaxis_title="Year",
         yaxis_title="City",
-        height=200,
+        height=500,
         font=dict(size=12)
     )
     
@@ -462,7 +462,6 @@ if map_click and map_click.selection and map_click.selection.points:
             st.session_state.selected_city = clicked_city
 
 # Display analysis for selected city
-# Display analysis for selected city
 if st.session_state.selected_city:
     selected_city = st.session_state.selected_city
 
@@ -474,7 +473,7 @@ if st.session_state.selected_city:
 
         st.markdown(f"""
             <div class="subtitle">
-                📍 Detailed Climate Analysis for {selected_city}, {country_name}
+                Detailed Climate Analysis for {selected_city}, {country_name}
             </div>
         """, unsafe_allow_html=True)
 
