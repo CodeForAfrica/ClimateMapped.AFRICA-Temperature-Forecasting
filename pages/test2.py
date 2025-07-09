@@ -128,7 +128,7 @@ country_mapping = {
     'MA': 'Morocco', 'MZ': 'Mozambique', 'NA': 'Namibia', 'NE': 'Niger',
     'NG': 'Nigeria', 'RW': 'Rwanda', 'ST': 'São Tomé and Príncipe', 'SN': 'Senegal',
     'SC': 'Seychelles', 'SL': 'Sierra Leone', 'SO': 'Somalia', 'ZA': 'South Africa',
-    'SS': 'South Sudan', 'SD': 'Sudan', 'EH': 'Eswatini', 'TZ': 'Tanzania',
+    'SS': 'South Sudan', 'SD': 'Sudan', 'SZ': 'Eswatini', 'EH': 'Western Sahara', 'TZ': 'Tanzania',
     'TG': 'Togo', 'TN': 'Tunisia', 'UG': 'Uganda', 'ZM': 'Zambia', 'ZW': 'Zimbabwe'
 }
 
