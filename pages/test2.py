@@ -479,10 +479,10 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Enhanced Footer
+# Footer
 st.markdown("""
     <div class="footer">
-        #<h4>🌍 Climate Action Africa Dashboard</h4>
+        <h4 style="color: white;" >🌍 Climate Map Africa Dashboard</h4>
         <p>Data source: <a href="https://cds.climate.copernicus.eu/" target="_blank" style="color: #4ECDC4;">Copernicus Climate Data Store</a></p>
         <p>Supporting UN SDGs: Climate Action (13) • Sustainable Cities (11) • Partnerships (17)</p>
         <p>🤝 Together, we can build a sustainable future for Africa and the world!</p>
