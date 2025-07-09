@@ -2,7 +2,38 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import numpy as np
+import numpy as np# SDG Information Section
+st.markdown("""
+    <div class="sdg-header">
+        🎯 Supporting UN Sustainable Development Goals 🎯
+    </div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🌍 SDG 13: Climate Action</h4>
+            <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🏙️ SDG 11: Sustainable Cities</h4>
+            <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🤝 SDG 17: Partnerships</h4>
+            <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
+        </div>
+    """, unsafe_allow_html=True)
 from datetime import datetime
 
 st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="🌍")
@@ -94,15 +125,43 @@ st.markdown("""
             box-shadow: 0 6px 20px rgba(240,147,251,0.3);
         }
         
-        .stats-card {
+        .stats-card-1 {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(79,172,254,0.3);
+            box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
+            }
+        .stats-card-2 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(67,233,123,0.3); 
         }
+        .stats-card-3 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(240,147,251,0.3); 
+        }
+        .stats-card-4 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
+        }
+
         
         .footer {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
@@ -291,7 +350,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown(f"""
-        <div class="stats-card">
+        <div class="stats-card-1">
             <h5>Cities and Towns Monitored</h5>
             <h2>{len(df['city'].unique())}</h2>
         </div>
@@ -299,7 +358,7 @@ with col1:
 
 with col2:
     st.markdown(f"""
-        <div class="stats-card">
+        <div class="stats-card-2">
             <h5>Countries Covered</h5>
             <h2>{len(df['country_name'].unique())}</h2>
         </div>
@@ -308,7 +367,7 @@ with col2:
 with col3:
     avg_temp = latest_data['temperature'].mean()
     st.markdown(f"""
-        <div class="stats-card">
+        <div class="stats-card-3">
             <h5>Average Temperature {latest_year}</h5>
             <h2>{avg_temp:.1f}°C</h2>
         </div>
@@ -317,7 +376,7 @@ with col3:
 with col4:
     avg_anomaly = latest_data['temperature_anomaly'].mean()
     st.markdown(f"""
-        <div class="stats-card">
+        <div class="stats-card-4">
             <h5>Average Anomaly {latest_year}</h5>
             <h2>{avg_anomaly:+.1f}°C</h2>
         </div>
