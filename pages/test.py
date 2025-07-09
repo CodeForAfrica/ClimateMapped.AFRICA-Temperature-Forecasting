@@ -462,39 +462,35 @@ if map_click and map_click.selection and map_click.selection.points:
             st.session_state.selected_city = clicked_city
 
 # Display analysis for selected city
+# Display analysis for selected city
 if st.session_state.selected_city:
     selected_city = st.session_state.selected_city
-    
+
     # Get city data
     city_data = df[df['city'] == selected_city]
-    
+
     if not city_data.empty:
         country_name = city_data['country_name'].iloc[0]
-        
+
         st.markdown(f"""
             <div class="subtitle">
-                Climate Analysis for {selected_city}, {country_name}
+                📍 Detailed Climate Analysis for {selected_city}, {country_name}
             </div>
         """, unsafe_allow_html=True)
-        
-        # Generate and display climate narrative
-        narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        if narrative:
-            st.markdown(narrative, unsafe_allow_html=True)
-        
-        # Create two columns for the charts
+
         col1, col2 = st.columns(2)
-        
+
         with col1:
-            # Temperature trend chart
-            fig_trend = create_temperature_trend_chart(df, selected_city)
-            st.plotly_chart(fig_trend, use_container_width=True)
-        
+            trend_chart = create_temperature_trend_chart(df, selected_city)
+            st.plotly_chart(trend_chart, use_container_width=True)
+
         with col2:
-            # Temperature anomaly heatmap
-            fig_heatmap = create_climate_heatmap(df, selected_city)
-            st.plotly_chart(fig_heatmap, use_container_width=True)
-        
+            heatmap = create_climate_heatmap(df, selected_city)
+            st.plotly_chart(heatmap, use_container_width=True)
+
+        narrative = generate_climate_narrative(city_data, selected_city, country_name)
+        st.markdown(narrative, unsafe_allow_html=True)
+
         # Additional insights
         st.markdown("""
             <div class="climate-info">
