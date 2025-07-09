@@ -400,41 +400,39 @@ df = calculate_temperature_anomaly(df)
 latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
-col1, col2, col3, col4 = st.columns(4)
+with st.container():
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.markdown(f"""
+            <div class="stats-card">
+                <h5>Cities and Towns Monitored</h5>
+                <h2>{len(df['city'].unique())}</h2>
+            </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"""
+            <div class="stats-card">
+                <h5>Countries Covered</h5>
+                <h2>{len(df['country_name'].unique())}</h2>
+            </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        avg_temp = latest_data['temperature'].mean()
+        st.markdown(f"""
+            <div class="stats-card">
+                <h5>Average Temperature {latest_year}</h5>
+                <h2>{avg_temp:.1f}°C</h2>
+            </div>
+        """, unsafe_allow_html=True)
+    with col4:
+        avg_anomaly = latest_data['temperature_anomaly'].mean()
+        st.markdown(f"""
+            <div class="stats-card">
+                <h5>Average Anomaly {latest_year}</h5>
+                <h2>{avg_anomaly:+.1f}°C</h2>
+            </div>
+        """, unsafe_allow_html=True)
 
-with col1:
-    st.markdown(f"""
-        <div class="stats-card">
-            <h5>Cities and Towns Monitored</h5>
-            <h2>{len(df['city'].unique())}</h2>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown(f"""
-        <div class="stats-card">
-            <h5>Countries Covered</h5>
-            <h2>{len(df['country_name'].unique())}</h2>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    avg_temp = latest_data['temperature'].mean()
-    st.markdown(f"""
-        <div class="stats-card">
-            <h5>Average Temperature {latest_year}</h5>
-            <h2>{avg_temp:.1f}°C</h2>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    avg_anomaly = latest_data['temperature_anomaly'].mean()
-    st.markdown(f"""
-        <div class="stats-card">
-            <h5>Average Anomaly {latest_year}</h5>
-            <h2>{avg_anomaly:+.1f}°C</h2>
-        </div>
-    """, unsafe_allow_html=True)
 
 # Interactive Map
 st.markdown("""
