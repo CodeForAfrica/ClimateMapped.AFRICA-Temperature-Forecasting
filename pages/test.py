@@ -273,7 +273,7 @@ def create_climate_heatmap(df, selected_city):
         title=f"Temperature Anomalies for {selected_city}",
         plot_bgcolor='white',
         paper_bgcolor='white',  # Simulates a border
-        margin=dict(l=20, r=20, t=20, b=20),  # Padding around the plot
+        margin=dict(l=30, r=30, t=30, b=30),  # Padding around the plot
         xaxis_title="Year",
         #yaxis_title="City",
         yaxis=dict(showticklabels=False),
@@ -321,7 +321,7 @@ def create_temperature_trend_chart(df, selected_city):
         title=f"Temperature Trend for {selected_city}",
         plot_bgcolor='white',
         paper_bgcolor='white',  # Simulates a border
-        margin=dict(l=20, r=20, t=20, b=20),  # Padding around the plot
+        margin=dict(l=30, r=30, t=30, b=30),  # Padding around the plot
         xaxis_title="Year",
         yaxis_title="Temperature (°C)",
         height=400,
