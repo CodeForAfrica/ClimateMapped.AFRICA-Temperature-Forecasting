@@ -366,15 +366,17 @@ fig_map = px.scatter_mapbox(
     lat="latitude",
     lon="lng",
     color="temperature",
-    size_max=8,
-    size=[8] * len(latest_data),
     hover_name="city",
-    hover_data={"temperature": ":.1f", "temperature_anomaly": ":.2f", "size": False},
-    zoom=3,
+    hover_data={"temperature": ":.1f", "temperature_anomaly": ":.2f"},
+    center={"lat": 0, "lon": 20},
+    zoom=2,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
     title=f"Average Temperature in {latest_year}"
 )
+
+# Set marker size after creation
+fig_map.update_traces(marker=dict(size=8))
 
 fig_map.update_traces(marker=dict(size=8))
 fig_map.update_layout(height=600)
