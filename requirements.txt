@@ -8,5 +8,6 @@ tensorflow==2.16.2
 keras==3.4.1
 ##tensorflow-cpu
 plotly==5.24.1
+streamlit-plotly-events
 ##setuptools>=65.5.0
 
