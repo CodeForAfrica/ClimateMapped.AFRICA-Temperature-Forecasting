@@ -278,7 +278,7 @@ def create_climate_heatmap(df, selected_city):
         #yaxis_title="City",
         yaxis=dict(showticklabels=False),
         height=400,
-        width=700,
+        width=1000,
         font=dict(size=12)
     )
     
