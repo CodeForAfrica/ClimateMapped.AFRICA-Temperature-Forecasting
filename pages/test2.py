@@ -2,38 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import numpy as np# SDG Information Section
-st.markdown("""
-    <div class="sdg-header">
-        🎯 Supporting UN Sustainable Development Goals 🎯
-    </div>
-""", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🌍 SDG 13: Climate Action</h4>
-            <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🏙️ SDG 11: Sustainable Cities</h4>
-            <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🤝 SDG 17: Partnerships</h4>
-            <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
-        </div>
-    """, unsafe_allow_html=True)
+import numpy as np
 from datetime import datetime
 
 st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="🌍")
