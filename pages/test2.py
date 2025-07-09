@@ -386,15 +386,15 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-    <div class="climate-info">
-        <h4>🔍 How to Use This Dashboard:</h4>
-        <p>1. Select countries from the dropdown below</p>
-        <p>2. Choose specific cities to analyze temperature trends</p>
-        <p>3. View the climate heatmap showing temperature anomalies over time</p>
-        <p>4. Read the climate narrative for insights and recommendations</p>
-    </div>
-""", unsafe_allow_html=True)
+#st.markdown("""
+#   <div class="climate-info">
+        #<h4>🔍 How to Use This Dashboard:</h4>
+        #<p>1. Select countries from the dropdown below</p>
+        #<p>2. Choose specific cities to analyze temperature trends</p>
+        #<p>3. View the climate heatmap showing temperature anomalies over time</p>
+       # <p>4. Read the climate narrative for insights and recommendations</p>
+   # </div>
+#""", unsafe_allow_html=True)
 
 # Country and City selection
 countries = sorted(df['country_name'].unique())
