@@ -373,8 +373,14 @@ st.markdown("""
 with st.container():
     st.markdown("""
         <div class="sdg-header">
-            🎯 Supporting UN Sustainable Development Goals 🎯
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png" alt="SDG 1" style="width:100px; height:auto;" />
+            🎯 Supporting UN Sustainable Development Goals 🎯 <br>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png" alt="SDG 13" style="width:100px; height:auto;" /> 
+             <img src="https://wmo.int/sites/default/files/2023-03/E-WEB-Goal-11.png" alt="SDG 11" style="width:100px; height:auto;" /> 
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Sustainable_Development_Goal_17.png/1200px-Sustainable_Development_Goal_17.png" alt="SDG 17" style="width:100px; height:auto;" /> 
+
+             
+
 
         </div>
     """, unsafe_allow_html=True)
