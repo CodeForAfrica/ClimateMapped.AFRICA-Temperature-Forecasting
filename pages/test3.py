@@ -368,7 +368,7 @@ def create_climate_heatmap(df, selected_city):
     
     fig.update_layout(
         title=f"Temperature Anomalies for {selected_city}",
-        plot_bgcolor='rgba(255,255,255,0.9)',
+        #plot_bgcolor='rgba(255,255,255,0.9)',
         paper_bgcolor='rgba(255,255,255,0.95)',
         margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
