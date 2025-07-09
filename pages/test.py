@@ -421,10 +421,9 @@ with col4:
 
 # Interactive Map
 st.markdown("""
-    <div class="subtitle">
-        Interactive Climate Map of Africa
-       👆 Click on any city point on the map to see detailed climate analysis!
-
+    <div class="subtitle" style="font-size:18px; font-weight:500; margin-bottom:10px;">
+        Interactive Climate Map of Africa<br>
+        <span style="font-size:16px;"> Click on any city point on the map to see detailed climate analysis!</span>
     </div>
 """, unsafe_allow_html=True)
 
