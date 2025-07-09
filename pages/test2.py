@@ -116,7 +116,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Country code to country name mapping for African countries
-python# Your country mapping (which is correct)
+
 country_mapping = {
     'DZ': 'Algeria', 'AO': 'Angola', 'BJ': 'Benin', 'BW': 'Botswana',
     'BF': 'Burkina Faso', 'BI': 'Burundi', 'CM': 'Cameroon', 'CV': 'Cape Verde',
@@ -144,7 +144,7 @@ def load_data():
     if 'lng' not in df.columns and 'longitude' in df.columns:
         df['lng'] = df['longitude']
 
-    df['country_name'] = df['country'].map(country_mapping).fillna(df['country'])
+    df['country_name'] = df['country'].map(country_mapping)
     return df
 
 def calculate_temperature_anomaly(df, baseline_start=1961, baseline_end=1990):
