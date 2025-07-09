@@ -341,19 +341,19 @@ def create_temperature_trend_chart(df, selected_city):
 if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
 
-## Main App
-#st.markdown("""
-#    <div class="main-title">
-#        🌍 Climate Map Africa 🌍
-#    </div>
-#""", unsafe_allow_html=True)
-
+# Main App
 st.markdown("""
-    <div class="main-title" style="display: flex; align-items: center;">
-        <img src="https://climatemapped-africa.dev.codeforafrica.org/media/Colour_IBMPlex.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+    <div class="main-title">
         Climate Map Africa
     </div>
 """, unsafe_allow_html=True)
+
+#st.markdown("""
+ #   <div class="main-title" style="display: flex; align-items: center;">
+  #      <img src="https://climatemapped-africa.dev.codeforafrica.org/media/Colour_IBMPlex.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+ #       Climate Map Africa
+ #   </div>
+#""", unsafe_allow_html=True)
 
 
 
