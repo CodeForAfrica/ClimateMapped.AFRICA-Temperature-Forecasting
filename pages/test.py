@@ -444,7 +444,7 @@ fig_map = px.scatter_mapbox(
     zoom=2,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
-    title=f"Average Temperature in {latest_year} - Click on a city to analyze"
+    title=f"Average Temperature in {latest_year}"
 )
 
 # Set marker size after creation
