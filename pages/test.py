@@ -423,14 +423,16 @@ with col4:
 st.markdown("""
     <div class="subtitle">
         Interactive Climate Map of Africa
+       👆 Click on any city point on the map to see detailed climate analysis!
+
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-    <div class="click-instruction">
-        👆 Click on any city point on the map to see detailed climate analysis!
-    </div>
-""", unsafe_allow_html=True)
+#st.markdown("""
+ #   <div class="click-instruction">
+  #      👆 Click on any city point on the map to see detailed climate analysis!
+  #  </div>
+#""", unsafe_allow_html=True)
 
 fig_map = px.scatter_mapbox(
     latest_data,
