@@ -10,6 +10,17 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 # Enhanced CSS styling with SDG colors and climate imagery
 st.markdown("""
     <style>
+        .custom-container {
+            background-color: #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+    <style>
         .main-title {
             background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
             padding: 30px;
