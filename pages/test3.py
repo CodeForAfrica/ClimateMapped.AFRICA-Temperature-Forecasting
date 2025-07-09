@@ -26,7 +26,7 @@ st.markdown("""
             100% { background-position: 0% 50%; }
         }
         
-        /* Container styling */
+        /* Container styling - Reduced bottom margin */
         .custom-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -34,7 +34,7 @@ st.markdown("""
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.18);
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Reduced from 20px */
         }
         
         .plot-container {
@@ -44,7 +44,7 @@ st.markdown("""
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            margin: 15px 0;
+            margin: 10px 0; /* Reduced from 15px */
             overflow: hidden; /* Prevent content overflow */
         }
         
@@ -56,7 +56,7 @@ st.markdown("""
             color: white;
             font-size: 48px;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* Reduced from 30px */
             box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
             border: 3px solid rgba(255, 255, 255, 0.2);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -72,7 +72,7 @@ st.markdown("""
             color: white;
             font-size: 28px;
             font-weight: bold;
-            margin-bottom: 25px;
+            margin-bottom: 15px; /* Reduced from 25px */
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.2);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -85,7 +85,7 @@ st.markdown("""
             color: white;
             font-weight: bold;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0; /* Reduced from 20px */
             box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
             border-left: 6px solid #FFD700;
             border: 2px solid rgba(255, 255, 255, 0.2);
@@ -96,7 +96,7 @@ st.markdown("""
             padding: 20px;
             border-radius: 15px;
             color: white;
-            margin: 20px 0;
+            margin: 10px 0; /* Reduced from 20px */
             box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
@@ -106,7 +106,7 @@ st.markdown("""
             padding: 20px;
             border-radius: 15px;
             color: white;
-            margin: 20px 0;
+            margin: 10px 0; /* Reduced from 20px */
             box-shadow: 0 8px 25px rgba(86, 171, 47, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
@@ -119,7 +119,7 @@ st.markdown("""
             color: white;
             font-size: 26px;
             font-weight: bold;
-            margin: 25px 0;
+            margin: 15px 0; /* Reduced from 25px */
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -130,7 +130,7 @@ st.markdown("""
             padding: 25px;
             border-radius: 18px;
             color: white;
-            margin: 20px 0;
+            margin: 10px 0; /* Reduced from 20px */
             box-shadow: 0 12px 35px rgba(240, 147, 251, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease;
@@ -147,7 +147,7 @@ st.markdown("""
             border-radius: 18px;
             color: white;
             text-align: center;
-            margin: 15px 0;
+            margin: 10px 0; /* Reduced from 15px */
             box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease;
@@ -164,7 +164,7 @@ st.markdown("""
             border-radius: 20px;
             color: white;
             text-align: center;
-            margin-top: 40px;
+            margin-top: 30px; /* Reduced from 40px */
             box-shadow: 0 12px 40px rgba(44, 62, 80, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
@@ -175,7 +175,7 @@ st.markdown("""
             border-radius: 15px;
             color: white;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0; /* Reduced from 20px */
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
             font-size: 18px;
             font-weight: bold;
@@ -210,6 +210,16 @@ st.markdown("""
         /* Fix for columns */
         .row-widget {
             width: 100% !important;
+        }
+        
+        /* Additional spacing reductions for tighter layout */
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        .element-container {
+            margin-bottom: 0.5rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -436,7 +446,7 @@ if 'selected_city' not in st.session_state:
 # Main App
 st.markdown("""
     <div class="main-title">
-        🌍 Climate Map Africa 🌍
+        Climate Map Africa
     </div>
 """, unsafe_allow_html=True)
 
