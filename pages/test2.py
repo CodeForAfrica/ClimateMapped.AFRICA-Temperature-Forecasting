@@ -371,15 +371,13 @@ fig_map = px.scatter_mapbox(
     hover_data={
         "temperature": ":.1f", 
         "temperature_anomaly": ":.2f",
-        "size": False
+        "size": False  # This hides the size from hover
     },
-    center={"lat": 0, "lon": 20},  # Center on Africa
-    zoom=2,  # Adjust zoom level to show the continent
+    zoom=3,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
     title=f"Average Temperature in {latest_year}"
 )
-
 fig_map.update_traces(marker=dict(size=8))
 fig_map.update_layout(height=600)
 st.plotly_chart(fig_map, use_container_width=True)
