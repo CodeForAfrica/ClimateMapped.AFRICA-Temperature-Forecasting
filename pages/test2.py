@@ -144,7 +144,7 @@ def load_data():
     if 'lng' not in df.columns and 'longitude' in df.columns:
         df['lng'] = df['longitude']
 
-    df['country_name'] = df['country'].map(country_mapping)
+    df['country_name'] = df['country'].map(country_mapping).fillna(df['country'])
     return df
 
 def calculate_temperature_anomaly(df, baseline_start=1961, baseline_end=1990):
