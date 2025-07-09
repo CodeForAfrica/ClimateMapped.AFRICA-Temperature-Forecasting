@@ -350,7 +350,7 @@ if 'selected_city' not in st.session_state:
 
 st.markdown("""
     <div class="main-title" style="display: flex; align-items: center;">
-        <img src="https://your-logo-url.com/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+        <img src="images/climatemap_logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
         Climate Map Africa
     </div>
 """, unsafe_allow_html=True)
