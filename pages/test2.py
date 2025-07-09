@@ -277,38 +277,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# SDG Information Section
-st.markdown("""
-    <div class="sdg-header">
-        🎯 Supporting UN Sustainable Development Goals 🎯
-    </div>
-""", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🌍 SDG 13: Climate Action</h4>
-            <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🏙️ SDG 11: Sustainable Cities</h4>
-            <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-        <div class="sdg-card">
-            <h4>🤝 SDG 17: Partnerships</h4>
-            <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
-        </div>
-    """, unsafe_allow_html=True)
 
 # Load data and calculate anomalies
 df = load_data()
@@ -468,6 +437,39 @@ else:
             <h4>🎯 Get Started:</h4>
             <p>Please select at least one country and city to begin your climate analysis journey!</p>
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+# SDG Information Section
+st.markdown("""
+    <div class="sdg-header">
+        🎯 Supporting UN Sustainable Development Goals 🎯
+    </div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🌍 SDG 13: Climate Action</h4>
+            <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🏙️ SDG 11: Sustainable Cities</h4>
+            <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🤝 SDG 17: Partnerships</h4>
+            <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
         </div>
     """, unsafe_allow_html=True)
 
