@@ -345,13 +345,12 @@ def create_climate_heatmap(df, selected_city):
         paper_bgcolor='rgba(255,255,255,0.95)',
         margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
-        yaxis=dict(showticklabels=False),
+        yaxis=dict(showticklabels=False, gridcolor='rgba(0,0,0,0.1)'),
         height=400,
         width=1000,
         font=dict(size=12),
         title_font=dict(size=16, color='#2c3e50'),
-        xaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
-        yaxis=dict(gridcolor='rgba(0,0,0,0.1)')
+        xaxis=dict(gridcolor='rgba(0,0,0,0.1)')
     )
     
     return fig
