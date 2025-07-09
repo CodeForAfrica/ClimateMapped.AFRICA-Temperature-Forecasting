@@ -476,7 +476,7 @@ fig_map = px.scatter_mapbox(
 
 # Set marker size after creation
 fig_map.update_traces(marker=dict(size=12))
-fig_map.update_layout(height=600)
+fig_map.update_layout(height=700)
 
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
