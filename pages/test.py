@@ -375,9 +375,9 @@ with st.container():
     <div class="sdg-header" style="text-align:center;">
         🎯 Supporting UN Sustainable Development Goals 🎯 <br><br>
         
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png" alt="SDG 13" style="width:100px; height:auto;" /> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/500px-Sustainable_Development_Goal_11.png" alt="SDG 11" style="width:100px; height:auto;" />
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Sustainable_Development_Goal_17.png/1200px-Sustainable_Development_Goal_17.png" alt="SDG 17" style="width:100px; height:auto;" />
+   # <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png" alt="SDG 13" style="width:100px; height:auto;" /> 
+   # <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sustainable_Development_Goal_11.png/500px-Sustainable_Development_Goal_11.png" alt="SDG 11" style="width:100px; height:auto;" />
+   # <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Sustainable_Development_Goal_17.png/1200px-Sustainable_Development_Goal_17.png" alt="SDG 17" style="width:100px; height:auto;" />
 
     </div>
 """, unsafe_allow_html=True)
