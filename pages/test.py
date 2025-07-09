@@ -273,7 +273,7 @@ def create_climate_heatmap(df, selected_city):
         title=f"Temperature Anomalies for {selected_city}",
         xaxis_title="Year",
         yaxis_title="City",
-        height=500,
+        height=400,
         font=dict(size=12)
     )
     
