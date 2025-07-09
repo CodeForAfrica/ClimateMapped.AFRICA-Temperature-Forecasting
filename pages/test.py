@@ -272,7 +272,7 @@ def create_climate_heatmap(df, selected_city):
     fig.update_layout(
         title=f"Temperature Anomalies for {selected_city}",
         xaxis_title="Year",
-        yaxis_title="City",
+        #yaxis_title="City",
         height=400,
         font=dict(size=12)
     )
