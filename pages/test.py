@@ -3,8 +3,129 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+from datetime import datetime
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="🌍")
+
+# Enhanced CSS styling with SDG colors and climate imagery
+st.markdown("""
+    <style>
+        .main-title {
+            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            #border: 2px solid #FFD700;
+        }
+        
+        .sdg-header {
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .climate-warning {
+            background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255,68,68,0.3);
+            border-left: 5px solid #FFD700;
+        }
+        
+        .climate-info {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
+        }
+        
+        .climate-good {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(86,171,47,0.3);
+        }
+        
+        .subtitle {
+            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        
+        .sdg-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            margin: 15px 0;
+            box-shadow: 0 6px 20px rgba(240,147,251,0.3);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(79,172,254,0.3);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .click-instruction {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Country code to country name mapping for African countries
 country_mapping = {
@@ -12,7 +133,7 @@ country_mapping = {
     'BF': 'Burkina Faso', 'BI': 'Burundi', 'CM': 'Cameroon', 'CV': 'Cape Verde',
     'CF': 'Central African Republic', 'TD': 'Chad', 'KM': 'Comoros', 'CG': 'Congo',
     'CD': 'Democratic Republic of Congo', 'CI': 'Côte d\'Ivoire', 'DJ': 'Djibouti',
-    'EG': 'Egypt', 'EH': 'Western Sahara', 'GQ': 'Equatorial Guinea', 'ER': 'Eritrea', 'ET': 'Ethiopia',
+    'EG': 'Egypt', 'EH': 'Western Sahara', 'GQ': 'Equatorial Guinea', 'ER': 'Eritrea', 'ET': 'Ethiopia', 
     'GA': 'Gabon', 'GM': 'Gambia', 'GH': 'Ghana', 'GN': 'Guinea', 'GW': 'Guinea-Bissau',
     'KE': 'Kenya', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'MG': 'Madagascar',
     'MW': 'Malawi', 'ML': 'Mali', 'MR': 'Mauritania', 'MU': 'Mauritius',
@@ -34,51 +155,170 @@ def load_data():
     if 'lng' not in df.columns and 'longitude' in df.columns:
         df['lng'] = df['longitude']
 
-    df['country_name'] = df['country'].map(country_mapping).fillna(df['country'])
+    df['country_name'] = df['country'].map(country_mapping)
     return df
-    
 
-def create_climate_heatmap(df, selected_cities):
-    """Create a climate stripes style heatmap for selected cities"""
-    if not selected_cities:
+def calculate_temperature_anomaly(df, baseline_start=1961, baseline_end=1990):
+    """Calculate temperature anomaly based on baseline period (1961-1990)"""
+    anomaly_df = df.copy()
+    
+    # Calculate baseline temperature for each city
+    baseline_data = df[(df['year'] >= baseline_start) & (df['year'] <= baseline_end)]
+    baseline_temps = baseline_data.groupby('city')['temperature'].mean().reset_index()
+    baseline_temps.columns = ['city', 'baseline_temp']
+    
+    # Merge with main dataframe
+    anomaly_df = anomaly_df.merge(baseline_temps, on='city', how='left')
+    
+    # Calculate anomaly
+    anomaly_df['temperature_anomaly'] = anomaly_df['temperature'] - anomaly_df['baseline_temp']
+    
+    return anomaly_df
+
+def generate_climate_narrative(city_data, city_name, country_name):
+    """Generate dynamic climate narrative based on data"""
+    if city_data.empty:
+        return ""
+    
+    # Calculate trends and anomalies
+    recent_years = city_data[city_data['year'] >= 2015]
+    early_years = city_data[city_data['year'] <= 1980]
+    
+    if not recent_years.empty and not early_years.empty:
+        recent_avg = recent_years['temperature'].mean()
+        early_avg = early_years['temperature'].mean()
+        temp_change = recent_avg - early_avg
+        
+        # Get latest anomaly
+        latest_anomaly = city_data[city_data['year'] == city_data['year'].max()]['temperature_anomaly'].iloc[0]
+        
+        # Generate narrative based on temperature trends
+        if temp_change > 2.0:
+            narrative_class = "climate-warning"
+            emoji = "🔥"
+            title = "CRITICAL TEMPERATURE RISE DETECTED"
+            message = f"""
+            <div class="{narrative_class}">
+                <h3>{emoji} {title} {emoji}</h3>
+                <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
+                <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
+                <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
+                <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
+                <p> <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
+            </div>
+            """
+        elif temp_change > 1.0:
+            narrative_class = "climate-info"
+            emoji = "⚠️"
+            title = "MODERATE WARMING TREND"
+            message = f"""
+            <div class="{narrative_class}">
+                <h3>{emoji} {title} {emoji}</h3>
+                <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
+                <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
+                <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
+                <p> This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
+                <p> Monitor trends closely and implement adaptation strategies.</p>
+            </div>
+            """
+        else:
+            narrative_class = "climate-good"
+            emoji = "✅"
+            title = "STABLE TEMPERATURE PATTERN"
+            message = f"""
+            <div class="{narrative_class}">
+                <h3>{emoji} {title} {emoji}</h3>
+                <p><strong>{city_name}, {country_name}</strong> shows relatively stable temperatures with a change of 
+                <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
+                <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> compared to the 1961-1990 baseline</p>
+                <p>🌱 Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
+            </div>
+            """
+        
+        return message
+    
+    return ""
+
+def create_climate_heatmap(df, selected_city):
+    """Create an enhanced climate stripes style heatmap with anomaly data for a single city"""
+    if not selected_city:
         return go.Figure()
     
-    # Filter data for selected cities
-    filtered_df = df[df['city'].isin(selected_cities)]
+    # Filter data for selected city
+    city_data = df[df['city'] == selected_city]
     
-    # Create pivot table for heatmap
-    pivot_df = filtered_df.pivot_table(
-        index='city', 
-        columns='year', 
-        values='temperature',
-        aggfunc='mean'
-    )
+    if city_data.empty:
+        return go.Figure()
     
-    # Determine global temperature range for color consistency
-    global_min = df['temperature'].min()
-    global_max = df['temperature'].max()
+    # Sort by year
+    city_data = city_data.sort_values('year')
     
-    # Create heatmap with global temperature scale
+    # Create heatmap with anomaly scale (single row for the city)
     fig = go.Figure(data=go.Heatmap(
-        z=pivot_df.values,
-        x=pivot_df.columns,
-        y=pivot_df.index,
-        zmin=global_min,
-        zmax=global_max,
+        z=[city_data['temperature_anomaly'].values],
+        x=city_data['year'].values,
+        y=[selected_city],
+        zmin=-3,
+        zmax=3,
         colorscale='RdBu_r',
         showscale=True,
-        colorbar=dict(title="Temperature (°C)"),
+        colorbar=dict(title="Temperature Anomaly (°C)"),
         hovertemplate='<b>%{y}</b><br>' +
                       'Year: %{x}<br>' +
-                      'Temperature: %{z:.1f}°C<br>' +
+                      'Anomaly: %{z:.2f}°C<br>' +
                       '<extra></extra>'
     ))
     
     fig.update_layout(
-        title="Temperature by City and Year (Standardized Scale)",
+        title=f"Temperature Anomalies for {selected_city}",
         xaxis_title="Year",
         yaxis_title="City",
-        height=max(300, len(selected_cities) * 40)
+        height=200,
+        font=dict(size=12)
+    )
+    
+    return fig
+
+def create_temperature_trend_chart(df, selected_city):
+    """Create a line chart showing temperature trends for the selected city"""
+    if not selected_city:
+        return go.Figure()
+    
+    city_data = df[df['city'] == selected_city].sort_values('year')
+    
+    if city_data.empty:
+        return go.Figure()
+    
+    fig = go.Figure()
+    
+    # Add temperature line
+    fig.add_trace(go.Scatter(
+        x=city_data['year'],
+        y=city_data['temperature'],
+        mode='lines+markers',
+        name='Temperature',
+        line=dict(color='#FF6B6B', width=2),
+        hovertemplate='Year: %{x}<br>Temperature: %{y:.1f}°C<extra></extra>'
+    ))
+    
+    # Add trend line
+    z = np.polyfit(city_data['year'], city_data['temperature'], 1)
+    p = np.poly1d(z)
+    fig.add_trace(go.Scatter(
+        x=city_data['year'],
+        y=p(city_data['year']),
+        mode='lines',
+        name='Trend',
+        line=dict(color='#4ECDC4', width=3, dash='dash'),
+        hovertemplate='Year: %{x}<br>Trend: %{y:.1f}°C<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title=f"Temperature Trend for {selected_city}",
+        xaxis_title="Year",
+        yaxis_title="Temperature (°C)",
+        height=400,
+        font=dict(size=12)
     )
     
     return fig
@@ -86,35 +326,103 @@ def create_climate_heatmap(df, selected_cities):
 # Initialize session state for selected city
 if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
-if 'selected_country' not in st.session_state:
-    st.session_state.selected_country = None
 
-# Load data
-df = load_data()
-
+# Main App
 st.markdown("""
-    <style>
-        .main-title {
-            background-color: #ADD8E6;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: black;
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-    </style>
-    <div class="main-title">Climate Map Africa</div>
+    <div class="main-title">
+        🌍 Climate Map Africa 🌍
+    </div>
 """, unsafe_allow_html=True)
 
-# Get latest year in the dataset
+# SDG Information Section
+st.markdown("""
+    <div class="sdg-header">
+        🎯 Supporting UN Sustainable Development Goals 🎯
+    </div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🌍 SDG 13: Climate Action</h4>
+            <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🏙️ SDG 11: Sustainable Cities</h4>
+            <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+        <div class="sdg-card">
+            <h4>🤝 SDG 17: Partnerships</h4>
+            <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Load data and calculate anomalies
+df = load_data()
+df = calculate_temperature_anomaly(df)
+
+# Display key statistics
 latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
-# 1. Interactive OpenStreetMap showing city temperatures
-st.markdown("### 🌍 Interactive Temperature Map")
-st.markdown("**Click on any city to see detailed climate analysis**")
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Cities and Towns Monitored</h5>
+            <h2>{len(df['city'].unique())}</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Countries Covered</h5>
+            <h2>{len(df['country_name'].unique())}</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    avg_temp = latest_data['temperature'].mean()
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Average Temperature {latest_year}</h5>
+            <h2>{avg_temp:.1f}°C</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    avg_anomaly = latest_data['temperature_anomaly'].mean()
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Average Anomaly {latest_year}</h5>
+            <h2>{avg_anomaly:+.1f}°C</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Interactive Map
+st.markdown("""
+    <div class="subtitle">
+        Interactive Climate Map of Africa
+    </div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+    <div class="click-instruction">
+        👆 Click on any city point on the map to see detailed climate analysis!
+    </div>
+""", unsafe_allow_html=True)
 
 fig_map = px.scatter_mapbox(
     latest_data,
@@ -122,205 +430,110 @@ fig_map = px.scatter_mapbox(
     lon="lng",
     color="temperature",
     hover_name="city",
-    hover_data={
-        "temperature": ":.1f",
-        "country_name": True,
-        "lat": False,
-        "lng": False
-    },
+    hover_data={"temperature": ":.1f", "country_name": True},
     center={"lat": 0, "lon": 20},
     zoom=2,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
-    title=f"Average Temperature in {latest_year} - Click on a city for details"
+    title=f"Average Temperature in {latest_year} - Click on a city to analyze"
 )
 
-# Force marker size and remove size from hover
-fig_map.update_traces(marker=dict(size=8))
+# Set marker size after creation
+fig_map.update_traces(marker=dict(size=12))
+fig_map.update_layout(height=600)
 
 # Display the map and capture click events
-clicked_data = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
-# Check if a point was clicked
-if clicked_data and "selection" in clicked_data and clicked_data["selection"]["points"]:
-    clicked_point = clicked_data["selection"]["points"][0]
-    point_index = clicked_point["point_index"]
+# Handle map click events
+if map_click and map_click.selection and map_click.selection.points:
+    # Get the clicked point
+    clicked_point = map_click.selection.points[0]
     
-    # Get the city data for the clicked point
-    st.session_state.selected_city = latest_data.iloc[point_index]['city']
-    st.session_state.selected_country = latest_data.iloc[point_index]['country_name']
+    # Find the city based on the clicked point's hover_name
+    if 'hovertext' in clicked_point:
+        clicked_city = clicked_point['hovertext']
+        st.session_state.selected_city = clicked_city
+    elif 'customdata' in clicked_point:
+        # Alternative method to get city name
+        point_index = clicked_point['point_index']
+        if point_index < len(latest_data):
+            clicked_city = latest_data.iloc[point_index]['city']
+            st.session_state.selected_city = clicked_city
 
-# Display detailed analysis if a city is selected
+# Display analysis for selected city
 if st.session_state.selected_city:
-    st.markdown("---")
+    selected_city = st.session_state.selected_city
     
-    # Header for selected city
-    col_header, col_clear = st.columns([4, 1])
-    with col_header:
-        st.markdown(f"## 📊 Climate Analysis: {st.session_state.selected_city}, {st.session_state.selected_country}")
-    with col_clear:
-        if st.button("🔄 Clear Selection", type="secondary"):
+    # Get city data
+    city_data = df[df['city'] == selected_city]
+    
+    if not city_data.empty:
+        country_name = city_data['country_name'].iloc[0]
+        
+        st.markdown(f"""
+            <div class="subtitle">
+                Climate Analysis for {selected_city}, {country_name}
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Generate and display climate narrative
+        narrative = generate_climate_narrative(city_data, selected_city, country_name)
+        if narrative:
+            st.markdown(narrative, unsafe_allow_html=True)
+        
+        # Create two columns for the charts
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Temperature trend chart
+            fig_trend = create_temperature_trend_chart(df, selected_city)
+            st.plotly_chart(fig_trend, use_container_width=True)
+        
+        with col2:
+            # Temperature anomaly heatmap
+            fig_heatmap = create_climate_heatmap(df, selected_city)
+            st.plotly_chart(fig_heatmap, use_container_width=True)
+        
+        # Additional insights
+        st.markdown("""
+            <div class="climate-info">
+                <h4>📖 Understanding Temperature Anomalies:</h4>
+                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
+                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
+                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
+                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Add a button to clear selection
+        if st.button("🔄 Clear Selection"):
             st.session_state.selected_city = None
-            st.session_state.selected_country = None
             st.rerun()
     
-    # Filter data for the selected city
-    city_data = df[df['city'] == st.session_state.selected_city].copy()
-    
-    # Calculate temperature statistics
-    current_temp = city_data[city_data['year'] == latest_year]['temperature'].iloc[0] if not city_data[city_data['year'] == latest_year].empty else None
-    avg_temp = city_data['temperature'].mean()
-    max_temp = city_data['temperature'].max()
-    min_temp = city_data['temperature'].min()
-    
-    # Display key metrics
-    metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
-    
-    with metric_col1:
-        st.metric("Current Temperature", f"{current_temp:.1f}°C" if current_temp else "N/A")
-    with metric_col2:
-        st.metric("Average Temperature", f"{avg_temp:.1f}°C")
-    with metric_col3:
-        st.metric("Highest Recorded", f"{max_temp:.1f}°C")
-    with metric_col4:
-        st.metric("Lowest Recorded", f"{min_temp:.1f}°C")
-    
-    # Create detailed plots
-    plot_col1, plot_col2 = st.columns(2)
-    
-    with plot_col1:
-        # Temperature trend over time
-        fig_temp = px.line(
-            city_data, 
-            x='year', 
-            y='temperature',
-            title=f'Temperature Trend Over Time',
-            labels={'temperature': 'Temperature (°C)', 'year': 'Year'},
-            markers=True
-        )
-        fig_temp.update_traces(line=dict(color='#1f77b4', width=2))
-        fig_temp.update_layout(height=400)
-        st.plotly_chart(fig_temp, use_container_width=True)
-    
-    with plot_col2:
-        # Temperature distribution
-        fig_hist = px.histogram(
-            city_data, 
-            x='temperature',
-            nbins=20,
-            title=f'Temperature Distribution',
-            labels={'temperature': 'Temperature (°C)', 'count': 'Frequency'},
-            color_discrete_sequence=['#ff7f0e']
-        )
-        fig_hist.update_layout(height=400)
-        st.plotly_chart(fig_hist, use_container_width=True)
-    
-    # Additional analysis
-    plot_col3, plot_col4 = st.columns(2)
-    
-    with plot_col3:
-        # Temperature by decade
-        city_data['decade'] = (city_data['year'] // 10) * 10
-        decade_avg = city_data.groupby('decade')['temperature'].mean().reset_index()
-        
-        fig_decade = px.bar(
-            decade_avg, 
-            x='decade', 
-            y='temperature',
-            title=f'Average Temperature by Decade',
-            labels={'temperature': 'Temperature (°C)', 'decade': 'Decade'},
-            color='temperature',
-            color_continuous_scale='RdBu_r'
-        )
-        fig_decade.update_layout(height=400)
-        st.plotly_chart(fig_decade, use_container_width=True)
-    
-    with plot_col4:
-        # Temperature anomaly (if available)
-        if 'temperature_anomaly' in city_data.columns:
-            fig_anomaly = px.line(
-                city_data, 
-                x='year', 
-                y='temperature_anomaly',
-                title=f'Temperature Anomaly Over Time',
-                labels={'temperature_anomaly': 'Temperature Anomaly (°C)', 'year': 'Year'},
-                markers=True
-            )
-            fig_anomaly.update_traces(line=dict(color='red', width=2))
-            fig_anomaly.add_hline(y=0, line_dash="dash", line_color="gray", annotation_text="Baseline")
-            fig_anomaly.update_layout(height=400)
-            st.plotly_chart(fig_anomaly, use_container_width=True)
-        else:
-            # Temperature change rate
-            city_data_sorted = city_data.sort_values('year')
-            city_data_sorted['temp_change'] = city_data_sorted['temperature'].diff()
-            
-            fig_change = px.bar(
-                city_data_sorted[1:], 
-                x='year', 
-                y='temp_change',
-                title=f'Year-over-Year Temperature Change',
-                labels={'temp_change': 'Temperature Change (°C)', 'year': 'Year'},
-                color='temp_change',
-                color_continuous_scale='RdBu_r'
-            )
-            fig_change.update_layout(height=400)
-            st.plotly_chart(fig_change, use_container_width=True)
-    
-    # Climate heatmap for the selected city
-    st.markdown("### 🌡️ Temperature Timeline Heatmap")
-    fig_city_heatmap = create_climate_heatmap(df, [st.session_state.selected_city])
-    st.plotly_chart(fig_city_heatmap, use_container_width=True)
+else:
+    st.markdown("""
+        <div class="climate-info">
+            <h4>🎯 Get Started:</h4>
+            <p>Click on any city point on the map above to begin your climate analysis journey!</p>
+            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-# 2. Multi-city comparison section
-st.markdown("---")
+# Call to Action
 st.markdown("""
-        <style>
-            .subtitle {
-                background-color: #f0f0f0;
-                padding: 10px;
-                border-radius: 8px;
-                text-align: center;
-                color: #333333;
-                font-size: 20px;
-                font-weight: normal;
-                margin-top: 10px;
-                margin-bottom: 20px;
-            }
-        </style>
-        <div class="subtitle">Multi-City Temperature Analysis</div>
+    <div class="sdg-card">
+        <h3>🌱 Take Climate Action Today!</h3>
+        <p><strong>Individual Actions:</strong> Reduce energy consumption, use renewable energy, support sustainable transportation</p>
+        <p><strong>Community Actions:</strong> Advocate for climate policies, support local environmental initiatives, educate others</p>
+        <p><strong>Global Actions:</strong> Support international climate agreements, sustainable development projects, and climate research</p>
+    </div>
 """, unsafe_allow_html=True)
 
-# Country selection
-countries = sorted(df['country_name'].unique())
-selected_countries = st.multiselect(
-    "Select countries:", 
-    countries, 
-    default=countries[:1] if len(countries) > 1 else countries
-)
-
-# Filter cities based on selected countries
-available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
-
-# City selection (multiselect within selected countries)
-selected_cities = st.multiselect(
-    "Select cities:", 
-    available_cities, 
-    default=available_cities[:1] if len(available_cities) > 1 else available_cities
-)
-
-if selected_cities:
-    # Climate Heatmap for multiple cities
-    fig_heatmap = create_climate_heatmap(df, selected_cities)
-    st.plotly_chart(fig_heatmap, use_container_width=True)
-else:
-    st.info("Please select at least one city to display the temperature trends and heatmap.")
-
 # Footer
-st.markdown("---")
 st.markdown("""
-    <div style="text-align: center; color: white;">
-        <h4 style="color: white;">🌍 Climate Map Africa Dashboard</h4>
+    <div class="footer">
+        <h4 style="color: white;" >🌍 Climate Map Africa Dashboard</h4>
         <p>Data source: <a href="https://cds.climate.copernicus.eu/" target="_blank" style="color: #4ECDC4;">Copernicus Climate Data Store</a></p>
         <p>Supporting UN SDGs: Climate Action (13) • Sustainable Cities (11) • Partnerships (17)</p>
         <p>🤝 Together, we can build a sustainable future for Africa and the world!</p>
