@@ -45,6 +45,7 @@ st.markdown("""
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             margin: 15px 0;
+            overflow: hidden; /* Prevent content overflow */
         }
         
         .main-title {
@@ -181,19 +182,35 @@ st.markdown("""
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
         
-        /* Streamlit component styling */
+        /* Streamlit component styling - Fixed overflow */
         .stPlotlyChart {
-            background: rgba(255, 255, 255, 0.95);
+            background: transparent;
             border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .stPlotlyChart > div {
+            width: 100% !important;
+            max-width: 100% !important;
         }
         
         /* Hide Streamlit branding */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
+        
+        /* Ensure proper responsive behavior */
+        .element-container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        /* Fix for columns */
+        .row-widget {
+            width: 100% !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -274,7 +291,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
                 <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
-                <p> <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
+                <p><strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
             </div>
             """
         elif temp_change > 1.0:
@@ -287,8 +304,8 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p> This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
-                <p> Monitor trends closely and implement adaptation strategies.</p>
+                <p>This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
+                <p>Monitor trends closely and implement adaptation strategies.</p>
             </div>
             """
         else:
@@ -312,13 +329,13 @@ def generate_climate_narrative(city_data, city_name, country_name):
 def create_climate_heatmap(df, selected_city):
     """Create an enhanced climate stripes style heatmap with anomaly data for a single city"""
     if not selected_city:
-        return go.Figure()
+        return None
     
     # Filter data for selected city
     city_data = df[df['city'] == selected_city]
     
     if city_data.empty:
-        return go.Figure()
+        return None
     
     # Sort by year
     city_data = city_data.sort_values('year')
@@ -346,11 +363,11 @@ def create_climate_heatmap(df, selected_city):
         margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
         yaxis=dict(showticklabels=False, gridcolor='rgba(0,0,0,0.1)'),
-        height=400,
-        width=1000,
+        height=350,
         font=dict(size=12),
         title_font=dict(size=16, color='#2c3e50'),
-        xaxis=dict(gridcolor='rgba(0,0,0,0.1)')
+        xaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
+        autosize=True
     )
     
     return fig
@@ -358,12 +375,12 @@ def create_climate_heatmap(df, selected_city):
 def create_temperature_trend_chart(df, selected_city):
     """Create a line chart showing temperature trends for the selected city"""
     if not selected_city:
-        return go.Figure()
+        return None
     
     city_data = df[df['city'] == selected_city].sort_values('year')
     
     if city_data.empty:
-        return go.Figure()
+        return None
     
     fig = go.Figure()
     
@@ -397,7 +414,7 @@ def create_temperature_trend_chart(df, selected_city):
         margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
         yaxis_title="Temperature (°C)",
-        height=400,
+        height=350,
         font=dict(size=12),
         title_font=dict(size=16, color='#2c3e50'),
         xaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
@@ -406,7 +423,8 @@ def create_temperature_trend_chart(df, selected_city):
             bgcolor='rgba(255,255,255,0.8)',
             bordercolor='rgba(0,0,0,0.2)',
             borderwidth=1
-        )
+        ),
+        autosize=True
     )
     
     return fig
@@ -423,45 +441,44 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # SDG Information Section
-with st.container():
+st.markdown("""
+    <div class="custom-container">
+        <div class="sdg-header">
+            🎯 Supporting UN Sustainable Development Goals 🎯 
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+with col1:
     st.markdown("""
         <div class="custom-container">
-            <div class="sdg-header">
-                🎯 Supporting UN Sustainable Development Goals 🎯 
+            <div class="sdg-card">
+                <h4>🌍 SDG 13: Climate Action</h4>
+                <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown("""
-            <div class="custom-container">
-                <div class="sdg-card">
-                    <h4>🌍 SDG 13: Climate Action</h4>
-                    <p>Take urgent action to combat climate change and its impacts through monitoring temperature trends and promoting awareness.</p>
-                </div>
+with col2:
+    st.markdown("""
+        <div class="custom-container">
+            <div class="sdg-card">
+                <h4>🏙️ SDG 11: Sustainable Cities</h4>
+                <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
             </div>
-        """, unsafe_allow_html=True)
+        </div>
+    """, unsafe_allow_html=True)
 
-    with col2:
-        st.markdown("""
-            <div class="custom-container">
-                <div class="sdg-card">
-                    <h4>🏙️ SDG 11: Sustainable Cities</h4>
-                    <p>Make cities and human settlements inclusive, safe, resilient and sustainable by understanding urban climate patterns.</p>
-                </div>
+with col3:
+    st.markdown("""
+        <div class="custom-container">
+            <div class="sdg-card">
+                <h4>🤝 SDG 17: Partnerships</h4>
+                <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
             </div>
-        """, unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("""
-            <div class="custom-container">
-                <div class="sdg-card">
-                    <h4>🤝 SDG 17: Partnerships</h4>
-                    <p>Strengthen global partnerships for sustainable development through open climate data and knowledge sharing.</p>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+        </div>
+    """, unsafe_allow_html=True)
 
 # Load data and calculate anomalies
 df = load_data()
@@ -471,40 +488,39 @@ df = calculate_temperature_anomaly(df)
 latest_year = df['year'].max()
 latest_data = df[df['year'] == latest_year]
 
-with st.container():
-    st.markdown('<div class="custom-container">', unsafe_allow_html=True)
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown(f"""
-            <div class="stats-card">
-                <h5>Cities and Towns Monitored</h5>
-                <h2>{len(df['city'].unique())}</h2>
-            </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-            <div class="stats-card">
-                <h5>Countries Covered</h5>
-                <h2>{len(df['country_name'].unique())}</h2>
-            </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        avg_temp = latest_data['temperature'].mean()
-        st.markdown(f"""
-            <div class="stats-card">
-                <h5>Average Temperature {latest_year}</h5>
-                <h2>{avg_temp:.1f}°C</h2>
-            </div>
-        """, unsafe_allow_html=True)
-    with col4:
-        avg_anomaly = latest_data['temperature_anomaly'].mean()
-        st.markdown(f"""
-            <div class="stats-card">
-                <h5>Average Anomaly {latest_year}</h5>
-                <h2>{avg_anomaly:+.1f}°C</h2>
-            </div>
-        """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<div class="custom-container">', unsafe_allow_html=True)
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Cities and Towns Monitored</h5>
+            <h2>{len(df['city'].unique())}</h2>
+        </div>
+    """, unsafe_allow_html=True)
+with col2:
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Countries Covered</h5>
+            <h2>{len(df['country_name'].unique())}</h2>
+        </div>
+    """, unsafe_allow_html=True)
+with col3:
+    avg_temp = latest_data['temperature'].mean()
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Average Temperature {latest_year}</h5>
+            <h2>{avg_temp:.1f}°C</h2>
+        </div>
+    """, unsafe_allow_html=True)
+with col4:
+    avg_anomaly = latest_data['temperature_anomaly'].mean()
+    st.markdown(f"""
+        <div class="stats-card">
+            <h5>Average Anomaly {latest_year}</h5>
+            <h2>{avg_anomaly:+.1f}°C</h2>
+        </div>
+    """, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Interactive Map
 st.markdown("""
@@ -530,21 +546,22 @@ fig_map = px.scatter_mapbox(
     title=f"Average Temperature in {latest_year}"
 )
 
-# Set marker size after creation
+# Set marker size and layout
 fig_map.update_traces(marker=dict(size=12))
 fig_map.update_layout(
-    height=700,
+    height=600,
     plot_bgcolor='rgba(255,255,255,0.9)',
     paper_bgcolor='rgba(255,255,255,0.95)',
     title_font=dict(size=18, color='#2c3e50'),
-    font=dict(size=12)
+    font=dict(size=12),
+    margin=dict(l=0, r=0, t=40, b=0),
+    autosize=True
 )
 
 # Display the map in a container
-with st.container():
-    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-    map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Handle map click events
 if map_click and map_click.selection and map_click.selection.points:
@@ -583,19 +600,22 @@ if st.session_state.selected_city:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
             trend_chart = create_temperature_trend_chart(df, selected_city)
-            st.plotly_chart(trend_chart, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            if trend_chart:
+                st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+                st.plotly_chart(trend_chart, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
         with col2:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
             heatmap = create_climate_heatmap(df, selected_city)
-            st.plotly_chart(heatmap, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            if heatmap:
+                st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+                st.plotly_chart(heatmap, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        st.markdown(f'<div class="custom-container">{narrative}</div>', unsafe_allow_html=True)
+        if narrative:
+            st.markdown(f'<div class="custom-container">{narrative}</div>', unsafe_allow_html=True)
 
         # Additional insights
         st.markdown("""
@@ -639,6 +659,6 @@ st.markdown("""
         <h4 style="color: white;">🌍 Climate Map Africa Dashboard</h4>
         <p>Data source: <a href="https://cds.climate.copernicus.eu/" target="_blank" style="color: #4ECDC4;">Copernicus Climate Data Store</a></p>
         <p>Supporting UN SDGs: Climate Action (13) • Sustainable Cities (11) • Partnerships (17)</p>
-        <p>🤝 Together, we can build a sustainable future for Africa and the world!</p>
+        <p>🤝 Together, we can build a sustainable future for Africa
     </div>
 """, unsafe_allow_html=True)
