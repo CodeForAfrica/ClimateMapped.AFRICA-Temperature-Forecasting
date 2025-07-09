@@ -510,10 +510,10 @@ if st.session_state.selected_city:
             </div>
         """, unsafe_allow_html=True)
         
-        # Add a button to clear selection
-        if st.button("🔄 Clear Selection"):
-            st.session_state.selected_city = None
-            st.rerun()
+        ## Add a button to clear selection
+        #if st.button("🔄 Clear Selection"):
+        #    st.session_state.selected_city = None
+         #   st.rerun()
     
 else:
     st.markdown("""
