@@ -297,9 +297,17 @@ if st.session_state.selected_city:
         with col2:
             st.plotly_chart(create_climate_heatmap(df, selected_city), use_container_width=True)
         st.markdown(generate_climate_narrative(city_data, selected_city, country_name), unsafe_allow_html=True)
-else:
+    else:
     st.info("Click a city on the map to explore its climate trend.")
 
+else:
+    st.markdown("""
+        <div class="climate-info">
+            <h4>🎯 Get Started:</h4>
+            <p>Please select at least one country and city to begin your climate analysis journey!</p>
+            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # Additional insights
     st.markdown("""
@@ -309,15 +317,6 @@ else:
             <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
             <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
             <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-else:
-    st.markdown("""
-        <div class="climate-info">
-            <h4>🎯 Get Started:</h4>
-            <p>Please select at least one country and city to begin your climate analysis journey!</p>
-            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
 
