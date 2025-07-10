@@ -305,20 +305,21 @@ def generate_climate_narrative(city_data, city_name, country_name):
     
     return ""
 
-def create_climate_heatmap(df, selected_city):
-    """Create an enhanced climate stripes style heatmap with anomaly data for a single city"""
-    if not selected_city:
+def create_climate_heatmap(df, selected_cities):
+    """Create an enhanced climate stripes style heatmap with anomaly data"""
+    if not selected_cities:
         return go.Figure()
     
-    # Filter data for selected city
-    city_data = df[df['city'] == selected_city]
+    # Filter data for selected cities
+    filtered_df = df[df['city'].isin(selected_cities)]
     
-    if city_data.empty:
-        return go.Figure()
-    
-    # Sort by year
-    city_data = city_data.sort_values('year')
-    
+    # Create pivot table for heatmap using anomaly data
+    pivot_df = filtered_df.pivot_table(
+        index='city', 
+        columns='year', 
+        values='temperature_anomaly',
+        aggfunc='mean'
+    )    
     # Create heatmap with anomaly scale (single row for the city)
     fig = go.Figure(data=go.Heatmap(
         z=pivot_df.values,
