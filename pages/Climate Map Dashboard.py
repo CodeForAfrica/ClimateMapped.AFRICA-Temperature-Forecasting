@@ -681,8 +681,6 @@ with st.container():
         """, unsafe_allow_html=True)
         
 
-
-
 # Call to Action
 st.markdown("""
     <div class="sdg-card">
@@ -692,6 +690,8 @@ st.markdown("""
         <p><strong>Global Actions:</strong> Support international climate agreements, sustainable development projects, and climate research</p>
     </div>
 """, unsafe_allow_html=True)
+
+st.markdown("---")
 
 # Footer
 st.markdown("""
