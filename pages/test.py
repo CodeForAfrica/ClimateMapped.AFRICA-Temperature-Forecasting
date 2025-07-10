@@ -120,6 +120,11 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
             }
+
+        .stats-card-1:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+        }
         .stats-card-2 {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             padding: 20px;
@@ -147,6 +152,7 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
         }
+        
 
         
         .footer {
