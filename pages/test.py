@@ -506,8 +506,6 @@ if map_click and map_click.selection and map_click.selection.points:
             clicked_city = latest_data.iloc[point_index]['city']
             st.session_state.selected_city = clicked_city
 
-
-
 # Display analysis for selected city
 if st.session_state.selected_city:
     selected_city = st.session_state.selected_city
