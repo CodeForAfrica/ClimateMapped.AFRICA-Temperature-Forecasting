@@ -134,6 +134,12 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(67,233,123,0.3); 
         }
+
+        .stats-card-2:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+        }
+        
         .stats-card-3 {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             padding: 20px;
@@ -143,6 +149,11 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(240,147,251,0.3); 
         }
+        .stats-card-3:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+        }
+        
         .stats-card-4 {
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             padding: 20px;
@@ -152,7 +163,10 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
         }
-        
+        .stats-card-3:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+        }
 
         
         .footer {
