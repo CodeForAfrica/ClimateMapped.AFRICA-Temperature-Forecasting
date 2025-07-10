@@ -518,11 +518,15 @@ fig_map.update_layout(
         title="Average Temperature(°C) 2025",
         title_side='top',
         title_font=dict(
-            color='black',        # Make the title text black
-            size=14               # Optional: set font size
+            color='black',        
+            size=14              
         ),
-        x=0.45,                 # Position on x-axis (0 to 1), right side
-        y=0.05,                 # Position on y-axis (0 to 1), bottom
+        tickfont=dict(
+            color='black',     
+            size=12            
+        ),
+        x=0.45,                 
+        y=0.05,                 
         xanchor='left',
         yanchor='bottom',
         orientation='h',        
