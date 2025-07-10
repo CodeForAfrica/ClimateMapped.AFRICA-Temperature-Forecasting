@@ -579,55 +579,56 @@ available_cities = sorted(filtered_df['city'].unique())
 selected_cities = st.multiselect("Select city/cities", available_cities, key="city_multiselect")
 
 # Update selected city in session state if user selects any cities from multiselect
+# Update selected cities in session state
 if selected_cities:
-    # Optionally allow user to choose multiple cities and loop over them later
-    # For now, store the first one in session state for analysis
-    st.session_state.selected_city = selected_cities[0]
-
-# Display the map and capture click events
-map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+    st.session_state.selected_cities = selected_cities
 
 # Handle map click events (override dropdown if clicked)
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+
 if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
 
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
-        st.session_state.selected_city = clicked_city
     elif 'customdata' in clicked_point:
         point_index = clicked_point['point_index']
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
-            st.session_state.selected_city = clicked_city
+    
+    # Add clicked city to the session state list if not already in it
+    if clicked_city:
+        if "selected_cities" not in st.session_state:
+            st.session_state.selected_cities = []
+        if clicked_city not in st.session_state.selected_cities:
+            st.session_state.selected_cities.append(clicked_city)
 
-# Display analysis for selected city
-if st.session_state.get("selected_city"):
-    selected_city = st.session_state.selected_city
+# Display analysis for each selected city
+if st.session_state.get("selected_cities"):
+    for selected_city in st.session_state.selected_cities:
+        city_data = df[df['city'] == selected_city]
+        if not city_data.empty:
+            country_name = city_data['country_name'].iloc[0]
 
-    # Get city data
-    city_data = df[df['city'] == selected_city]
+            st.markdown(f"""
+                <div class="subtitle">
+                    Detailed Climate Analysis for {selected_city}, {country_name}
+                </div>
+            """, unsafe_allow_html=True)
 
-    if not city_data.empty:
-        country_name = city_data['country_name'].iloc[0]
+            col1, col2 = st.columns(2)
 
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {selected_city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
+            with col1:
+                trend_chart = create_temperature_trend_chart(df, selected_city)
+                st.plotly_chart(trend_chart, use_container_width=True)
 
-        col1, col2 = st.columns(2)
+            with col2:
+                heatmap = create_climate_heatmap(df, selected_city)
+                st.plotly_chart(heatmap, use_container_width=True)
 
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, selected_city)
-            st.plotly_chart(trend_chart, use_container_width=True)
+            narrative = generate_climate_narrative(city_data, selected_city, country_name)
+            st.markdown(narrative, unsafe_allow_html=True)
 
-        with col2:
-            heatmap = create_climate_heatmap(df, selected_city)
-            st.plotly_chart(heatmap, use_container_width=True)
-
-        narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        st.markdown(narrative, unsafe_allow_html=True)
 
         # Additional insights
         st.markdown("""
