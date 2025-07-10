@@ -458,9 +458,18 @@ with st.container():
                 <h2>{avg_anomaly:+.1f}°C</h2>
             </div>
         """, unsafe_allow_html=True)
+        
 # Initialize session state
 if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
+
+# Interactive Map
+st.markdown("""
+    <div class="subtitle">
+        Interactive Climate Map of Africa <br>
+        <span style="font-size:16px;"> Click on any city point on the map to see detailed climate analysis!</span>
+    </div>
+""", unsafe_allow_html=True)
 
 # Country and city selection (appears first for better UX)
 countries = sorted(df['country_name'].dropna().unique())
@@ -487,13 +496,6 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Interactive Map
-st.markdown("""
-    <div class="subtitle">
-        Interactive Climate Map of Africa <br>
-        <span style="font-size:16px;"> Click on any city point on the map to see detailed climate analysis!</span>
-    </div>
-""", unsafe_allow_html=True)
 
 fig_map = px.scatter_mapbox(
     latest_data,
