@@ -491,6 +491,17 @@ fig_map.update_layout(height=700)
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
+# Show help message only when no map selection AND no multiselect cities are chosen
+if st.session_state.selected_city is None and not selected_cities:
+    st.markdown("""
+        <div class="climate-info">
+            <h4>🎯 Get Started:</h4>
+            <p>Click on any city point on the map above to begin your climate analysis journey!</p>
+            <p>Or use the country and city selection boxes above to choose specific locations for analysis.</p>
+            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
 # Handle map click events
 if map_click and map_click.selection and map_click.selection.points:
     # Get the clicked point
@@ -597,16 +608,7 @@ if selected_cities:
         if narrative:
             st.markdown(narrative, unsafe_allow_html=True)
 
-# Show help message only when no map selection AND no multiselect cities are chosen
-if st.session_state.selected_city is None and not selected_cities:
-    st.markdown("""
-        <div class="climate-info">
-            <h4>🎯 Get Started:</h4>
-            <p>Click on any city point on the map above to begin your climate analysis journey!</p>
-            <p>Or use the country and city selection boxes above to choose specific locations for analysis.</p>
-            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
-        </div>
-    """, unsafe_allow_html=True)
+
     
 # Additional insights
 st.markdown("""
