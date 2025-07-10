@@ -319,9 +319,9 @@ def create_climate_heatmap(df, selected_cities):
         columns='year', 
         values='temperature_anomaly',
         aggfunc='mean'
-    ) 
+    )
     
-    # Create heatmap with anomaly scale (single row for the city)
+    # Create heatmap with anomaly scale
     fig = go.Figure(data=go.Heatmap(
         z=pivot_df.values,
         x=pivot_df.columns,
@@ -329,28 +329,23 @@ def create_climate_heatmap(df, selected_cities):
         zmin=-3,
         zmax=3,
         colorscale='RdBu_r',
-        showscale=False,  # Hides the colorbar/legend
+        showscale=True,
+        colorbar=dict(title="Temperature Anomaly (°C)"),
         hovertemplate='<b>%{y}</b><br>' +
                       'Year: %{x}<br>' +
                       'Anomaly: %{z:.2f}°C<br>' +
                       '<extra></extra>'
-))
-    
+    ))
     
     fig.update_layout(
-        title=f"Temperature Anomalies for {selected_city}",
-        plot_bgcolor='white',
-        paper_bgcolor='white', 
-        margin=dict(l=30, r=30, t=30, b=30),  # Padding around the plot
+        title="Temperature Anomalies by city and year",
         xaxis_title="Year",
-        #yaxis_title="City",
-        yaxis=dict(showticklabels=False),
-        height=400,
-        width=1000,
+        yaxis_title="City",
+        height=max(400, len(selected_cities) * 50),
         font=dict(size=12)
     )
     
-return fig
+    return fig
 
 def create_temperature_trend_chart(df, selected_city):
     """Create a line chart showing temperature trends for the selected city"""
