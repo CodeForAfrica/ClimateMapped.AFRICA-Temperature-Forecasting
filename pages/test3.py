@@ -569,42 +569,41 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
+if "selected_cities" not in st.session_state:
+    st.session_state.selected_cities = []
+
+# --- Step 2: UI – Country & City Filters ---
 countries = sorted(df['country_name'].unique())
 
-# Create two columns for aligned filters
 col1, col2 = st.columns(2)
 
 with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
-        countries, 
+        countries,
         default=['Senegal'] if 'Senegal' in countries else countries[:1],
         help="Choose one or more African countries to examine their climate data"
     )
 
-# Filter cities based on selected countries
-available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
+# Combine available cities from selected countries + any cities already selected (including map clicks)
+filtered_df = df[df['country_name'].isin(selected_countries)]
+dropdown_cities = sorted(filtered_df['city'].unique())
 
-# Initialize session state for selected cities
-if "selected_cities" not in st.session_state:
-    st.session_state.selected_cities = []
-
-# Filter session-stored selected cities to only show valid ones
-valid_selected_cities = [city for city in st.session_state.selected_cities if city in available_cities]
+# Add any previously selected cities that may not be in current country filter
+dropdown_cities = sorted(set(dropdown_cities) | set(st.session_state.selected_cities))
 
 with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
-        available_cities, 
-        default=valid_selected_cities if valid_selected_cities else available_cities[:1],
+        dropdown_cities, 
+        default=st.session_state.selected_cities,
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Update session state with new selection
+# Update session state
 st.session_state.selected_cities = selected_cities
 
-# --- Step 2: Map Plot and Click Handling ---
-
+# --- Step 3: Map Click Handling ---
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
 if map_click and map_click.selection and map_click.selection.points:
@@ -618,14 +617,12 @@ if map_click and map_click.selection and map_click.selection.points:
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
 
-    # Add clicked city if valid and not already selected
-    if clicked_city:
-        if clicked_city not in st.session_state.selected_cities:
-            st.session_state.selected_cities.append(clicked_city)
-            st.experimental_rerun()  # Trigger rerun to update multiselect + analysis
+    # If clicked city is valid and not already selected, add it and rerun
+    if clicked_city and clicked_city not in st.session_state.selected_cities:
+        st.session_state.selected_cities.append(clicked_city)
+        st.experimental_rerun()
 
-# --- Step 3: Analysis and Narrative Display ---
-
+# --- Step 4: Display Analysis ---
 if st.session_state.selected_cities:
     for city in st.session_state.selected_cities:
         city_data = df[df['city'] == city]
