@@ -582,11 +582,6 @@ if selected_cities:
             </div>
         """, unsafe_allow_html=True)
 
-        # Display narrative
-        narrative = generate_climate_narrative(city_data, city, country_name)
-        if narrative:
-            st.markdown(narrative, unsafe_allow_html=True)
-
         # Display visualizations
         col1, col2 = st.columns(2)
 
@@ -597,6 +592,11 @@ if selected_cities:
         with col2:
             heatmap = create_climate_heatmap(df, city)
             st.plotly_chart(heatmap, use_container_width=True)
+
+        # Display narrative
+        narrative = generate_climate_narrative(city_data, city, country_name)
+        if narrative:
+            st.markdown(narrative, unsafe_allow_html=True)
 
 # Show help message only when no map selection AND no multiselect cities are chosen
 if st.session_state.selected_city is None and not selected_cities:
