@@ -515,24 +515,17 @@ fig_map.update_traces(marker=dict(size=12))
 fig_map.update_layout(height=700, width = 1500, margin=dict(l=0, r=0, t=30, b=0))
 fig_map.update_layout(
     coloraxis_colorbar=dict(
-        title="Average Temperature(°C) 2025",  
+        title="Average Temperature(°C) 2025", 
         x=0.75,                 # Position on x-axis (0 to 1), right side
         y=0.05,                 # Position on y-axis (0 to 1), bottom
         xanchor='left',
         yanchor='bottom',
-        orientation='v',        # vertical legend
-        len=0.3,                # 30% of plot height
-        thickness=10            # make it slimmer if needed
+        orientation='h',        
+        len=0.3,                
+        thickness=15            
     )
 )
-fig.update_layout(
-    legend=dict(
-        orientation="h",           # horizontal
-        yanchor="bottom",          # anchor from the bottom
-        y=-0.2,                    # position below the chart (adjust as needed)
-        xanchor="center",          
-        x=0.5                      # center horizontally
-    )
+
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
