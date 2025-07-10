@@ -305,27 +305,25 @@ def generate_climate_narrative(city_data, city_name, country_name):
     
     return ""
 
-def create_climate_heatmap(df, selected_cities):
-    """Create an enhanced climate stripes style heatmap with anomaly data"""
-    if not selected_cities:
-        return go.Figure()
+def create_climate_heatmap(df, selected_city):
+    """Create an enhanced climate stripes style heatmap with anomaly data for a single city"""
+    if not selected_city:
+        return None
     
-    # Filter data for selected cities
-    filtered_df = df[df['city'].isin(selected_cities)]
+    # Filter data for selected city
+    city_data = df[df['city'] == selected_city]
     
-    # Create pivot table for heatmap using anomaly data
-    pivot_df = filtered_df.pivot_table(
-        index='city', 
-        columns='year', 
-        values='temperature_anomaly',
-        aggfunc='mean'
-    )
+    if city_data.empty:
+        return None
     
-    # Create heatmap with anomaly scale
+    # Sort by year
+    city_data = city_data.sort_values('year')
+    
+    # Create heatmap with anomaly scale (single row for the city)
     fig = go.Figure(data=go.Heatmap(
-        z=pivot_df.values,
-        x=pivot_df.columns,
-        y=pivot_df.index,
+        z=[city_data['temperature_anomaly'].values],
+        x=city_data['year'].values,
+        y=[selected_city],
         zmin=-3,
         zmax=3,
         colorscale='RdBu_r',
@@ -338,11 +336,17 @@ def create_climate_heatmap(df, selected_cities):
     ))
     
     fig.update_layout(
-        title="Temperature Anomalies by city and year",
+        title=f"Temperature Anomalies for {selected_city}",
+        #plot_bgcolor='rgba(255,255,255,0.9)',
+        paper_bgcolor='rgba(255,255,255,0.95)',
+        margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
-        yaxis_title="City",
-        height=max(400, len(selected_cities) * 50),
-        font=dict(size=12)
+        yaxis=dict(showticklabels=False, gridcolor='rgba(0,0,0,0.1)'),
+        height=350,
+        font=dict(size=12),
+        title_font=dict(size=16, color='#2c3e50'),
+        xaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
+        autosize=True
     )
     
     return fig
@@ -350,12 +354,12 @@ def create_climate_heatmap(df, selected_cities):
 def create_temperature_trend_chart(df, selected_city):
     """Create a line chart showing temperature trends for the selected city"""
     if not selected_city:
-        return go.Figure()
+        return None
     
     city_data = df[df['city'] == selected_city].sort_values('year')
     
     if city_data.empty:
-        return go.Figure()
+        return None
     
     fig = go.Figure()
     
@@ -365,7 +369,8 @@ def create_temperature_trend_chart(df, selected_city):
         y=city_data['temperature'],
         mode='lines+markers',
         name='Temperature',
-        line=dict(color='#FF6B6B', width=2),
+        line=dict(color='#FF6B6B', width=3),
+        marker=dict(size=6, color='#FF6B6B'),
         hovertemplate='Year: %{x}<br>Temperature: %{y:.1f}°C<extra></extra>'
     ))
     
@@ -377,19 +382,28 @@ def create_temperature_trend_chart(df, selected_city):
         y=p(city_data['year']),
         mode='lines',
         name='Trend',
-        line=dict(color='#4ECDC4', width=3, dash='dash'),
+        line=dict(color='#4ECDC4', width=4, dash='dash'),
         hovertemplate='Year: %{x}<br>Trend: %{y:.1f}°C<extra></extra>'
     ))
     
     fig.update_layout(
         title=f"Temperature Trend for {selected_city}",
-        plot_bgcolor='white',
-        paper_bgcolor='white',  # Simulates a border
-        margin=dict(l=30, r=30, t=30, b=30),  # Padding around the plot
+        plot_bgcolor='rgba(255,255,255,0.9)',
+        paper_bgcolor='rgba(255,255,255,0.95)',
+        margin=dict(l=40, r=40, t=60, b=40),
         xaxis_title="Year",
         yaxis_title="Temperature (°C)",
-        height=400,
-        font=dict(size=12)
+        height=350,
+        font=dict(size=12),
+        title_font=dict(size=16, color='#2c3e50'),
+        xaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
+        yaxis=dict(gridcolor='rgba(0,0,0,0.1)'),
+        legend=dict(
+            bgcolor='rgba(255,255,255,0.8)',
+            bordercolor='rgba(0,0,0,0.2)',
+            borderwidth=1
+        ),
+        autosize=True
     )
     
     return fig
