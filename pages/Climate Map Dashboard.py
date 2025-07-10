@@ -526,7 +526,7 @@ fig_map.update_layout(
             color='black',     
             size=12            
         ),
-        x=0.75,                 
+        x=0.70,                 
         y=0.05,                 
         xanchor='left',
         yanchor='bottom',
