@@ -459,8 +459,10 @@ with st.container():
             </div>
         """, unsafe_allow_html=True)
 
+# Initialize session state
+if 'selected_city' not in st.session_state:
+    st.session_state.selected_city = None
 
-# Interactive Map
 # Interactive Map
 st.markdown("""
     <div class="subtitle">
@@ -506,8 +508,8 @@ if map_click and map_click.selection and map_click.selection.points:
             clicked_city = latest_data.iloc[point_index]['city']
             st.session_state.selected_city = clicked_city
 
-# Display analysis for selected city from map click
-if st.session_state.selected_city:
+# Display analysis for selected city from map click (only if actually clicked)
+if st.session_state.selected_city is not None:
     selected_city = st.session_state.selected_city
 
     # Get city data
@@ -534,6 +536,11 @@ if st.session_state.selected_city:
 
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
         st.markdown(narrative, unsafe_allow_html=True)
+        
+        # Add button to clear selection
+        if st.button("Clear Selection", key="clear_selection"):
+            st.session_state.selected_city = None
+            st.rerun()
 
 # Country and city selection (appears after map analysis OR when no map selection)
 countries = sorted(df['country_name'].dropna().unique())
@@ -592,7 +599,7 @@ if selected_cities:
             st.plotly_chart(heatmap, use_container_width=True)
 
 # Show help message only when no map selection AND no multiselect cities are chosen
-if not st.session_state.selected_city and not selected_cities:
+if st.session_state.selected_city is None and not selected_cities:
     st.markdown("""
         <div class="climate-info">
             <h4>🎯 Get Started:</h4>
@@ -601,6 +608,8 @@ if not st.session_state.selected_city and not selected_cities:
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
+
+    
 # Additional insights
 st.markdown("""
             <div class="climate-info">
