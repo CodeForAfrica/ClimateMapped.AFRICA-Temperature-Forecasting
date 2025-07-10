@@ -506,54 +506,36 @@ if map_click and map_click.selection and map_click.selection.points:
             clicked_city = latest_data.iloc[point_index]['city']
             st.session_state.selected_city = clicked_city
 
-# Function to display city analysis
-def display_city_analysis(city_name):
-    """Display detailed analysis for a specific city"""
-    city_data = df[df['city'] == city_name]
-    
+# Display analysis for selected city from map click
+if st.session_state.selected_city:
+    selected_city = st.session_state.selected_city
+
+    # Get city data
+    city_data = df[df['city'] == selected_city]
+
     if not city_data.empty:
         country_name = city_data['country_name'].iloc[0]
 
         st.markdown(f"""
             <div class="subtitle">
-                Detailed Climate Analysis for {city_name}, {country_name}
+                Detailed Climate Analysis for {selected_city}, {country_name}
             </div>
         """, unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
 
         with col1:
-            trend_chart = create_temperature_trend_chart(df, city_name)
+            trend_chart = create_temperature_trend_chart(df, selected_city)
             st.plotly_chart(trend_chart, use_container_width=True)
 
         with col2:
-            heatmap = create_climate_heatmap(df, city_name)
+            heatmap = create_climate_heatmap(df, selected_city)
             st.plotly_chart(heatmap, use_container_width=True)
 
-        narrative = generate_climate_narrative(city_data, city_name, country_name)
+        narrative = generate_climate_narrative(city_data, selected_city, country_name)
         st.markdown(narrative, unsafe_allow_html=True)
 
-# Display analysis for city selected from map click
-if st.session_state.selected_city:
-    selected_city = st.session_state.selected_city
-    display_city_analysis(selected_city)
-    
-    # Add option to clear selection
-    if st.button("Clear Map Selection", key="clear_map_selection"):
-        st.session_state.selected_city = None
-        st.rerun()
-
-# Add separator
-#st.markdown("---")
-
-# Alternative selection method using multiselect boxes
-#st.markdown("""
-#    <div class="subtitle">
-#        Alternative Analysis Method <br>
-#        <span style="font-size:16px;">Use the filters below to select countries and cities for analysis</span>
-#    </div>
-#""", unsafe_allow_html=True)
-
+# Country and city selection (appears after map analysis OR when no map selection)
 countries = sorted(df['country_name'].dropna().unique())
 
 # Create two columns for aligned filters
@@ -564,8 +546,7 @@ with col1:
         "Select countries to analyze:", 
         countries, 
         default=['Senegal'] if 'Senegal' in countries else countries[:1],
-        help="Choose one or more African countries to examine their climate data",
-        key="country_multiselect"
+        help="Choose one or more African countries to examine their climate data"
     )
 
 # Filter cities based on selected countries
@@ -576,11 +557,10 @@ with col2:
         "Select cities for detailed analysis:", 
         available_cities, 
         default=available_cities[:1] if len(available_cities) > 0 else [],
-        help="Choose specific cities to analyze temperature trends and anomalies",
-        key="city_multiselect"
+        help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Display analysis for cities selected from multiselect
+# Display analysis for cities selected from multiselect (only if cities are selected)
 if selected_cities:
     for city in selected_cities:
         city_data = df[df['city'] == city]
@@ -611,18 +591,16 @@ if selected_cities:
             heatmap = create_climate_heatmap(df, city)
             st.plotly_chart(heatmap, use_container_width=True)
 
-# Show help message when no selections are made
+# Show help message only when no map selection AND no multiselect cities are chosen
 if not st.session_state.selected_city and not selected_cities:
     st.markdown("""
         <div class="climate-info">
             <h4>🎯 Get Started:</h4>
-            <p><strong>Option 1:</strong> Click on any city point on the map above to begin your climate analysis journey!</p>
-            <p><strong>Option 2:</strong> Use the country and city selection boxes above to choose specific locations for analysis.</p>
+            <p>Click on any city point on the map above to begin your climate analysis journey!</p>
+            <p>Or use the country and city selection boxes above to choose specific locations for analysis.</p>
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
-
-
 # Additional insights
 st.markdown("""
             <div class="climate-info">
