@@ -701,18 +701,19 @@ if cities_to_analyze:
                 st.markdown("---")
 else:
     st.info("👆 Select cities using the dropdown above or click on any point on the map to start analyzing climate data.")
+    
 #Additional insights
-st.markdown("""
-        <div class="custom-container">
-            <div class="climate-info">
-                <h4>📖 Understanding Temperature Anomalies:</h4>
-                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
-                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
-                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
-                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+#st.markdown("""
+#        <div class="custom-container">
+ #           <div class="climate-info">
+ #               <h4>📖 Understanding Temperature Anomalies:</h4>
+ #               <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
+ #               <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
+ #               <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
+ #               <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+ #           </div>
+ #       </div>
+ #   """, unsafe_allow_html=True)
 
 else:
     st.markdown("""
