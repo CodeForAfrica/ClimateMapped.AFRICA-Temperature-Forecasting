@@ -298,7 +298,7 @@ if st.session_state.selected_city:
             st.plotly_chart(create_climate_heatmap(df, selected_city), use_container_width=True)
         st.markdown(generate_climate_narrative(city_data, selected_city, country_name), unsafe_allow_html=True)
     else:
-    st.info("Click a city on the map to explore its climate trend.")
+        st.info("Click a city on the map to explore its climate trend.")
 
 else:
     st.markdown("""
