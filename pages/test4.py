@@ -467,7 +467,7 @@ if 'selected_city' not in st.session_state:
 st.markdown("""
     <div class="subtitle">
         Interactive Climate Map of Africa <br>
-        <span style="font-size:16px;"> Click on any city point on the map to see detailed climate analysis!</span>
+        <span style="font-size:16px;"> Click on any city point on the map or select any country or city to see detailed climate analysis!</span>
     </div>
 """, unsafe_allow_html=True)
 
@@ -550,7 +550,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     selected_countries = st.multiselect(
-        "Select countries to analyze:", 
+        "Select countries:", 
         countries, 
         default=[],
         help="Choose one or more African countries to examine their climate data"
@@ -561,7 +561,7 @@ available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_
 
 with col2:
     selected_cities = st.multiselect(
-        "Select cities for detailed analysis:", 
+        "Select cities:", 
         available_cities, 
         default=[],
         help="Choose specific cities to analyze temperature trends and anomalies"
