@@ -530,7 +530,7 @@ fig_map.update_layout(
         xanchor='left',
         yanchor='bottom',
         orientation='h',        
-        len=0.5,                
+        len=0.3,                
         thickness=15            
     )
 )
