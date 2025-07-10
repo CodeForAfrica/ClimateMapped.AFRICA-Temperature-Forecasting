@@ -569,28 +569,36 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
-st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
-st.markdown('</div>', unsafe_allow_html=True)
+# Dropdown for country selection
+countries = sorted(df['country_name'].unique())
+selected_country = st.selectbox("Select a country", countries, key="country_dropdown")
 
-# Handle map click events
+# Filter cities based on selected country
+cities_in_country = sorted(df[df['country_name'] == selected_country]['city'].unique())
+selected_city_dropdown = st.selectbox("Select a city", cities_in_country, key="city_dropdown")
+
+# Update selected city in session state when dropdown changes
+if selected_city_dropdown:
+    st.session_state.selected_city = selected_city_dropdown
+
+# Display the map and capture click events
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+
+# Handle map click events (override dropdown if clicked)
 if map_click and map_click.selection and map_click.selection.points:
-    # Get the clicked point
     clicked_point = map_click.selection.points[0]
-    
-    # Find the city based on the clicked point's hover_name
+
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
         st.session_state.selected_city = clicked_city
     elif 'customdata' in clicked_point:
-        # Alternative method to get city name
         point_index = clicked_point['point_index']
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
             st.session_state.selected_city = clicked_city
 
 # Display analysis for selected city
-if st.session_state.selected_city:
+if st.session_state.get("selected_city"):
     selected_city = st.session_state.selected_city
 
     # Get city data
@@ -600,10 +608,8 @@ if st.session_state.selected_city:
         country_name = city_data['country_name'].iloc[0]
 
         st.markdown(f"""
-            <div class="custom-container">
-                <div class="subtitle">
-                    Detailed Climate Analysis for {selected_city}, {country_name}
-                </div>
+            <div class="subtitle">
+                Detailed Climate Analysis for {selected_city}, {country_name}
             </div>
         """, unsafe_allow_html=True)
 
@@ -611,21 +617,14 @@ if st.session_state.selected_city:
 
         with col1:
             trend_chart = create_temperature_trend_chart(df, selected_city)
-            if trend_chart:
-                st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-                st.plotly_chart(trend_chart, use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
+            st.plotly_chart(trend_chart, use_container_width=True)
 
         with col2:
             heatmap = create_climate_heatmap(df, selected_city)
-            if heatmap:
-                st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-                st.plotly_chart(heatmap, use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
+            st.plotly_chart(heatmap, use_container_width=True)
 
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        if narrative:
-            st.markdown(f'<div class="custom-container">{narrative}</div>', unsafe_allow_html=True)
+        st.markdown(narrative, unsafe_allow_html=True)
 
         # Additional insights
         st.markdown("""
