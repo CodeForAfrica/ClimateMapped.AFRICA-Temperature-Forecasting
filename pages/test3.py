@@ -569,17 +569,20 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
-# Dropdown for country selection
+# Multiselect for country selection
 countries = sorted(df['country_name'].unique())
-selected_country = st.selectbox("Select a country", countries, key="country_dropdown")
+selected_countries = st.multiselect("Select country/countries", countries, key="country_multiselect")
 
-# Filter cities based on selected country
-cities_in_country = sorted(df[df['country_name'] == selected_country]['city'].unique())
-selected_city_dropdown = st.selectbox("Select a city", cities_in_country, key="city_dropdown")
+# Filter cities based on selected countries
+filtered_df = df[df['country_name'].isin(selected_countries)]
+available_cities = sorted(filtered_df['city'].unique())
+selected_cities = st.multiselect("Select city/cities", available_cities, key="city_multiselect")
 
-# Update selected city in session state when dropdown changes
-if selected_city_dropdown:
-    st.session_state.selected_city = selected_city_dropdown
+# Update selected city in session state if user selects any cities from multiselect
+if selected_cities:
+    # Optionally allow user to choose multiple cities and loop over them later
+    # For now, store the first one in session state for analysis
+    st.session_state.selected_city = selected_cities[0]
 
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
