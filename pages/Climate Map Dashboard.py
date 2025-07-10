@@ -513,8 +513,18 @@ fig_map = px.scatter_mapbox(
 # Set marker size after creation
 fig_map.update_traces(marker=dict(size=12))
 fig_map.update_layout(height=700, width = 1200)
-fig_map.update_layout(coloraxis_colorbar=dict(title="Avg Temp(°C) 2025"))
-
+fig_map.update_layout(
+    coloraxis_colorbar=dict(
+        title="Average Temperature(°C) 2025",  
+        x=0.95,                 # Position on x-axis (0 to 1), right side
+        y=0.05,                 # Position on y-axis (0 to 1), bottom
+        xanchor='left',
+        yanchor='bottom',
+        orientation='v',        # vertical legend
+        len=0.3,                # 30% of plot height
+        thickness=10            # make it slimmer if needed
+    )
+)
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
