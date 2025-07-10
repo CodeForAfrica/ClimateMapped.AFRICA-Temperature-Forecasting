@@ -321,12 +321,12 @@ def create_climate_heatmap(df, selected_city):
     
     # Create heatmap with anomaly scale (single row for the city)
     fig = go.Figure(data=go.Heatmap(
-        z=[city_data['temperature_anomaly'].values],
-        x=city_data['year'].values,
-        y=[selected_city],
+        z=pivot_df.values,
+        x=pivot_df.columns,
+        y=pivot_df.index,
         zmin=-3,
         zmax=3,
-        #colorscale='RdBu_r',
+        colorscale='RdBu_r',
         showscale=True,
         #colorbar=dict(title="Temperature Anomaly(°C)"),
         hovertemplate='<b>%{y}</b><br>' +
