@@ -533,7 +533,6 @@ with col4:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Interactive Map
-# Interactive Map
 st.markdown("""
     <div class="custom-container">
         <div class="subtitle">
@@ -646,7 +645,6 @@ else:
 if st.session_state.map_selected_city:
     if st.button("↩️ Return to Dropdown Mode", type="secondary"):
         st.session_state.map_selected_city = None
-        # Keep the cities that were selected via dropdown
         st.rerun()
 
 if cities_to_analyze:
@@ -658,64 +656,60 @@ if cities_to_analyze:
 # --- Display Analysis ---
 if cities_to_analyze:
     st.markdown("---")  # Visual separator
-    
+
     # Show different headers based on selection mode
     if analysis_mode == "map":
         st.markdown("### 📍 Map Click Analysis")
     else:
         st.markdown("### 📊 Selected Cities Analysis")
-    
+
     for city in cities_to_analyze:
         city_data = df[df['city'] == city]
         if not city_data.empty:
             country_name = city_data['country_name'].iloc[0]
-            
-            # Check if the city's country is in selected countries
+
+            # Warn if country not in current filter
             if country_name not in selected_countries:
                 st.warning(f"Note: {city} is in {country_name}, which is not currently selected in the country filter above.")
-            
+
             st.markdown(f"""
                 <div class="subtitle">
                     <strong>🌡️ Detailed Climate Analysis for {city}, {country_name}</strong>
                 </div>
             """, unsafe_allow_html=True)
-            
-            # Create two columns for charts
+
             col1, col2 = st.columns(2)
-            
+
             with col1:
                 trend_chart = create_temperature_trend_chart(df, city)
                 st.plotly_chart(trend_chart, use_container_width=True)
-            
+
             with col2:
                 heatmap = create_climate_heatmap(df, city)
                 st.plotly_chart(heatmap, use_container_width=True)
-            
-            # Generate and display narrative
+
             narrative = generate_climate_narrative(city_data, city, country_name)
             if narrative:
                 st.markdown(narrative, unsafe_allow_html=True)
-            
-            # Add a small separator between cities if multiple are selected
+
             if len(cities_to_analyze) > 1:
                 st.markdown("---")
-else:
-    st.info("👆 Select cities using the dropdown above or click on any point on the map to start analyzing climate data.")
-    
-#Additional insights
-#st.markdown("""
-#        <div class="custom-container">
- #           <div class="climate-info">
- #               <h4>📖 Understanding Temperature Anomalies:</h4>
- #               <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
- #               <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
- #               <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
- #               <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
- #           </div>
- #       </div>
- #   """, unsafe_allow_html=True)
+
+    # --- Additional Insights ---
+    st.markdown("""
+        <div class="custom-container">
+            <div class="climate-info">
+                <h4>📖 Understanding Temperature Anomalies:</h4>
+                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
+                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
+                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
+                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
 else:
+    # --- Default Message when no selection is active ---
     st.markdown("""
         <div class="custom-container">
             <div class="climate-info">
@@ -725,6 +719,7 @@ else:
             </div>
         </div>
     """, unsafe_allow_html=True)
+
 # Call to Action
 st.markdown("""
     <div class="custom-container">
