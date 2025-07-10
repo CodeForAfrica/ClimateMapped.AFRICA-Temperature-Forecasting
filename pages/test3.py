@@ -569,24 +569,42 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
-all_countries = sorted(df['country_name'].unique())
-selected_countries = st.multiselect("Select country/countries", all_countries)
+countries = sorted(df['country_name'].unique())
+
+# Create two columns for aligned filters
+col1, col2 = st.columns(2)
+
+with col1:
+    selected_countries = st.multiselect(
+        "Select countries to analyze:", 
+        countries, 
+        default=['Senegal'] if 'Senegal' in countries else countries[:1],
+        help="Choose one or more African countries to examine their climate data"
+    )
 
 # Filter cities based on selected countries
-filtered_df = df[df['country_name'].isin(selected_countries)]
-available_cities = sorted(filtered_df['city'].unique())
+available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
 
-# Initialize session state if not set
+# Initialize session state for selected cities
 if "selected_cities" not in st.session_state:
     st.session_state.selected_cities = []
 
-# Multiselect for cities
-selected_cities = st.multiselect("Select city/cities", available_cities, default=st.session_state.selected_cities)
+# Filter session-stored selected cities to only show valid ones
+valid_selected_cities = [city for city in st.session_state.selected_cities if city in available_cities]
 
-# Keep session state in sync
+with col2:
+    selected_cities = st.multiselect(
+        "Select cities for detailed analysis:", 
+        available_cities, 
+        default=valid_selected_cities if valid_selected_cities else available_cities[:1],
+        help="Choose specific cities to analyze temperature trends and anomalies"
+    )
+
+# Update session state with new selection
 st.session_state.selected_cities = selected_cities
 
-# --- MAP CLICK HANDLING ---
+# --- Step 2: Map Plot and Click Handling ---
+
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
 if map_click and map_click.selection and map_click.selection.points:
@@ -600,35 +618,39 @@ if map_click and map_click.selection and map_click.selection.points:
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
 
-    # Add clicked city to session state if not already selected
-    if clicked_city and clicked_city not in st.session_state.selected_cities:
-        st.session_state.selected_cities.append(clicked_city)
-        st.experimental_rerun()  # Force rerun to update city list and analysis
+    # Add clicked city if valid and not already selected
+    if clicked_city:
+        if clicked_city not in st.session_state.selected_cities:
+            st.session_state.selected_cities.append(clicked_city)
+            st.experimental_rerun()  # Trigger rerun to update multiselect + analysis
 
-# --- DISPLAY ANALYSIS FOR ALL SELECTED CITIES ---
-for city in st.session_state.selected_cities:
-    city_data = df[df['city'] == city]
-    if not city_data.empty:
-        country_name = city_data['country_name'].iloc[0]
+# --- Step 3: Analysis and Narrative Display ---
 
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
+if st.session_state.selected_cities:
+    for city in st.session_state.selected_cities:
+        city_data = df[df['city'] == city]
+        if not city_data.empty:
+            country_name = city_data['country_name'].iloc[0]
 
-        col1, col2 = st.columns(2)
+            st.markdown(f"""
+                <div class="subtitle">
+                    <strong>Detailed Climate Analysis for {city}, {country_name}</strong>
+                </div>
+            """, unsafe_allow_html=True)
 
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, city)
-            st.plotly_chart(trend_chart, use_container_width=True)
+            col1, col2 = st.columns(2)
 
-        with col2:
-            heatmap = create_climate_heatmap(df, city)
-            st.plotly_chart(heatmap, use_container_width=True)
+            with col1:
+                trend_chart = create_temperature_trend_chart(df, city)
+                st.plotly_chart(trend_chart, use_container_width=True)
 
-        narrative = generate_climate_narrative(city_data, city, country_name)
-        st.markdown(narrative, unsafe_allow_html=True)
+            with col2:
+                heatmap = create_climate_heatmap(df, city)
+                st.plotly_chart(heatmap, use_container_width=True)
+
+            narrative = generate_climate_narrative(city_data, city, country_name)
+            if narrative:
+                st.markdown(narrative, unsafe_allow_html=True)
 
         # Additional insights
         st.markdown("""
