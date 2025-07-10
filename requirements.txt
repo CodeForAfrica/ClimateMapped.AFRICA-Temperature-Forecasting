@@ -9,5 +9,6 @@ keras==3.4.1
 ##tensorflow-cpu
 plotly==5.24.1
 streamlit-plotly-events
+plotly_events
 ##setuptools>=65.5.0
 
