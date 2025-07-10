@@ -568,7 +568,7 @@ fig_map.update_layout(
     autosize=True
 )
 
-# Display the map in a container
+# Initialize session state
 if "selected_cities" not in st.session_state:
     st.session_state.selected_cities = []
 if "map_selected_city" not in st.session_state:
@@ -591,24 +591,34 @@ with col1:
 filtered_df = df[df['country_name'].isin(selected_countries)]
 available_cities = sorted(filtered_df['city'].unique())
 
-# If user previously clicked on map, skip multiselect (handled later)
+# Multiselect for cities (only show if no map selection is active)
 with col2:
     if st.session_state.map_selected_city is None:
         selected_cities = st.multiselect(
             "Select cities for detailed analysis:",
             available_cities,
-            default=st.session_state.selected_cities,
+            default=[city for city in st.session_state.selected_cities if city in available_cities],
             help="Choose specific cities to analyze temperature trends and anomalies"
         )
         st.session_state.selected_cities = selected_cities
+    else:
+        # Show the map-selected city in a disabled state
+        st.multiselect(
+            "Select cities for detailed analysis:",
+            available_cities,
+            default=[st.session_state.map_selected_city],
+            help="🗺️ City selected from map click. Use the button below to return to dropdown mode.",
+            disabled=True
+        )
 
 # --- Map Click Handling ---
-map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun", key="climate_map")
 
 if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
     clicked_city = None
 
+    # Try to get city name from the clicked point
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
     elif 'customdata' in clicked_point:
@@ -616,62 +626,45 @@ if map_click and map_click.selection and map_click.selection.points:
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
 
-    # Override selection on map click
+    # Set the map selection and override dropdown selection
     if clicked_city:
         st.session_state.map_selected_city = clicked_city
         st.session_state.selected_cities = [clicked_city]
-        st.experimental_rerun()
+        st.success(f"🎯 Now analyzing: **{clicked_city}** (selected from map)")
+        st.rerun()
 
 # --- Determine Cities to Analyze ---
 if st.session_state.map_selected_city:
     cities_to_analyze = [st.session_state.map_selected_city]
+    analysis_mode = "map"
 else:
     cities_to_analyze = st.session_state.selected_cities
+    analysis_mode = "dropdown"
+
+# --- Control Buttons ---
+if st.session_state.map_selected_city:
+    if st.button("↩️ Return to Dropdown Mode", type="secondary"):
+        st.session_state.map_selected_city = None
+        # Keep the cities that were selected via dropdown
+        st.rerun()
+
+if cities_to_analyze:
+    if st.button("🗑️ Clear All Selections", type="secondary"):
+        st.session_state.selected_cities = []
+        st.session_state.map_selected_city = None
+        st.rerun()
 
 # --- Display Analysis ---
 if cities_to_analyze:
-    for city in cities_to_analyze:
-        city_data = df[df['city'] == city]
-        if not city_data.empty:
-            country_name = city_data['country_name'].iloc[0]
-
-            st.markdown(f"""
-                <div class="subtitle">
-                    <strong>Detailed Climate Analysis for {city}, {country_name}</strong>
-                </div>
-            """, unsafe_allow_html=True)
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                trend_chart = create_temperature_trend_chart(df, city)
-                st.plotly_chart(trend_chart, use_container_width=True)
-
-            with col2:
-                heatmap = create_climate_heatmap(df, city)
-                st.plotly_chart(heatmap, use_container_width=True)
-
-            narrative = generate_climate_narrative(city_data, city, country_name)
-            if narrative:
-                st.markdown(narrative, unsafe_allow_html=True)
-
-# --- Optional: Reset Map Click Button ---
-if st.session_state.map_selected_city:
-    if st.button("Clear map selection and return to dropdown mode"):
-        st.session_state.map_selected_city = None
-        st.experimental_rerun()
-
-# --- Step 3: Analysis and Narrative Display ---
-if st.session_state.selected_cities:
     st.markdown("---")  # Visual separator
     
     # Show different headers based on selection mode
-    if st.session_state.clicked_mode and len(st.session_state.selected_cities) == 1:
+    if analysis_mode == "map":
         st.markdown("### 📍 Map Click Analysis")
     else:
         st.markdown("### 📊 Selected Cities Analysis")
     
-    for city in st.session_state.selected_cities:
+    for city in cities_to_analyze:
         city_data = df[df['city'] == city]
         if not city_data.empty:
             country_name = city_data['country_name'].iloc[0]
@@ -703,70 +696,12 @@ if st.session_state.selected_cities:
                 st.markdown(narrative, unsafe_allow_html=True)
             
             # Add a small separator between cities if multiple are selected
-            if len(st.session_state.selected_cities) > 1:
+            if len(cities_to_analyze) > 1:
                 st.markdown("---")
-
-# Optional: Add control buttons
-if st.session_state.selected_cities:
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🗑️ Clear Selection", type="secondary"):
-            st.session_state.selected_cities = []
-            st.session_state.clicked_mode = False
-            st.rerun()
-    
-    with col2:
-        if st.session_state.clicked_mode:
-            if st.button("↩️ Return to Multiselect Mode", type="secondary"):
-                st.session_state.clicked_mode = False
-                st.rerun()
 else:
     st.info("👆 Select cities using the dropdown above or click on any point on the map to start analyzing climate data.")
-# --- Step 3: Analysis and Narrative Display ---
-if st.session_state.selected_cities:
-    st.markdown("---")  # Visual separator
+
     
-    for city in st.session_state.selected_cities:
-        city_data = df[df['city'] == city]
-        if not city_data.empty:
-            country_name = city_data['country_name'].iloc[0]
-            
-            # Check if the city's country is in selected countries
-            if country_name not in selected_countries:
-                st.warning(f"Note: {city} is in {country_name}, which is not currently selected in the country filter above.")
-            
-            st.markdown(f"""
-                <div class="subtitle">
-                    <strong>Detailed Climate Analysis for {city}, {country_name}</strong>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            # Create two columns for charts
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                trend_chart = create_temperature_trend_chart(df, city)
-                st.plotly_chart(trend_chart, use_container_width=True)
-            
-            with col2:
-                heatmap = create_climate_heatmap(df, city)
-                st.plotly_chart(heatmap, use_container_width=True)
-            
-            # Generate and display narrative
-            narrative = generate_climate_narrative(city_data, city, country_name)
-            if narrative:
-                st.markdown(narrative, unsafe_allow_html=True)
-            
-            # Add a small separator between cities if multiple are selected
-            if len(st.session_state.selected_cities) > 1:
-                st.markdown("---")
-
-# Optional: Add a button to clear all selected cities
-if st.session_state.selected_cities:
-    if st.button("Clear All Selected Cities", type="secondary"):
-        st.session_state.selected_cities = []
-        st.rerun()
-
         # Additional insights
         st.markdown("""
             <div class="custom-container">
