@@ -537,7 +537,7 @@ if st.session_state.selected_city:
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
         st.markdown(narrative, unsafe_allow_html=True)
         
-    elif: 
+    elif
         countries = sorted(df['country_name'].dropna().unique())
 
         # Create two columns for aligned filters
