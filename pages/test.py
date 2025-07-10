@@ -289,7 +289,7 @@ def create_climate_heatmap(df, selected_city):
     fig.update_layout(
         title=f"Temperature Anomalies for {selected_city}",
         plot_bgcolor='white',
-        paper_bgcolor='gainsboro',  # Simulates a border
+        paper_bgcolor='white', 
         margin=dict(l=30, r=30, t=30, b=30),  # Padding around the plot
         xaxis_title="Year",
         #yaxis_title="City",
@@ -454,11 +454,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-#st.markdown("""
- #   <div class="click-instruction">
-  #      👆 Click on any city point on the map to see detailed climate analysis!
-  #  </div>
-#""", unsafe_allow_html=True)
 
 fig_map = px.scatter_mapbox(
     latest_data,
@@ -528,16 +523,6 @@ if st.session_state.selected_city:
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
         st.markdown(narrative, unsafe_allow_html=True)
 
-        # Additional insights
-        st.markdown("""
-            <div class="climate-info">
-                <h4>📖 Understanding Temperature Anomalies:</h4>
-                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
-                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
-                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
-                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
-            </div>
-        """, unsafe_allow_html=True)
         
         ## Add a button to clear selection
         #if st.button("🔄 Clear Selection"):
@@ -552,6 +537,19 @@ else:
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
+
+
+# Additional insights
+st.markdown("""
+            <div class="climate-info">
+                <h4>📖 Understanding Temperature Anomalies:</h4>
+                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
+                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
+                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
+                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+            </div>
+""", unsafe_allow_html=True)
+
 
 # Call to Action
 st.markdown("""
