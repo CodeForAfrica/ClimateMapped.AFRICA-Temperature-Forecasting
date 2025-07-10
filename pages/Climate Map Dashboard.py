@@ -517,6 +517,10 @@ fig_map.update_layout(
     coloraxis_colorbar=dict(
         title="Average Temperature(°C) 2025",
         title_side='top',
+        title_font=dict(
+            color='black',        # Make the title text black
+            size=14               # Optional: set font size
+        ),
         x=0.45,                 # Position on x-axis (0 to 1), right side
         y=0.05,                 # Position on y-axis (0 to 1), bottom
         xanchor='left',
