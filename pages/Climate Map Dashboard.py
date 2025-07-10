@@ -9,6 +9,7 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 
 # Enhanced CSS styling with SDG colors and climate imagery
 st.markdown("""
+
     <style>
         .custom-container {
             background-color: #ffeaa7;
@@ -525,7 +526,7 @@ fig_map.update_layout(
             color='black',     
             size=12            
         ),
-        x=0.45,                 
+        x=0.75,                 
         y=0.05,                 
         xanchor='left',
         yanchor='bottom',
