@@ -533,6 +533,7 @@ with col4:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Interactive Map
+
 st.markdown("""
     <div class="custom-container">
         <div class="subtitle">
@@ -702,8 +703,8 @@ else:
     st.info("👆 Select cities using the dropdown above or click on any point on the map to start analyzing climate data.")
 
     
-        # Additional insights
-        st.markdown("""
+# Additional insights
+    st.markdown("""
             <div class="custom-container">
                 <div class="climate-info">
                     <h4>📖 Understanding Temperature Anomalies:</h4>
