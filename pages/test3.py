@@ -569,85 +569,111 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
-if "selected_cities" not in st.session_state:
-    st.session_state.selected_cities = []
-
-# --- Step 2: UI – Country & City Filters ---
 countries = sorted(df['country_name'].unique())
 
+# Create two columns for aligned filters
 col1, col2 = st.columns(2)
 
 with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
-        countries,
+        countries, 
         default=['Senegal'] if 'Senegal' in countries else countries[:1],
         help="Choose one or more African countries to examine their climate data"
     )
 
-# Combine available cities from selected countries + any cities already selected (including map clicks)
-filtered_df = df[df['country_name'].isin(selected_countries)]
-dropdown_cities = sorted(filtered_df['city'].unique())
+# Filter cities based on selected countries
+available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
 
-# Add any previously selected cities that may not be in current country filter
-dropdown_cities = sorted(set(dropdown_cities) | set(st.session_state.selected_cities))
+# Initialize session state for selected cities
+if "selected_cities" not in st.session_state:
+    st.session_state.selected_cities = []
+
+# Filter session-stored selected cities to only show valid ones
+valid_selected_cities = [city for city in st.session_state.selected_cities if city in available_cities]
 
 with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
-        dropdown_cities, 
-        default=st.session_state.selected_cities,
-        help="Choose specific cities to analyze temperature trends and anomalies"
+        available_cities, 
+        default=valid_selected_cities if valid_selected_cities else (available_cities[:1] if len(available_cities) > 0 else []),
+        help="Choose specific cities to analyze temperature trends and anomalies",
+        key="city_multiselect"
     )
 
-# Update session state
+# Update session state with new selection from multiselect
 st.session_state.selected_cities = selected_cities
 
-# --- Step 3: Map Click Handling ---
-map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+# --- Step 2: Map Plot and Click Handling ---
+map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun", key="map_chart")
 
+# Handle map clicks
 if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
     clicked_city = None
-
+    
+    # Try to get city name from different possible sources
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
     elif 'customdata' in clicked_point:
         point_index = clicked_point['point_index']
         if point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
+    elif 'text' in clicked_point:
+        clicked_city = clicked_point['text']
+    
+    # Add clicked city if valid and not already selected
+    if clicked_city and clicked_city in available_cities:
+        if clicked_city not in st.session_state.selected_cities:
+            st.session_state.selected_cities.append(clicked_city)
+            # Force a rerun to update the interface
+            st.rerun()
 
-    # If clicked city is valid and not already selected, add it and rerun
-    if clicked_city and clicked_city not in st.session_state.selected_cities:
-        st.session_state.selected_cities.append(clicked_city)
-        st.experimental_rerun()
-
-# --- Step 4: Display Analysis ---
+# --- Step 3: Analysis and Narrative Display ---
 if st.session_state.selected_cities:
+    st.markdown("---")  # Visual separator
+    
     for city in st.session_state.selected_cities:
         city_data = df[df['city'] == city]
         if not city_data.empty:
             country_name = city_data['country_name'].iloc[0]
-
+            
+            # Check if the city's country is in selected countries
+            if country_name not in selected_countries:
+                st.warning(f"Note: {city} is in {country_name}, which is not currently selected in the country filter above.")
+            
             st.markdown(f"""
                 <div class="subtitle">
                     <strong>Detailed Climate Analysis for {city}, {country_name}</strong>
                 </div>
             """, unsafe_allow_html=True)
-
+            
+            # Create two columns for charts
             col1, col2 = st.columns(2)
-
+            
             with col1:
                 trend_chart = create_temperature_trend_chart(df, city)
                 st.plotly_chart(trend_chart, use_container_width=True)
-
+            
             with col2:
                 heatmap = create_climate_heatmap(df, city)
                 st.plotly_chart(heatmap, use_container_width=True)
-
+            
+            # Generate and display narrative
             narrative = generate_climate_narrative(city_data, city, country_name)
             if narrative:
                 st.markdown(narrative, unsafe_allow_html=True)
+            
+            # Add a small separator between cities if multiple are selected
+            if len(st.session_state.selected_cities) > 1:
+                st.markdown("---")
+
+# Optional: Add a button to clear all selected cities
+if st.session_state.selected_cities:
+    if st.button("Clear All Selected Cities", type="secondary"):
+        st.session_state.selected_cities = []
+        st.rerun()
+        
 
         # Additional insights
         st.markdown("""
