@@ -507,12 +507,13 @@ fig_map = px.scatter_mapbox(
     zoom=2,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
-    title=f"Average Temperature in {latest_year}"
+    #title=f"Average Temperature in {latest_year}"
 )
 
 # Set marker size after creation
 fig_map.update_traces(marker=dict(size=12))
 fig_map.update_layout(height=700)
+fig_map.update_layout(coloraxis_colorbar=dict(title="Average Temperature(°C) 2025"))
 
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
