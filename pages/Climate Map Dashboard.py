@@ -319,7 +319,8 @@ def create_climate_heatmap(df, selected_cities):
         columns='year', 
         values='temperature_anomaly',
         aggfunc='mean'
-    )    
+    ) 
+    
     # Create heatmap with anomaly scale (single row for the city)
     fig = go.Figure(data=go.Heatmap(
         z=pivot_df.values,
@@ -349,7 +350,7 @@ def create_climate_heatmap(df, selected_cities):
         font=dict(size=12)
     )
     
-    return fig
+return fig
 
 def create_temperature_trend_chart(df, selected_city):
     """Create a line chart showing temperature trends for the selected city"""
