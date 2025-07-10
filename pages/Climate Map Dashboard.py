@@ -328,7 +328,19 @@ def create_climate_heatmap(df, selected_city):
         zmax=3,
         colorscale='RdBu_r',
         showscale=True,
-        colorbar=dict(title="Temperature Anomaly (°C)"),
+        colorbar=dict(title="Temperature Anomaly (°C)", 
+        title="Anomaly (°C)",
+        title_side='top',
+        orientation='h',           
+        x=1.0,                     
+        y=1.15,                    
+        xanchor='right',
+        yanchor='bottom',
+        len=0.3,                   
+        thickness=10,              
+        tickfont=dict(color='black'),
+        titlefont=dict(color='black')
+        ),
         hovertemplate='<b>%{y}</b><br>' +
                       'Year: %{x}<br>' +
                       'Anomaly: %{z:.2f}°C<br>' +
