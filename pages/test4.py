@@ -544,15 +544,15 @@ if st.session_state.selected_city:
         st.rerun()
 
 # Add separator
-st.markdown("---")
+#st.markdown("---")
 
 # Alternative selection method using multiselect boxes
-st.markdown("""
-    <div class="subtitle">
-        Alternative Analysis Method <br>
-        <span style="font-size:16px;">Use the filters below to select countries and cities for analysis</span>
-    </div>
-""", unsafe_allow_html=True)
+#st.markdown("""
+#    <div class="subtitle">
+#        Alternative Analysis Method <br>
+#        <span style="font-size:16px;">Use the filters below to select countries and cities for analysis</span>
+#    </div>
+#""", unsafe_allow_html=True)
 
 countries = sorted(df['country_name'].dropna().unique())
 
