@@ -163,7 +163,7 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
         }
-        .stats-card-3:hover {
+        .stats-card-4:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
         }
