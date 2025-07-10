@@ -525,6 +525,14 @@ fig_map.update_layout(
         thickness=10            # make it slimmer if needed
     )
 )
+fig.update_layout(
+    legend=dict(
+        orientation="h",           # horizontal
+        yanchor="bottom",          # anchor from the bottom
+        y=-0.2,                    # position below the chart (adjust as needed)
+        xanchor="center",          
+        x=0.5                      # center horizontally
+    )
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
