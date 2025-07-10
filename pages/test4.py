@@ -463,11 +463,10 @@ with st.container():
 if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
 
-# Interactive Map
+# Interactive Map Title
 st.markdown("""
     <div class="subtitle">
         Interactive Climate Map of Africa <br>
-        <span style="font-size:16px;"> Click on any city point on the map to see detailed climate analysis!</span>
     </div>
 """, unsafe_allow_html=True)
 
@@ -496,7 +495,7 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-
+# Create and display the interactive map
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
@@ -518,8 +517,89 @@ fig_map.update_layout(height=700)
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
 
+# Handle map click events
+if map_click and map_click.selection and map_click.selection.points:
+    # Get the clicked point
+    clicked_point = map_click.selection.points[0]
+    
+    # Find the city based on the clicked point's hover_name
+    if 'hovertext' in clicked_point:
+        clicked_city = clicked_point['hovertext']
+        st.session_state.selected_city = clicked_city
+    elif 'customdata' in clicked_point:
+        # Alternative method to get city name
+        point_index = clicked_point['point_index']
+        if point_index < len(latest_data):
+            clicked_city = latest_data.iloc[point_index]['city']
+            st.session_state.selected_city = clicked_city
+
+# Display analysis for selected city from map click (only if actually clicked)
+if st.session_state.selected_city is not None:
+    selected_city = st.session_state.selected_city
+
+    # Get city data
+    city_data = df[df['city'] == selected_city]
+
+    if not city_data.empty:
+        country_name = city_data['country_name'].iloc[0]
+
+        st.markdown(f"""
+            <div class="subtitle">
+                Detailed Climate Analysis for {selected_city}, {country_name}
+            </div>
+        """, unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            trend_chart = create_temperature_trend_chart(df, selected_city)
+            st.plotly_chart(trend_chart, use_container_width=True)
+
+        with col2:
+            heatmap = create_climate_heatmap(df, selected_city)
+            st.plotly_chart(heatmap, use_container_width=True)
+
+        narrative = generate_climate_narrative(city_data, selected_city, country_name)
+        st.markdown(narrative, unsafe_allow_html=True)
+        
+        # Add button to clear selection
+        if st.button("Clear Selection", key="clear_selection"):
+            st.session_state.selected_city = None
+            st.rerun()
+
+# Display analysis for cities selected from multiselect (only if cities are selected)
+if selected_cities:
+    for city in selected_cities:
+        city_data = df[df['city'] == city]
+        if city_data.empty:
+            continue
+
+        country_name = city_data['country_name'].iloc[0]
+
+        st.markdown(f"""
+            <div class="subtitle">
+                Detailed Climate Analysis for {city}, {country_name}
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Display visualizations
+        col1, col2 = st.columns(2)
+
+        with col1:
+            trend_chart = create_temperature_trend_chart(df, city)
+            st.plotly_chart(trend_chart, use_container_width=True)
+
+        with col2:
+            heatmap = create_climate_heatmap(df, city)
+            st.plotly_chart(heatmap, use_container_width=True)
+
+        # Display narrative
+        narrative = generate_climate_narrative(city_data, city, country_name)
+        if narrative:
+            st.markdown(narrative, unsafe_allow_html=True)
+
 # Show help message when no selections are made
-if st.session_state.selected_city is None and not st.session_state.get('has_multiselect_selection', False):
+if st.session_state.selected_city is None and not selected_cities:
     st.markdown("""
         <div class="climate-info">
             <h4>🎯 Get Started:</h4>
@@ -528,200 +608,6 @@ if st.session_state.selected_city is None and not st.session_state.get('has_mult
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
-
-# Handle map click events
-if map_click and map_click.selection and map_click.selection.points:
-    # Get the clicked point
-    clicked_point = map_click.selection.points[0]
-    
-    # Find the city based on the clicked point's hover_name
-    if 'hovertext' in clicked_point:
-        clicked_city = clicked_point['hovertext']
-        st.session_state.selected_city = clicked_city
-    elif 'customdata' in clicked_point:
-        # Alternative method to get city name
-        point_index = clicked_point['point_index']
-        if point_index < len(latest_data):
-            clicked_city = latest_data.iloc[point_index]['city']
-            st.session_state.selected_city = clicked_city
-
-# Display analysis for selected city from map click (only if actually clicked)
-if st.session_state.selected_city is not None:
-    selected_city = st.session_state.selected_city
-
-    # Get city data
-    city_data = df[df['city'] == selected_city]
-
-    if not city_data.empty:
-        country_name = city_data['country_name'].iloc[0]
-
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {selected_city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, selected_city)
-            st.plotly_chart(trend_chart, use_container_width=True)
-
-        with col2:
-            heatmap = create_climate_heatmap(df, selected_city)
-            st.plotly_chart(heatmap, use_container_width=True)
-
-        narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        st.markdown(narrative, unsafe_allow_html=True)
-        
-        # Add button to clear selection
-        if st.button("Clear Selection", key="clear_selection"):
-            st.session_state.selected_city = None
-            st.rerun()
-
-# Display analysis for cities selected from multiselect (only if cities are selected)
-if selected_cities:
-    # Track that multiselect has selections
-    st.session_state.has_multiselect_selection = True
-    
-    for city in selected_cities:
-        city_data = df[df['city'] == city]
-        if city_data.empty:
-            continue
-
-        country_name = city_data['country_name'].iloc[0]
-
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Display narrative
-        narrative = generate_climate_narrative(city_data, city, country_name)
-        if narrative:
-            st.markdown(narrative, unsafe_allow_html=True)
-
-        # Display visualizations
-        col1, col2 = st.columns(2)
-
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, city)
-            st.plotly_chart(trend_chart, use_container_width=True)
-
-        with col2:
-            heatmap = create_climate_heatmap(df, city)
-            st.plotly_chart(heatmap, use_container_width=True)
-else:
-    # Clear multiselect tracking when no cities selected
-    st.session_state.has_multiselect_selection = False
-
-# Handle map click events
-if map_click and map_click.selection and map_click.selection.points:
-    # Get the clicked point
-    clicked_point = map_click.selection.points[0]
-    
-    # Find the city based on the clicked point's hover_name
-    if 'hovertext' in clicked_point:
-        clicked_city = clicked_point['hovertext']
-        st.session_state.selected_city = clicked_city
-    elif 'customdata' in clicked_point:
-        # Alternative method to get city name
-        point_index = clicked_point['point_index']
-        if point_index < len(latest_data):
-            clicked_city = latest_data.iloc[point_index]['city']
-            st.session_state.selected_city = clicked_city
-
-# Display analysis for selected city from map click (only if actually clicked)
-if st.session_state.selected_city is not None:
-    selected_city = st.session_state.selected_city
-
-    # Get city data
-    city_data = df[df['city'] == selected_city]
-
-    if not city_data.empty:
-        country_name = city_data['country_name'].iloc[0]
-
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {selected_city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, selected_city)
-            st.plotly_chart(trend_chart, use_container_width=True)
-
-        with col2:
-            heatmap = create_climate_heatmap(df, selected_city)
-            st.plotly_chart(heatmap, use_container_width=True)
-
-        narrative = generate_climate_narrative(city_data, selected_city, country_name)
-        st.markdown(narrative, unsafe_allow_html=True)
-        
-        # Add button to clear selection
-        if st.button("Clear Selection", key="clear_selection"):
-            st.session_state.selected_city = None
-            st.rerun()
-
-# Country and city selection (appears after map analysis OR when no map selection)
-countries = sorted(df['country_name'].dropna().unique())
-
-# Create two columns for aligned filters
-col1, col2 = st.columns(2)
-
-with col1:
-    selected_countries = st.multiselect(
-        "Select countries:", 
-        countries, 
-        default=[],
-        help="Choose one or more African countries to examine their climate data"
-    )
-
-# Filter cities based on selected countries
-available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
-
-with col2:
-    selected_cities = st.multiselect(
-        "Select cities:", 
-        available_cities, 
-        default=[],
-        help="Choose specific cities to analyze temperature trends and anomalies"
-    )
-
-# Display analysis for cities selected from multiselect (only if cities are selected)
-if selected_cities:
-    for city in selected_cities:
-        city_data = df[df['city'] == city]
-        if city_data.empty:
-            continue
-
-        country_name = city_data['country_name'].iloc[0]
-
-        st.markdown(f"""
-            <div class="subtitle">
-                Detailed Climate Analysis for {city}, {country_name}
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Display visualizations
-        col1, col2 = st.columns(2)
-
-        with col1:
-            trend_chart = create_temperature_trend_chart(df, city)
-            st.plotly_chart(trend_chart, use_container_width=True)
-
-        with col2:
-            heatmap = create_climate_heatmap(df, city)
-            st.plotly_chart(heatmap, use_container_width=True)
-
-        # Display narrative
-        narrative = generate_climate_narrative(city_data, city, country_name)
-        if narrative:
-            st.markdown(narrative, unsafe_allow_html=True)
-
 
     
 # Additional insights
