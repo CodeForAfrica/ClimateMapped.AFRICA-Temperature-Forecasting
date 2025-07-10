@@ -569,9 +569,6 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
-import streamlit as st
-
-# --- Step 1: Country and City Multiselect UI ---
 countries = sorted(df['country_name'].unique())
 
 # Create two columns for aligned filters
@@ -588,26 +585,41 @@ with col1:
 # Filter cities based on selected countries
 available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
 
-# Initialize session state for selected cities
+# Initialize session state for selected cities and click mode
 if "selected_cities" not in st.session_state:
     st.session_state.selected_cities = []
+if "clicked_mode" not in st.session_state:
+    st.session_state.clicked_mode = False
 
-# Filter session-stored selected cities to only show valid ones
-valid_selected_cities = [city for city in st.session_state.selected_cities if city in available_cities]
+# If we're in clicked mode, don't use the multiselect default
+if st.session_state.clicked_mode:
+    multiselect_default = st.session_state.selected_cities
+else:
+    # Filter session-stored selected cities to only show valid ones
+    valid_selected_cities = [city for city in st.session_state.selected_cities if city in available_cities]
+    multiselect_default = valid_selected_cities if valid_selected_cities else (available_cities[:1] if len(available_cities) > 0 else [])
 
 with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
         available_cities, 
-        default=valid_selected_cities if valid_selected_cities else (available_cities[:1] if len(available_cities) > 0 else []),
-        help="Choose specific cities to analyze temperature trends and anomalies",
+        default=multiselect_default,
+        help="Choose specific cities to analyze temperature trends and anomalies, or click on map points",
         key="city_multiselect"
     )
 
-# Update session state with new selection from multiselect
-st.session_state.selected_cities = selected_cities
+# Update session state when multiselect changes (not in clicked mode)
+if not st.session_state.clicked_mode or selected_cities != st.session_state.selected_cities:
+    st.session_state.selected_cities = selected_cities
+    st.session_state.clicked_mode = False  # Reset clicked mode when using multiselect
 
 # --- Step 2: Map Plot and Click Handling ---
+st.markdown("**💡 Tip:** Click on any point on the map to instantly analyze that city, or use the dropdown above to select multiple cities.")
+
+# Store the map data in session state for point_index lookups
+if 'latest_data' in globals():
+    st.session_state.map_data = latest_data
+
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun", key="map_chart")
 
 # Handle map clicks
@@ -615,51 +627,98 @@ if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
     clicked_city = None
     
-    # Debug: Show what's in the clicked point (remove this after debugging)
-    st.write("Debug - Clicked point data:", clicked_point)
-    
     # Try to get city name from different possible sources
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
-        st.write(f"Debug - Found city in hovertext: {clicked_city}")
-    elif 'customdata' in clicked_point:
-        if isinstance(clicked_point['customdata'], list) and len(clicked_point['customdata']) > 0:
-            clicked_city = clicked_point['customdata'][0]  # Assuming city is first in customdata
-            st.write(f"Debug - Found city in customdata: {clicked_city}")
     elif 'text' in clicked_point:
         clicked_city = clicked_point['text']
-        st.write(f"Debug - Found city in text: {clicked_city}")
-    
-    # Try using point_index to get city from the original data
-    if not clicked_city and 'point_index' in clicked_point:
+    elif 'customdata' in clicked_point:
+        if isinstance(clicked_point['customdata'], list) and len(clicked_point['customdata']) > 0:
+            clicked_city = clicked_point['customdata'][0]
+    elif 'point_index' in clicked_point:
         point_index = clicked_point['point_index']
-        # We need to make sure we're using the same data that was used to create the map
+        # Try to get city from stored map data
         if hasattr(st.session_state, 'map_data') and point_index < len(st.session_state.map_data):
             clicked_city = st.session_state.map_data.iloc[point_index]['city']
-            st.write(f"Debug - Found city using point_index: {clicked_city}")
         elif 'latest_data' in globals() and point_index < len(latest_data):
             clicked_city = latest_data.iloc[point_index]['city']
-            st.write(f"Debug - Found city in latest_data: {clicked_city}")
     
-    # Add clicked city if valid and not already selected
+    # Replace current selection with clicked city
     if clicked_city:
-        st.write(f"Debug - Attempting to add city: {clicked_city}")
-        st.write(f"Debug - Available cities: {list(available_cities)}")
-        st.write(f"Debug - City in available cities: {clicked_city in available_cities}")
+        # Check if the city exists in our dataframe
+        city_exists = not df[df['city'] == clicked_city].empty
         
-        if clicked_city in available_cities:
-            if clicked_city not in st.session_state.selected_cities:
-                st.session_state.selected_cities.append(clicked_city)
-                st.success(f"Added {clicked_city} to analysis!")
-                # Force a rerun to update the interface
-                st.rerun()
-            else:
-                st.info(f"{clicked_city} is already selected for analysis.")
+        if city_exists:
+            # Replace the selection with just the clicked city
+            st.session_state.selected_cities = [clicked_city]
+            st.session_state.clicked_mode = True
+            st.success(f"🎯 Now analyzing: **{clicked_city}**")
+            # Force a rerun to update the interface
+            st.rerun()
         else:
-            st.error(f"City '{clicked_city}' not found in available cities for selected countries.")
-    else:
-        st.error("Could not identify the clicked city. Please use the dropdown to select cities.")
+            st.error(f"City '{clicked_city}' not found in the dataset.")
 
+# --- Step 3: Analysis and Narrative Display ---
+if st.session_state.selected_cities:
+    st.markdown("---")  # Visual separator
+    
+    # Show different headers based on selection mode
+    if st.session_state.clicked_mode and len(st.session_state.selected_cities) == 1:
+        st.markdown("### 📍 Map Click Analysis")
+    else:
+        st.markdown("### 📊 Selected Cities Analysis")
+    
+    for city in st.session_state.selected_cities:
+        city_data = df[df['city'] == city]
+        if not city_data.empty:
+            country_name = city_data['country_name'].iloc[0]
+            
+            # Check if the city's country is in selected countries
+            if country_name not in selected_countries:
+                st.warning(f"Note: {city} is in {country_name}, which is not currently selected in the country filter above.")
+            
+            st.markdown(f"""
+                <div class="subtitle">
+                    <strong>🌡️ Detailed Climate Analysis for {city}, {country_name}</strong>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # Create two columns for charts
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                trend_chart = create_temperature_trend_chart(df, city)
+                st.plotly_chart(trend_chart, use_container_width=True)
+            
+            with col2:
+                heatmap = create_climate_heatmap(df, city)
+                st.plotly_chart(heatmap, use_container_width=True)
+            
+            # Generate and display narrative
+            narrative = generate_climate_narrative(city_data, city, country_name)
+            if narrative:
+                st.markdown(narrative, unsafe_allow_html=True)
+            
+            # Add a small separator between cities if multiple are selected
+            if len(st.session_state.selected_cities) > 1:
+                st.markdown("---")
+
+# Optional: Add control buttons
+if st.session_state.selected_cities:
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🗑️ Clear Selection", type="secondary"):
+            st.session_state.selected_cities = []
+            st.session_state.clicked_mode = False
+            st.rerun()
+    
+    with col2:
+        if st.session_state.clicked_mode:
+            if st.button("↩️ Return to Multiselect Mode", type="secondary"):
+                st.session_state.clicked_mode = False
+                st.rerun()
+else:
+    st.info("👆 Select cities using the dropdown above or click on any point on the map to start analyzing climate data.")
 # --- Step 3: Analysis and Narrative Display ---
 if st.session_state.selected_cities:
     st.markdown("---")  # Visual separator
