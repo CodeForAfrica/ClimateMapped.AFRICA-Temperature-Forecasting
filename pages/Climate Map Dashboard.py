@@ -512,11 +512,11 @@ fig_map = px.scatter_mapbox(
 
 # Set marker size after creation
 fig_map.update_traces(marker=dict(size=12))
-fig_map.update_layout(height=700, width = 1500)
+fig_map.update_layout(height=700, width = 1500, margin=dict(l=0, r=0, t=30, b=0))
 fig_map.update_layout(
     coloraxis_colorbar=dict(
         title="Average Temperature(°C) 2025",  
-        x=0.95,                 # Position on x-axis (0 to 1), right side
+        x=0.75,                 # Position on x-axis (0 to 1), right side
         y=0.05,                 # Position on y-axis (0 to 1), bottom
         xanchor='left',
         yanchor='bottom',
