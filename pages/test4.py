@@ -552,7 +552,7 @@ with col1:
     selected_countries = st.multiselect(
         "Select countries to analyze:", 
         countries, 
-        default=['Senegal'] if 'Senegal' in countries else countries[:1],
+        default=[],
         help="Choose one or more African countries to examine their climate data"
     )
 
@@ -563,7 +563,7 @@ with col2:
     selected_cities = st.multiselect(
         "Select cities for detailed analysis:", 
         available_cities, 
-        default=available_cities[:1] if len(available_cities) > 0 else [],
+        default=[],
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
@@ -608,7 +608,6 @@ if st.session_state.selected_city is None and not selected_cities:
             <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
         </div>
     """, unsafe_allow_html=True)
-
     
 # Additional insights
 st.markdown("""
