@@ -536,13 +536,63 @@ if st.session_state.selected_city:
 
         narrative = generate_climate_narrative(city_data, selected_city, country_name)
         st.markdown(narrative, unsafe_allow_html=True)
-
         
-        ## Add a button to clear selection
-        #if st.button("🔄 Clear Selection"):
-        #    st.session_state.selected_city = None
-         #   st.rerun()
-    
+    elif: 
+        countries = sorted(df['country_name'].dropna().unique())
+
+        # Create two columns for aligned filters
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            selected_countries = st.multiselect(
+                "Select countries to analyze:", 
+                countries, 
+                default=['Senegal'] if 'Senegal' in countries else countries[:1],
+                help="Choose one or more African countries to examine their climate data"
+            )
+        
+        # Filter cities based on selected countries
+        available_cities = df[df['country_name'].isin(selected_countries)]['city'].sort_values().unique()
+        
+        with col2:
+            selected_cities = st.multiselect(
+                "Select cities for detailed analysis:", 
+                available_cities, 
+                default=available_cities[:1] if len(available_cities) > 0 else [],
+                help="Choose specific cities to analyze temperature trends and anomalies"
+            )
+        
+        if selected_cities:
+            for city in selected_cities:
+                city_data = df[df['city'] == city]
+                if city_data.empty:
+                    continue
+        
+                country_name = city_data['country_name'].iloc[0]
+        
+                st.markdown(f"""
+                    <div class="subtitle">
+                        Detailed Climate Analysis for {city}, {country_name}
+                    </div>
+                """, unsafe_allow_html=True)
+        
+                # Display narrative
+                narrative = generate_climate_narrative(city_data, city, country_name)
+                if narrative:
+                    st.markdown(narrative, unsafe_allow_html=True)
+        
+                # Display visualizations
+                col1, col2 = st.columns(2)
+        
+                with col1:
+                    trend_chart = create_temperature_trend_chart(df, city)
+                    st.plotly_chart(trend_chart, use_container_width=True)
+        
+                with col2:
+                    heatmap = create_climate_heatmap(df, city)
+                    st.plotly_chart(heatmap, use_container_width=True)
+        
+            
 else:
     st.markdown("""
         <div class="climate-info">
