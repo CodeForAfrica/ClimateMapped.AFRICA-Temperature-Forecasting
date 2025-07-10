@@ -569,6 +569,9 @@ fig_map.update_layout(
 )
 
 # Display the map in a container
+import streamlit as st
+
+# --- Step 1: Country and City Multiselect UI ---
 countries = sorted(df['country_name'].unique())
 
 # Create two columns for aligned filters
@@ -612,22 +615,50 @@ if map_click and map_click.selection and map_click.selection.points:
     clicked_point = map_click.selection.points[0]
     clicked_city = None
     
+    # Debug: Show what's in the clicked point (remove this after debugging)
+    st.write("Debug - Clicked point data:", clicked_point)
+    
     # Try to get city name from different possible sources
     if 'hovertext' in clicked_point:
         clicked_city = clicked_point['hovertext']
+        st.write(f"Debug - Found city in hovertext: {clicked_city}")
     elif 'customdata' in clicked_point:
-        point_index = clicked_point['point_index']
-        if point_index < len(latest_data):
-            clicked_city = latest_data.iloc[point_index]['city']
+        if isinstance(clicked_point['customdata'], list) and len(clicked_point['customdata']) > 0:
+            clicked_city = clicked_point['customdata'][0]  # Assuming city is first in customdata
+            st.write(f"Debug - Found city in customdata: {clicked_city}")
     elif 'text' in clicked_point:
         clicked_city = clicked_point['text']
+        st.write(f"Debug - Found city in text: {clicked_city}")
+    
+    # Try using point_index to get city from the original data
+    if not clicked_city and 'point_index' in clicked_point:
+        point_index = clicked_point['point_index']
+        # We need to make sure we're using the same data that was used to create the map
+        if hasattr(st.session_state, 'map_data') and point_index < len(st.session_state.map_data):
+            clicked_city = st.session_state.map_data.iloc[point_index]['city']
+            st.write(f"Debug - Found city using point_index: {clicked_city}")
+        elif 'latest_data' in globals() and point_index < len(latest_data):
+            clicked_city = latest_data.iloc[point_index]['city']
+            st.write(f"Debug - Found city in latest_data: {clicked_city}")
     
     # Add clicked city if valid and not already selected
-    if clicked_city and clicked_city in available_cities:
-        if clicked_city not in st.session_state.selected_cities:
-            st.session_state.selected_cities.append(clicked_city)
-            # Force a rerun to update the interface
-            st.rerun()
+    if clicked_city:
+        st.write(f"Debug - Attempting to add city: {clicked_city}")
+        st.write(f"Debug - Available cities: {list(available_cities)}")
+        st.write(f"Debug - City in available cities: {clicked_city in available_cities}")
+        
+        if clicked_city in available_cities:
+            if clicked_city not in st.session_state.selected_cities:
+                st.session_state.selected_cities.append(clicked_city)
+                st.success(f"Added {clicked_city} to analysis!")
+                # Force a rerun to update the interface
+                st.rerun()
+            else:
+                st.info(f"{clicked_city} is already selected for analysis.")
+        else:
+            st.error(f"City '{clicked_city}' not found in available cities for selected countries.")
+    else:
+        st.error("Could not identify the clicked city. Please use the dropdown to select cities.")
 
 # --- Step 3: Analysis and Narrative Display ---
 if st.session_state.selected_cities:
@@ -673,7 +704,6 @@ if st.session_state.selected_cities:
     if st.button("Clear All Selected Cities", type="secondary"):
         st.session_state.selected_cities = []
         st.rerun()
-        
 
         # Additional insights
         st.markdown("""
