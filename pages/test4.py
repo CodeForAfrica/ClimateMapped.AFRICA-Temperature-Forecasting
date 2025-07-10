@@ -610,6 +610,8 @@ if st.session_state.selected_city is None and not selected_cities:
     """, unsafe_allow_html=True)
 
     
+st.markdown("---")
+    
 # Additional insights
 st.markdown("""
             <div class="climate-info">
