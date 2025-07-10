@@ -467,7 +467,6 @@ if 'selected_city' not in st.session_state:
 st.markdown("""
     <div class="subtitle">
         Interactive Climate Map of Africa <br>
-        #<span style="font-size:16px;"> Click on any city point on the map or select any country or city to see detailed climate analysis!</span>
     </div>
 """, unsafe_allow_html=True)
 
