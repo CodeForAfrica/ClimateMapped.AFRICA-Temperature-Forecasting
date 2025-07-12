@@ -213,7 +213,9 @@ country_mapping = {
 # Load and prepare the dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data/sample_temp_1950-2025.csv")
+    df1 = pd.read_csv("data/sample_temp_1950-2025_1.csv")
+    df2 = pd.read_csv("data/sample_temp_1950-2025_2.csv")
+    df = pd.concat([df1, df2], axis = 0).reset_index(drop=True)
     df.columns = df.columns.str.lower()
 
     if 'latitude' not in df.columns:
