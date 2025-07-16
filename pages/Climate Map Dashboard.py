@@ -526,7 +526,7 @@ fig_map = px.scatter_mapbox(
 )
 
 # Set marker size after creation
-fig_map.update_traces(marker=dict(size=12))
+fig_map.update_traces(marker=dict(size=20))
 fig_map.update_layout(height=700, width = 1500, margin=dict(l=0, r=0, t=30, b=0))
 fig_map.update_layout(
     coloraxis_colorbar=dict(
