@@ -515,10 +515,10 @@ map_center = {"lat": 0, "lon": 20}
 map_zoom = 2
 
 # If only one city is selected, zoom into it
-if len(selected_cities) == 1:
+if len(selected_cities) == 4:
     city_info = df[df['city'] == selected_cities[0]].iloc[0]
     map_center = {"lat": city_info["latitude"], "lon": city_info["lng"]}
-    map_zoom = 7  # or adjust as needed for clarity
+    map_zoom = 10  # or adjust as needed for clarity
 
 fig_map = px.scatter_mapbox(
     latest_data,
