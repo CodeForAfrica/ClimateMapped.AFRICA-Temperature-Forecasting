@@ -510,7 +510,20 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
-# Create and display the interactive map
+map_center = {"lat": 0, "lon": 20}
+map_zoom = 2
+
+# If a city is selected, update center and zoom
+if st.session_state.selected_city:
+    city_row = latest_data[latest_data['city'] == st.session_state.selected_city]
+    if not city_row.empty:
+        map_center = {
+            "lat": city_row.iloc[0]['latitude'],
+            "lon": city_row.iloc[0]['lng']
+        }
+        map_zoom = 7  # Adjust zoom level as needed (6–10 for cities)
+
+# Create the updated map
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
@@ -518,12 +531,27 @@ fig_map = px.scatter_mapbox(
     color="temperature",
     hover_name="city",
     hover_data={"temperature": ":.1f", "country_name": True},
-    center={"lat": 0, "lon": 20},
-    zoom=2,
+    center=map_center,
+    zoom=map_zoom,
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
-    #title=f"Average Temperature in {latest_year}"
 )
+
+
+## Create and display the interactive map
+#fig_map = px.scatter_mapbox(
+#    latest_data,
+#    lat="latitude",
+#    lon="lng",
+#    color="temperature",
+#    hover_name="city",
+#    hover_data={"temperature": ":.1f", "country_name": True},
+#    center={"lat": 0, "lon": 20},
+#    zoom=2,
+#    mapbox_style="open-street-map",
+#    color_continuous_scale="RdBu_r",
+#    #title=f"Average Temperature in {latest_year}"
+#)
 
 # Set marker size after creation
 fig_map.update_traces(marker=dict(size=13))
