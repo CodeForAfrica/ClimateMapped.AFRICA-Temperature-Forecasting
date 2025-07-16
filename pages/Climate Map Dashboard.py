@@ -510,20 +510,16 @@ with col2:
         help="Choose specific cities to analyze temperature trends and anomalies"
     )
 
+# Default center and zoom
 map_center = {"lat": 0, "lon": 20}
 map_zoom = 2
 
-# If a city is selected, update center and zoom
-if st.session_state.selected_city:
-    city_row = latest_data[latest_data['city'] == st.session_state.selected_city]
-    if not city_row.empty:
-        map_center = {
-            "lat": city_row.iloc[0]['latitude'],
-            "lon": city_row.iloc[0]['lng']
-        }
-        map_zoom = 7  # Adjust zoom level as needed (6–10 for cities)
+# If only one city is selected, zoom into it
+if len(selected_cities) == 1:
+    city_info = df[df['city'] == selected_cities[0]].iloc[0]
+    map_center = {"lat": city_info["latitude"], "lon": city_info["lng"]}
+    map_zoom = 7  # or adjust as needed for clarity
 
-# Create the updated map
 fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
@@ -536,6 +532,7 @@ fig_map = px.scatter_mapbox(
     mapbox_style="open-street-map",
     color_continuous_scale="RdBu_r",
 )
+
 
 
 ## Create and display the interactive map
