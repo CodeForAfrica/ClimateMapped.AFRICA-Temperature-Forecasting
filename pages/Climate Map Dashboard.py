@@ -9,13 +9,12 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 
 # Enhanced CSS styling with SDG colors and climate imagery
 st.markdown("""
-
     <style>
         .custom-container {
-            background-color: #ffeaa7;
+            background-color: #e6f2ff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,122,255,0.15);
         }
     </style>
 """, unsafe_allow_html=True)
@@ -23,7 +22,7 @@ st.markdown("""
 st.markdown("""
     <style>
         .main-title {
-            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
+            background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
@@ -31,8 +30,8 @@ st.markdown("""
             font-size: 42px;
             font-weight: bold;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            #border: 2px solid #FFD700;
+            box-shadow: 0 8px 32px rgba(0,122,255,0.4);
+            border: 2px solid #4da6ff;
         }
 
         @keyframes gradientShift {
@@ -42,7 +41,7 @@ st.markdown("""
         }
         
         .sdg-header {
-            background: linear-gradient(90deg, #FF6B6B, #007aff, #45B7D1, #96CEB4, #FFEAA7);
+            background: linear-gradient(90deg, #007aff, #1a8cff, #3399ff, #66b3ff, #99ccff);
             background-size: 300% 300%;
             animation: gradientShift 3s ease infinite;
             padding: 20px;
@@ -52,7 +51,7 @@ st.markdown("""
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
         }
         
         @keyframes gradientShift {
@@ -62,37 +61,37 @@ st.markdown("""
         }
         
         .climate-warning {
-            background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+            background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
             padding: 20px;
             border-radius: 10px;
             color: white;
             font-weight: bold;
             text-align: center;
             margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(255,68,68,0.3);
-            border-left: 5px solid #FFD700;
+            box-shadow: 0 4px 15px rgba(0,86,204,0.4);
+            border-left: 5px solid #4da6ff;
         }
         
         .climate-info {
-            background: linear-gradient(135deg, #007aff 0%, #44A08D 100%);
+            background: linear-gradient(135deg, #1a8cff 0%, #0066e6 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
             margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
+            box-shadow: 0 4px 15px rgba(26,140,255,0.3);
         }
         
         .climate-good {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            background: linear-gradient(135deg, #3399ff 0%, #66b3ff 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
             margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(86,171,47,0.3);
+            box-shadow: 0 4px 15px rgba(51,153,255,0.3);
         }
         
         .subtitle {
-            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
+            background: linear-gradient(135deg, #0066e6 0%, #004db3 100%);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
@@ -100,93 +99,100 @@ st.markdown("""
             font-size: 22px;
             font-weight: bold;
             margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            box-shadow: 0 4px 15px rgba(0,102,230,0.3);
         }
         
         .sdg-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #4da6ff 0%, #007aff 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             margin: 15px 0;
-            box-shadow: 0 6px 20px rgba(240,147,251,0.3);
+            box-shadow: 0 6px 20px rgba(77,166,255,0.3);
         }
         
         .stats-card-1 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #80bfff 0%, #4da6ff 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
-            }
+            box-shadow: 0 4px 15px rgba(128,191,255,0.3);
+            transition: all 0.3s ease;
+        }
 
         .stats-card-1:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+            box-shadow: 0 12px 40px rgba(128,191,255,0.5);
         }
+        
         .stats-card-2 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: linear-gradient(135deg, #99ccff 0%, #66b3ff 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(67,233,123,0.3); 
+            box-shadow: 0 4px 15px rgba(153,204,255,0.3);
+            transition: all 0.3s ease;
         }
 
         .stats-card-2:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+            box-shadow: 0 12px 40px rgba(153,204,255,0.5);
         }
         
         .stats-card-3 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #1a8cff 0%, #0073e6 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(240,147,251,0.3); 
+            box-shadow: 0 4px 15px rgba(26,140,255,0.3);
+            transition: all 0.3s ease;
         }
+        
         .stats-card-3:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+            box-shadow: 0 12px 40px rgba(26,140,255,0.5);
         }
         
         .stats-card-4 {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            background: linear-gradient(135deg, #b3d9ff 0%, #80bfff 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
+            box-shadow: 0 4px 15px rgba(179,217,255,0.3);
+            transition: all 0.3s ease;
         }
+        
         .stats-card-4:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
+            box-shadow: 0 12px 40px rgba(179,217,255,0.5);
         }
-
         
         .footer {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #003d99 0%, #002966 100%);
             padding: 20px;
             border-radius: 10px;
             color: white;
             text-align: center;
             margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0,61,153,0.3);
         }
         
         .click-instruction {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0066e6 0%, #0056cc 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
             text-align: center;
             margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            box-shadow: 0 4px 15px rgba(0,102,230,0.3);
             font-size: 18px;
             font-weight: bold;
         }
