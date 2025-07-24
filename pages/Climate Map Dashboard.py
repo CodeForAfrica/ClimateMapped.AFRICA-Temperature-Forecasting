@@ -23,7 +23,7 @@ st.markdown("""
 st.markdown("""
     <style>
         .main-title {
-            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
+            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
@@ -42,7 +42,7 @@ st.markdown("""
         }
         
         .sdg-header {
-            background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
+            background: linear-gradient(90deg, #FF6B6B, #007aff, #45B7D1, #96CEB4, #FFEAA7);
             background-size: 300% 300%;
             animation: gradientShift 3s ease infinite;
             padding: 20px;
@@ -74,7 +74,7 @@ st.markdown("""
         }
         
         .climate-info {
-            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            background: linear-gradient(135deg, #007aff 0%, #44A08D 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
@@ -92,7 +92,7 @@ st.markdown("""
         }
         
         .subtitle {
-            background: linear-gradient(135deg, #4ECDC4 0%, #4ECDC4 100%);
+            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
