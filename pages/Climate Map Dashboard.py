@@ -95,7 +95,7 @@ st.markdown("""
         }
         
         .climate-info {
-            background: linear-gradient(135deg, #007aff 0%, #44A08D 100%);
+            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
             #background: linear-gradient(135deg, rgba(0,0,255,0.6) 0%, rgba(0,0,255,0.6) 100%);
             #background: transparent;
             padding: 15px;
