@@ -83,7 +83,7 @@ st.markdown("""
         }
         
         .climate-info {
-            background: linear-gradient(135deg, #0000FF 0%, #FF0000 100%);
+            background: linear-gradient(135deg, #0000FF 0%, #0000FF 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
@@ -91,7 +91,7 @@ st.markdown("""
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
         .climate-info h4 {
-        color: white !important; /* Forcer la couleur du titre */
+        color: white; 
         }
         .climate-info p {
         color: white;
