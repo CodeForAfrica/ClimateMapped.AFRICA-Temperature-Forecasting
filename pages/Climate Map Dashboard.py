@@ -730,15 +730,15 @@ if st.session_state.selected_city is None and not selected_cities:
 st.markdown("---")
     
 # Additional insights
-st.markdown("""
-            <div class="climate-info">
-                <h4>📖 Understanding Temperature Anomalies:</h4>
-                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
-                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
-                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
-                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
-            </div>
-""", unsafe_allow_html=True)
+#st.markdown("""
+#            <div class="climate-info">
+#                <h4>📖 Understanding Temperature Anomalies:</h4>
+#                <p>• <strong>Positive anomalies (red)</strong>: Temperatures above the 1961-1990 average</p>
+#                <p>• <strong>Negative anomalies (blue)</strong>: Temperatures below the 1961-1990 average</p>
+#                <p>• <strong>Baseline period</strong>: 1961-1990 is used as the reference period following WMO standards</p>
+#                <p>• <strong>Climate stripes</strong>: Each column represents one year, showing long-term trends</p>
+#            </div>
+#""", unsafe_allow_html=True)
 
 
 # SDG Information Section
