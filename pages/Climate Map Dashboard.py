@@ -136,6 +136,14 @@ st.markdown("""
             margin: 15px 0;
             box-shadow: 0 6px 20px rgba(240,147,251,0.3);
         }
+
+        }
+        .sdg-card h4 {
+        color: black; 
+        }
+        .sdg-card p {
+        color: black;
+        }
         
         .stats-card-1 {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
