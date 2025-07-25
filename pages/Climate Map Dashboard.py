@@ -528,11 +528,11 @@ if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
 
 # Interactive Map Title
-st.markdown("""
-    <div class="subtitle">
-        Interactive Map<br>
-    </div>
-""", unsafe_allow_html=True)
+#st.markdown("""
+#    <div class="subtitle">
+#        Interactive Map<br>
+#    </div>
+#""", unsafe_allow_html=True)
 
 # Country and city selection (appears first for better UX)
 countries = sorted(df['country_name'].dropna().unique())
