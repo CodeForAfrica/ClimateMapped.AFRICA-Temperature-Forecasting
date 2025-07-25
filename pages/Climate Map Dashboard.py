@@ -25,7 +25,7 @@ st.markdown("""
 st.markdown("""
     <style>
         .main-title {
-            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
+            background: linear-gradient(135deg, #0000FF 0%, #0000FF 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
