@@ -158,7 +158,7 @@ st.markdown("""
         }
         
         .stats-card-4 {
-            background: linear-gradient(135deg, #00BFFF 0%, #fad0c4 100%);
+            background: linear-gradient(135deg, #00BFFF 0%, #87CEFA 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
