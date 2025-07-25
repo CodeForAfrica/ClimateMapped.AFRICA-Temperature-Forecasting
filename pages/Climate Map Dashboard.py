@@ -144,7 +144,7 @@ st.markdown("""
         }
         
         .stats-card-3 {
-            background: linear-gradient(135deg, #1E90FF 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #1E90FF 0%, #6495ED 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
