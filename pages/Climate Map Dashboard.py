@@ -754,7 +754,7 @@ with st.container():
         st.markdown("""
             <div class="sdg-card">
                 <h4>🌍 SDG 13: Climate Action</h4>
-                <p>Take urgent action to combat climate change and its impacts.</p>
+                <p>Take urgent action to combat climate change and its impacts through monitoring trends and promoting awareness.</p>
             </div>
         """, unsafe_allow_html=True)
 
