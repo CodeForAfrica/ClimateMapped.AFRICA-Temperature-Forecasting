@@ -11,6 +11,15 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 
 st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    html, body, [class*="st"] {
+        font-family: 'Poppins', sans-serif;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+    <style>
     .stApp {
         background-image: url("https://climatemapped-africa.dev.codeforafrica.org/_next/static/media/bg-map-white.f3fbc71d.jpg");
         background-attachment: fixed;
