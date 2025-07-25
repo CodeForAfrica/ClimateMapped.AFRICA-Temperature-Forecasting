@@ -597,6 +597,11 @@ fig_map.update_layout(
         thickness=15            
     )
 )
+fig_map.update_layout(
+    margin=dict(l=0, r=0, t=0, b=0),
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+)
 
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
