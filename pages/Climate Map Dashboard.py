@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
+import streamlit.components.v1 as components
+
 
 st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="🌍")
 
@@ -602,6 +604,36 @@ fig_map.update_layout(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
 )
+
+components.html(
+    f"""
+    <div id="bg-map" style="
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+    "></div>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        const fig = {json.dumps(fig_map.to_plotly_json())};
+        Plotly.newPlot('bg-map', fig.data, fig.layout, {{
+            displayModeBar: false,
+            responsive: true
+        }});
+        // Désactive l'interaction pour ne pas bloquer le scroll/click
+        const el = document.getElementById('bg-map');
+        el.style.pointerEvents = 'none';
+    </script>
+    """,
+    height=0,  # le conteneur visible est en position:fixed, pas besoin de hauteur ici
+)
+
+
+
+
+
 
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
