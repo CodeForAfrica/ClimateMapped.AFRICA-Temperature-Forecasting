@@ -167,6 +167,12 @@ st.markdown("""
             #box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
             }
+            .stats-card-1 h4 {
+            color: black; 
+            }
+            .stats-card-1 p {
+            color: black;
+            }
 
         .stats-card-1:hover {
             transform: translateY(-3px);
