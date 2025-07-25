@@ -92,10 +92,10 @@ st.markdown("""
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
         .climate-info h4 {
-        color: white; 
+        color: black; 
         }
         .climate-info p {
-        color: white;
+        color: black;
         }
         
     
