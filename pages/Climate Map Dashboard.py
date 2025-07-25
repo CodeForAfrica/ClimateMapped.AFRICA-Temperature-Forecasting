@@ -628,9 +628,92 @@ fig_map.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
 )
 
-
 # Display the map and capture click events
 map_click = st.plotly_chart(fig_map, use_container_width=True, on_select="rerun")
+
+st.markdown("""
+<style>
+    /* Container principal avec carte en arrière-plan */
+    .map-background-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    /* Couche de contenu superposée */
+    .overlay-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        pointer-events: none; /* Permet l'interaction avec la carte */
+    }
+    
+    /* Panneaux de contenu */
+    .content-panel {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        pointer-events: auto; /* Réactive les interactions pour ce panneau */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Positionnement des panneaux */
+    .top-left-panel {
+        top: 20px;
+        left: 20px;
+        max-width: 350px;
+    }
+    
+    .top-right-panel {
+        top: 20px;
+        right: 20px;
+        max-width: 300px;
+    }
+    
+    .bottom-center-panel {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 600px;
+    }
+    
+    /* Style pour les stats flottantes */
+    .floating-stats {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-card-floating {
+        background: linear-gradient(135deg, rgba(0, 122, 255, 0.9), rgba(0, 86, 204, 0.9));
+        backdrop-filter: blur(15px);
+        padding: 15px 20px;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        min-width: 200px;
+        box-shadow: 0 8px 32px rgba(0, 122, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        pointer-events: auto;
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card-floating:hover {
+        transform: translateY(-3px);
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Handle map click events
 if map_click and map_click.selection and map_click.selection.points:
