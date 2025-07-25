@@ -90,9 +90,14 @@ st.markdown("""
             margin: 15px 0;
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
-
-
-            
+        .climate-info h4 {
+        color: white !important; /* Forcer la couleur du titre */
+        }
+        .climate-info p {
+        color: white;
+        }
+        
+    
         .climate-good {
             background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             padding: 15px;
