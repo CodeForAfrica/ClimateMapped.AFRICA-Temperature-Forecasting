@@ -529,7 +529,7 @@ if 'selected_city' not in st.session_state:
 # Interactive Map Title
 st.markdown("""
     <div class="subtitle">
-        Interactive Climate Map of Africa <br>
+        Interactive Map<br>
     </div>
 """, unsafe_allow_html=True)
 
