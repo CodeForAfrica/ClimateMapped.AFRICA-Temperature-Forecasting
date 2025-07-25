@@ -95,7 +95,8 @@ st.markdown("""
         }
         
         .climate-info {
-            background: linear-gradient(135deg, rgba(0,0,255,0.6) 0%, rgba(0,0,255,0.6) 100%);
+            background: linear-gradient(135deg, #007aff 0%, #44A08D 100%);
+            #background: linear-gradient(135deg, rgba(0,0,255,0.6) 0%, rgba(0,0,255,0.6) 100%);
             #background: transparent;
             padding: 15px;
             border-radius: 8px;
@@ -112,8 +113,8 @@ st.markdown("""
         
     
         .climate-good {
-            background: transparent;
-            #background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            #background: transparent;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             padding: 15px;
             border-radius: 8px;
             color: white;
