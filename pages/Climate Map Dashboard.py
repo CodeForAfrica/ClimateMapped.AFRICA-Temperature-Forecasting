@@ -578,7 +578,7 @@ fig_map = px.scatter_mapbox(
     center=map_center,
     zoom=map_zoom,
     #mapbox_style="open-street-map",
-    mapbox_style="carto-positron"
+    mapbox_style="carto-positron",
     color_continuous_scale="RdBu_r",
 )
 
