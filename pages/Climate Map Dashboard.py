@@ -63,7 +63,7 @@ st.markdown("""
         }
         
         .sdg-header {
-            background: linear-gradient(90deg, #FF6B6B, #007aff, #45B7D1, ##45B7D1, #45B7D1);
+            background: linear-gradient(90deg, #FF6B6B, #007aff, #45B7D1, #45B7D1, #45B7D1);
             background-size: 300% 300%;
             animation: gradientShift 3s ease infinite;
             padding: 20px;
