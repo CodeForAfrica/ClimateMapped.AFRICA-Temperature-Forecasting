@@ -112,7 +112,10 @@ st.markdown("""
         }
         
         .subtitle {
-            background: linear-gradient(135deg, #0000FF 0%, #0000FF 100%);
+            background-image: url("https://climatemapped-africa.dev.codeforafrica.org/media/sat-mtKenya-1_alt@2400x.jpg");
+            background-size: cover;
+            background-position: center;
+            #background: linear-gradient(135deg, #0000FF 0%, #0000FF 100%);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
