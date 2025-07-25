@@ -124,7 +124,8 @@ st.markdown("""
             font-size: 22px;
             font-weight: bold;
             margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            #box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
         
         .sdg-card {
@@ -134,7 +135,8 @@ st.markdown("""
             border-radius: 12px;
             color: white;
             margin: 15px 0;
-            box-shadow: 0 6px 20px rgba(240,147,251,0.3);
+            #box-shadow: 0 6px 20px rgba(240,147,251,0.3);
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
 
         }
@@ -152,7 +154,8 @@ st.markdown("""
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
+            #box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
             }
 
         .stats-card-1:hover {
@@ -166,7 +169,8 @@ st.markdown("""
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(67,233,123,0.3); 
+            #box-shadow: 0 4px 15px rgba(67,233,123,0.3);
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
 
         .stats-card-2:hover {
@@ -181,7 +185,8 @@ st.markdown("""
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(240,147,251,0.3); 
+            #box-shadow: 0 4px 15px rgba(240,147,251,0.3);
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
         .stats-card-3:hover {
             transform: translateY(-3px);
@@ -195,7 +200,8 @@ st.markdown("""
             color: white;
             text-align: center;
             margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(255,154,158,0.3); 
+            #box-shadow: 0 4px 15px rgba(255,154,158,0.3);
+            box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
         .stats-card-4:hover {
             transform: translateY(-3px);
