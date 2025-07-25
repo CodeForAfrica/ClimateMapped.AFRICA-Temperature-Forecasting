@@ -92,7 +92,7 @@ st.markdown("""
         #}
 
         .climate-info {
-        background-image: url("https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0");
+        background-image: url("https://climatemapped-africa.dev.codeforafrica.org/media/sat-mtKenya-2@2x-1.jpg");
         background-size: cover;
         background-position: center;
         padding: 30px;
@@ -101,14 +101,14 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         color: black;
         position: relative;
-    }
-    
-    .climate-info .content-box {
-        background: rgba(255, 255, 255, 0.7);  /* cadre blanc transparent */
-        padding: 20px;
-        border-radius: 8px;
-        display: inline-block;
-    }
+        }
+        .climate-info .content-box {
+            background: rgba(255, 255, 255, 0.7);  /* cadre blanc transparent */
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
             
         .climate-good {
             background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
