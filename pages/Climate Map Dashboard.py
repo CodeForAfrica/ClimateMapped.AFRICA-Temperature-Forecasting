@@ -129,7 +129,7 @@ st.markdown("""
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
         }
         .stats-card-2 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: linear-gradient(135deg, #7B68EE 0%, #38f9d7 100%);
             padding: 20px;
             border-radius: 12px;
             color: white;
