@@ -94,7 +94,7 @@ st.markdown("""
         }
         
         .subtitle {
-            background: linear-gradient(135deg, #007aff 0%, #007aff 100%);
+            background: linear-gradient(135deg, #0000FF 0%, #0000FF 100%);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
