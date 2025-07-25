@@ -11,15 +11,20 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 
 st.markdown("""
     <style>
-        .custom-container {
-            background-image: https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-vector%2Flandscape-background-with-abstract-topography-map-design_65096438.htm&psig=AOvVaw2AYLvGdxS7xYp_WJLpIWe6&ust=1753527201640000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMjXlIPs144DFQAAAAAdAAAAABAU
-            background-size: cover;  
-            background-position: center; 
-            background-repeat: no-repeat; 
-            #background-color: #ffeaa7;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    .stApp {
+        background-image: url("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-vector%2Flandscape-background-with-abstract-topography-map-design_65096438.htm&psig=AOvVaw2AYLvGdxS7xYp_WJLpIWe6&ust=1753527201640000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMjXlIPs144DFQAAAAAdAAAAABAU");
+        background-attachment: fixed;
+        background-size: cover;
+    }
+        #.custom-container {
+        #    background-image: 
+        #    background-size: cover;  
+        #    background-position: center; 
+        #    background-repeat: no-repeat; 
+        #    #background-color: #ffeaa7;
+        #    padding: 20px;
+        #    border-radius: 10px;
+        #    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
     </style>
 """, unsafe_allow_html=True)
