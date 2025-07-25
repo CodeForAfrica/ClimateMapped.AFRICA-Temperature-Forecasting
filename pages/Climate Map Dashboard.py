@@ -12,7 +12,7 @@ st.set_page_config(layout="wide", page_title="Climate Map Africa", page_icon="ðŸ
 st.markdown("""
     <style>
     .stApp {
-        background-image: url("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-vector%2Flandscape-background-with-abstract-topography-map-design_65096438.htm&psig=AOvVaw2AYLvGdxS7xYp_WJLpIWe6&ust=1753527201640000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMjXlIPs144DFQAAAAAdAAAAABAU");
+        background-image: url("https://c8.alamy.com/comp/2RKFM6X/landscape-background-with-an-abstract-topography-map-design-2RKFM6X.jpg");
         background-attachment: fixed;
         background-size: cover;
     }
