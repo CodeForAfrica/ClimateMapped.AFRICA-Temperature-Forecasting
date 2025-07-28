@@ -174,9 +174,17 @@ st.markdown("""
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
         }
+
+        }
+        .stats-card-1 h4 {
+        color: white; 
+        }
+        .stats-card-1 p {
+        color: white;
+        }
         .stats-card-2 {
             #background: linear-gradient(135deg, #7B68EE 0%, #7B68EE 100%);
-            background:#7B68EE;
+            background: #0000FF;
             padding: 20px;
             border-radius: 12px;
             color: white;
