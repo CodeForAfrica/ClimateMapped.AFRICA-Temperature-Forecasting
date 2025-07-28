@@ -191,6 +191,11 @@ st.markdown("""
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
 
+        .stats-card-2, 
+        .stats-card-2 * {
+            color: white ;
+        }
+
         .stats-card-2:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
@@ -207,6 +212,12 @@ st.markdown("""
             #box-shadow: 0 4px 15px rgba(240,147,251,0.3);
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
         }
+
+        .stats-card-3, 
+        .stats-card-3 * {
+            color: white ;
+        }
+        
         .stats-card-3:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
@@ -222,6 +233,11 @@ st.markdown("""
             margin: 10px 0;
             #box-shadow: 0 4px 15px rgba(255,154,158,0.3);
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
+        }
+
+        .stats-card-4, 
+        .stats-card-4 * {
+            color: white ;
         }
         .stats-card-4:hover {
             transform: translateY(-3px);
