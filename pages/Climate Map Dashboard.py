@@ -727,16 +727,16 @@ if selected_cities:
         if narrative:
             st.markdown(narrative, unsafe_allow_html=True)
 
-# Show help message when no selections are made
-if st.session_state.selected_city is None and not selected_cities:
-    st.markdown("""
-        <div class="climate-info">
-            <h4>🎯 Get Started:</h4>
-            <p>Use the country and city selection boxes above to choose specific locations for analysis.</p>
-            <p>Or click on any city point on the map above to begin your climate analysis journey!</p>
-            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
-        </div>
-    """, unsafe_allow_html=True)
+## Show help message when no selections are made
+#if st.session_state.selected_city is None and not selected_cities:
+#    st.markdown("""
+#        <div class="climate-info">
+#            <h4>🎯 Get Started:</h4>
+#            <p>Use the country and city selection boxes above to choose specific locations for analysis.</p>
+#            <p>Or click on any city point on the map above to begin your climate analysis journey!</p>
+#            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+#        </div>
+#    """, unsafe_allow_html=True)
 
     
 #st.markdown("---")
