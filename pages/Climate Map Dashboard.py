@@ -447,8 +447,8 @@ def create_temperature_trend_chart(df, selected_city):
         y=city_data['temperature'],
         mode='lines+markers',
         name='Temperature',
-        line=dict(color='#08306b', width=3),
-        marker=dict(size=6, color='#08306b'),
+        line=dict(color='#08519c', width=3),
+        marker=dict(size=6, color='#08519c'),
         hovertemplate='Year: %{x}<br>Temperature: %{y:.1f}°C<extra></extra>'
     ))
     
