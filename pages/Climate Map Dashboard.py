@@ -181,7 +181,7 @@ st.markdown("""
 
         .stats-card-2 {
             #background: linear-gradient(135deg, #7B68EE 0%, #7B68EE 100%);
-            background: #0000FF;
+            background: #1E90FF;
             padding: 20px;
             border-radius: 12px;
             color: white;
@@ -203,7 +203,7 @@ st.markdown("""
         
         .stats-card-3 {
             #background: linear-gradient(135deg, #1E90FF 0%, #1E90FF 100%);
-            background:#1E90FF; 
+            background:#0000FF; 
             padding: 20px;
             border-radius: 12px;
             color: white;
