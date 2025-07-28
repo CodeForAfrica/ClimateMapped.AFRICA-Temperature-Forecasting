@@ -528,6 +528,17 @@ with st.container():
 if 'selected_city' not in st.session_state:
     st.session_state.selected_city = None
 
+
+st.markdown("""
+        <div class="climate-info">
+            <h4>🎯 Get Started:</h4>
+            <p>Use the country and city selection boxes above to choose specific locations for analysis.</p>
+            <p>Or click on any city point on the map above to begin your climate analysis journey!</p>
+            <p>Explore how temperatures have changed over time and discover the impacts of climate change in Africa.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+
 # Interactive Map Title
 #st.markdown("""
 #    <div class="subtitle">
