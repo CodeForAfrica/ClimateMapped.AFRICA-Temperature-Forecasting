@@ -168,6 +168,10 @@ st.markdown("""
             #box-shadow: 0 4px 15px rgba(79,172,254,0.3); 
             box-shadow: 0 4px 15px rgba(78,205,196,0.3);
             }
+        .stats-card-1, 
+        .stats-card-1 * {
+            color: white ;
+        }
             
 
         .stats-card-1:hover {
@@ -175,13 +179,6 @@ st.markdown("""
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
         }
 
-        }
-        .stats-card-1 h4 {
-        color: white; 
-        }
-        .stats-card-1 p {
-        color: white;
-        }
         .stats-card-2 {
             #background: linear-gradient(135deg, #7B68EE 0%, #7B68EE 100%);
             background: #0000FF;
