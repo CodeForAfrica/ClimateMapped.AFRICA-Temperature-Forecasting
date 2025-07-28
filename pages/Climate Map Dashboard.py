@@ -158,7 +158,8 @@ st.markdown("""
         }
         
         .stats-card-1 {
-            background: linear-gradient(135deg, #4facfe 0%, #4facfe 100%);
+            #background: linear-gradient(135deg, #4facfe 0%, #4facfe 100%);
+            background: #4facfe; 
             padding: 20px;
             border-radius: 12px;
             color: white;
@@ -174,7 +175,8 @@ st.markdown("""
             box-shadow: 0 12px 40px rgba(79, 172, 254, 0.5);
         }
         .stats-card-2 {
-            background: linear-gradient(135deg, #7B68EE 0%, #7B68EE 100%);
+            #background: linear-gradient(135deg, #7B68EE 0%, #7B68EE 100%);
+            background:#7B68EE;
             padding: 20px;
             border-radius: 12px;
             color: white;
@@ -190,7 +192,8 @@ st.markdown("""
         }
         
         .stats-card-3 {
-            background: linear-gradient(135deg, #1E90FF 0%, #1E90FF 100%);
+            #background: linear-gradient(135deg, #1E90FF 0%, #1E90FF 100%);
+            background:#1E90FF; 
             padding: 20px;
             border-radius: 12px;
             color: white;
@@ -205,7 +208,8 @@ st.markdown("""
         }
         
         .stats-card-4 {
-            background: linear-gradient(135deg, #00BFFF 0%, #00BFFF 100%);
+            #background: linear-gradient(135deg, #00BFFF 0%, #00BFFF 100%);
+            background: #00BFFF;
             padding: 20px;
             border-radius: 12px;
             color: white;
