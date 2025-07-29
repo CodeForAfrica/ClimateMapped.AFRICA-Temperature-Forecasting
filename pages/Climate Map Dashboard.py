@@ -818,10 +818,16 @@ with st.container():
 st.markdown("""
     <div class="sdg-card">
         <h3>🌱 Take Climate Action Today!</h3>
-        <p><strong>Individual Actions:</strong> Reduce energy consumption, use renewable energy, support sustainable transportation</p>
-        <p><strong>Community Actions:</strong> Advocate for climate policies, support local environmental initiatives, educate others</p>
-        <p><strong>Global Actions:</strong> Support international climate agreements, sustainable development projects, and climate research</p>
+        <p>Support renewable energy, reduce carbon footprint, and advocate for climate policies. Small and smart choices to mitigate increasing temperatures:</p>
+        <p>Create green spaces like parks and forests, urban forests, rooftop gardens, community gardens and green roofs & walls.</p>
+        <p>Plant native species to promote biodiversity.</p>
+        <p> Use renewable energy sources and improve energy efficiency.</p>
+        <p> Walk, bike or take public transport, which will reduce greenhouse gas emissions. </p>
+        <p> Reduce, reuse, repair and recycle to reduce the carbon footprint.</p>
+        <p> Advocate for change. Speak up and get others to join in taking action.</p>
+
     </div>
+
 """, unsafe_allow_html=True)
 
 st.markdown("---")
