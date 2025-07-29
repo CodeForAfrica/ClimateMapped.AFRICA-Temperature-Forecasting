@@ -819,7 +819,7 @@ st.markdown("""
     <div class="sdg-card">
         <h3>🌱 Take Climate Action Today!</h3>
         <p>Support renewable energy, reduce carbon footprint, and advocate for climate policies. Small and smart choices to mitigate increasing temperatures:</p>
-        <ul>
+        <ul style="color: black;">
           <li>Create green spaces like parks, urban forests, rooftop gardens, community gardens, and green roofs or walls.</li>
           <li>Plant native species to promote biodiversity.</li>
           <li>Use renewable energy sources and improve energy efficiency.</li>
