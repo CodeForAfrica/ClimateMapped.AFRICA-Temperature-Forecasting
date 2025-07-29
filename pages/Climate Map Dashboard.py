@@ -820,13 +820,12 @@ st.markdown("""
         <h3>🌱 Take Climate Action Today!</h3>
         <p>Support renewable energy, reduce carbon footprint, and advocate for climate policies. Small and smart choices to mitigate increasing temperatures:</p>
         <ul>
-        <li><p>Create green spaces like parks and forests, urban forests, rooftop gardens, community gardens and green roofs & walls.</p></li>
-        <li><p>Plant native species to promote biodiversity.</p></li>
-        <li><p> Use renewable energy sources and improve energy efficiency.</p></li>
-        <li><p> Walk, bike or take public transport, which will reduce greenhouse gas emissions. </p></li>
-        <li><p> Reduce, reuse, repair and recycle to reduce the carbon footprint.</p></li>
-        <li><p> Advocate for change. Speak up and get others to join in taking action.</p></li>
-
+          <li>Create green spaces like parks, urban forests, rooftop gardens, community gardens, and green roofs or walls.</li>
+          <li>Plant native species to promote biodiversity.</li>
+          <li>Use renewable energy sources and improve energy efficiency.</li>
+          <li>Walk, bike, or take public transport to reduce greenhouse gas emissions.</li>
+          <li>Reduce, reuse, repair, and recycle to lower your carbon footprint.</li>
+          <li>Advocate for change: speak up and encourage others to take action.</li>
         </ul>
 
     </div>
