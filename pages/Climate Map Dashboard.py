@@ -348,7 +348,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
                 <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
                 <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
-                <p> <strong>Take Action:</strong> Support renewable energy, reduce carbon footprint, and advocate for climate policies.</p>
+                <p> <strong>Take Action:</strong> Act now. First and foremost, by urging all levels of government to give climate action top priority and allocate resources accordingly. Furthermore, mitigation should be a local issue that is addressed in households, communities, schools, and places of worship rather than just being a national one.</p>
             </div>
             """
         elif temp_change > 1.0:
