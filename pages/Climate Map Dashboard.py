@@ -606,7 +606,7 @@ if len(selected_cities) == 1:
     map_center = {"lat": city_info["latitude"], "lon": city_info["lng"]}
     map_zoom = 12  # or adjust as needed for clarity
 
-fig_map = px.scatter_map(
+fig_map = px.scatter_mapbox(
     latest_data,
     lat="latitude",
     lon="lng",
