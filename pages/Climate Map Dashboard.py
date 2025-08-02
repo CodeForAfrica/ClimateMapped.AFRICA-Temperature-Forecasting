@@ -621,9 +621,8 @@ fig_map = px.scatter_map(
 )
 
 
-
 ## Create and display the interactive map
-#fig_map = px.scatter_mapbox(
+#fig_map = px.scatter_map(
 #    latest_data,
 #    lat="latitude",
 #    lon="lng",
