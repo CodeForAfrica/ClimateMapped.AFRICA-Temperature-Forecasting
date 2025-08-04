@@ -361,7 +361,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <h3>{emoji} {title} {emoji}</h3>
             <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
             <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
-            <p>Current anomaly: In <strong>{latest_year}</strong>, the recored average temperature 
+            <p>Current anomaly: In <strong>{latest_year}</strong>, the recorded average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
             <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
@@ -377,7 +377,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <h3>{emoji} {title} {emoji}</h3>
             <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
             <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-            <p>Current anomaly: In <strong>{latest_year}</strong>, the average temperature 
+            <p>Current anomaly: In <strong>{latest_year}</strong>, the recorded average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
             <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
@@ -394,7 +394,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <h3>{emoji} {title} {emoji}</h3>
             <p><strong>{city_name}, {country_name}</strong> shows relatively stable temperatures with a change of 
             <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-            <p>Current anomaly: In <strong>{latest_year}</strong>, the average temperature 
+            <p>Current anomaly: In <strong>{latest_year}</strong>, the recorded average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
             <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
