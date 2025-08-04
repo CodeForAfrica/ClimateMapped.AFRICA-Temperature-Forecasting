@@ -847,6 +847,8 @@ def display_city_analysis(city, df, df_pred):
     narrative = generate_climate_narrative(city_data, city, country_name)
     if narrative:
         st.markdown(narrative, unsafe_allow_html=True)
+        
+    st.markdown("---")
     
     # Prediction Analysis Section
     if not city_pred_data.empty:
