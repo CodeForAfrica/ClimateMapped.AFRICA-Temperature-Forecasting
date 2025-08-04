@@ -320,7 +320,7 @@ def calculate_temperature_anomaly(df, baseline_start=1961, baseline_end=1990):
     return anomaly_df
 
 def generate_climate_narrative(city_data, city_name, country_name):
-    """Generate dynamic climate narrative based on data"""
+    """Generate dynamic climate narrative based on 1980s trend and baseline comparison"""
     if city_data.empty:
         return ""
     
@@ -328,65 +328,85 @@ def generate_climate_narrative(city_data, city_name, country_name):
     recent_years = city_data[city_data['year'] >= 2015]
     early_years = city_data[city_data['year'] <= 1980]
     
-    if not recent_years.empty and not early_years.empty:
-        recent_avg = recent_years['temperature'].mean()
-        early_avg = early_years['temperature'].mean()
-        temp_change = recent_avg - early_avg
-        
-        # Get latest anomaly
-        latest_anomaly = city_data[city_data['year'] == city_data['year'].max()]['temperature_anomaly'].iloc[0]
-        
-        # Generate narrative based on temperature trends
-        if temp_change > 2.0:
-            narrative_class = "climate-warning"
-            emoji = "🔥"
-            title = "CRITICAL TEMPERATURE RISE DETECTED"
-            message = f"""
-            <div class="{narrative_class}">
-                <h3>{emoji} {title} {emoji}</h3>
-                <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
-                <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
-                <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                <p>This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed to combat climate change!</p>
-                <p> <strong>Take Action:</strong> Act now. First and foremost, by urging all levels of government to give climate action top priority and allocate resources accordingly. Furthermore, mitigation should be a local issue that is addressed in households, communities, schools, and places of worship rather than just being a national one.</p>
-            </div>
-            """
-        elif temp_change > 1.0:
-            narrative_class = "climate-info"
-            emoji = "⚠️"
-            title = "MODERATE WARMING TREND"
-            latest_year = city_data['year'].max()
-            latest_temp = city_data.loc[city_data['year'] == latest_year, 'temperature'].mean()
-            baseline_temp = city_data['baseline_temp'].iloc[0]
-                
-            message = f"""
-                <div class="{narrative_class}">
-                    <h3>{emoji} {title} {emoji}</h3>
-                    <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
-                    <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-                    <p>In <strong>{latest_year}</strong>, the recorded average yearly temperature 
-                    (<strong>{latest_temp:.1f}°C</strong>) is about <strong>{latest_anomaly:+.1f}°C</strong> above 
-                    the 1961-1990 baseline (<strong>{baseline_temp:.1f}°C</strong>).</p>
-                    <p>This relates to <strong>SDG 13: Climate Action</strong> and 
-                    <strong>SDG 11: Sustainable Cities</strong>.</p>
-                    <p>Monitor trends closely and implement adaptation strategies.</p>
-            </div>
-            """
-        else:
-            narrative_class = "climate-good"
-            emoji = "✅"
-            title = "STABLE TEMPERATURE PATTERN"
-            message = f"""
-            <div class="{narrative_class}">
-                <h3>{emoji} {title} {emoji}</h3>
-                <p><strong>{city_name}, {country_name}</strong> shows relatively stable temperatures with a change of 
-                <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-                <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong> compared to the 1961-1990 baseline</p>
-                <p>🌱 Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
-            </div>
-            """
-        
-        return message
+    if recent_years.empty or early_years.empty:
+        return ""
+    
+    # Temperature change since 1980s
+    recent_avg = recent_years['temperature'].mean()
+    early_avg = early_years['temperature'].mean()
+    temp_change = recent_avg - early_avg
+    
+    # Latest year and baseline comparison
+    latest_year = city_data['year'].max()
+    latest_temp = city_data.loc[city_data['year'] == latest_year, 'temperature'].mean()
+    baseline_temp = city_data['baseline_temp'].iloc[0]
+    latest_anomaly = city_data.loc[city_data['year'] == latest_year, 'temperature_anomaly'].iloc[0]
+    
+    # Determine trend relative to baseline
+    baseline_diff = latest_temp - baseline_temp
+    if baseline_diff > 0.2:
+        baseline_trend = "increased"
+    elif baseline_diff < -0.2:
+        baseline_trend = "decreased"
+    else:
+        baseline_trend = "remained relatively constant"
+    
+    # Select narrative class
+    if temp_change > 2.0:
+        narrative_class = "climate-warning"
+        emoji = "🔥"
+        title = "CRITICAL TEMPERATURE RISE DETECTED"
+        message = f"""
+        <div class="{narrative_class}">
+            <h3>{emoji} {title} {emoji}</h3>
+            <p><strong>{city_name}, {country_name}</strong> has experienced a significant temperature increase of 
+            <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
+            <p>In <strong>{latest_year}</strong>, the recored average temperature 
+            (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
+            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            (<strong>{baseline_temp:.1f}°C</strong>).</p>
+            <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong></p>
+            <p> This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed!</p>
+        </div>
+        """
+    elif temp_change > 1.0:
+        narrative_class = "climate-info"
+        emoji = "⚠️"
+        title = "MODERATE WARMING TREND"
+        message = f"""
+        <div class="{narrative_class}">
+            <h3>{emoji} {title} {emoji}</h3>
+            <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
+            <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
+            <p>In <strong>{latest_year}</strong>, the average temperature 
+            (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
+            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            (<strong>{baseline_temp:.1f}°C</strong>).</p>
+            <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong></p>
+            <p>This relates to <strong>SDG 13: Climate Action</strong> and 
+            <strong>SDG 11: Sustainable Cities</strong>.</p>
+        </div>
+        """
+    else:
+        narrative_class = "climate-good"
+        emoji = "✅"
+        title = "STABLE TEMPERATURE PATTERN"
+        message = f"""
+        <div class="{narrative_class}">
+            <h3>{emoji} {title} {emoji}</h3>
+            <p><strong>{city_name}, {country_name}</strong> shows relatively stable temperatures with a change of 
+            <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
+            <p>In <strong>{latest_year}</strong>, the average temperature 
+            (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
+            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            (<strong>{baseline_temp:.1f}°C</strong>).</p>
+            <p>Current anomaly: <strong>{latest_anomaly:+.1f}°C</strong></p>
+            <p>🌱 Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
+        </div>
+        """
+    
+    return message
+
     
     return ""
 
