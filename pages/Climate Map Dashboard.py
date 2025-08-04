@@ -360,7 +360,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
                 <h3>{emoji} {title} {emoji}</h3>
                 <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
                 <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-                <p>Current anomaly: In current year(2025), the recorded average yearly temperature ({city_data['year'].max()]['temperature']}°C has increased by +1.9°C above the 1961-1990 baseline ({anomaly_df['baseline_temp']}°C) <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
+                <p>Current anomaly: In current year(2025), the recorded average yearly temperature ({city_data['year'].max()['temperature']}°C has increased by +1.9°C above the 1961-1990 baseline ({anomaly_df['baseline_temp']}°C) <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
                                                                                                                                                                                         
                 <p> This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
                 <p> Monitor trends closely and implement adaptation strategies.</p>
