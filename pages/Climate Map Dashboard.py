@@ -292,8 +292,8 @@ country_mapping = {
 @st.cache_data
 def load_data():
     # Load historical data
-    df1 = pd.read_csv("sample_temp_1950-2025_1.csv")
-    df2 = pd.read_csv("sample_temp_1950-2025_2.csv")
+    df1 = pd.read_csv("data/sample_temp_1950-2025_1.csv")
+    df2 = pd.read_csv("data/sample_temp_1950-2025_2.csv")
     df = pd.concat([df1, df2], axis=0).reset_index(drop=True)
     df.fillna("NA", inplace=True)
     df.columns = df.columns.str.lower()
@@ -306,7 +306,7 @@ def load_data():
     df['country_name'] = df['country'].map(country_mapping)
     
     # Load prediction data
-    df_pred = pd.read_csv("monthly_pred_temp_2025-2029.csv")
+    df_pred = pd.read_csv("data/monthly_pred_temp_2025-2029.csv")
     df_pred.columns = df_pred.columns.str.lower()
 
     # Parse the date column (mm-year format like "Jul-2025")
