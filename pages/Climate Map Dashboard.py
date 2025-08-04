@@ -363,7 +363,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <strong>{temp_change:.1f}°C</strong> since the 1980s!</p>
             <p>Current anomaly: In <strong>{latest_year}</strong>, the recored average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
-            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
             <p> This aligns with <strong>SDG 13: Climate Action</strong> - urgent action needed!</p>
         </div>
@@ -379,7 +379,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
             <p>Current anomaly: In <strong>{latest_year}</strong>, the average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
-            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
             <p>This relates to <strong>SDG 13: Climate Action</strong> and 
             <strong>SDG 11: Sustainable Cities</strong>.</p>
@@ -396,7 +396,7 @@ def generate_climate_narrative(city_data, city_name, country_name):
             <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
             <p>Current anomaly: In <strong>{latest_year}</strong>, the average temperature 
             (<strong>{latest_temp:.1f}°C</strong>) has <strong>{baseline_trend}</strong> by 
-            <strong>{abs(baseline_diff):.1f}°C</strong> compared to the 1961–1990 baseline 
+            <strong>{baseline_diff:+.1f}°C</strong> compared to the 1961–1990 baseline 
             (<strong>{baseline_temp:.1f}°C</strong>).</p>
             <p>🌱 Continue supporting <strong>SDG 13: Climate Action</strong> to maintain stability!</p>
         </div>
