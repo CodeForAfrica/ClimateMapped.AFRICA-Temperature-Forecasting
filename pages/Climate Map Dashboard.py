@@ -355,15 +355,21 @@ def generate_climate_narrative(city_data, city_name, country_name):
             narrative_class = "climate-info"
             emoji = "⚠️"
             title = "MODERATE WARMING TREND"
+            latest_year = city_data['year'].max()
+            latest_temp = city_data.loc[city_data['year'] == latest_year, 'temperature'].mean()
+            baseline_temp = city_data['baseline_temp'].iloc[0]
+                
             message = f"""
-            <div class="{narrative_class}">
-                <h3>{emoji} {title} {emoji}</h3>
-                <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
-                <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
-                <p>Current anomaly: In current year(2025), the recorded average yearly temperature ({city_data['year'].max()['temperature']}°C has increased by +1.9°C above the 1961-1990 baseline ({anomaly_df['baseline_temp']}°C) <strong>{latest_anomaly:+.1f}°C</strong> above the 1961-1990 baseline</p>
-                                                                                                                                                                                        
-                <p> This relates to <strong>SDG 13: Climate Action</strong> and <strong>SDG 11: Sustainable Cities</strong></p>
-                <p> Monitor trends closely and implement adaptation strategies.</p>
+                <div class="{narrative_class}">
+                    <h3>{emoji} {title} {emoji}</h3>
+                    <p><strong>{city_name}, {country_name}</strong> shows a moderate warming trend of 
+                    <strong>{temp_change:.1f}°C</strong> since the 1980s.</p>
+                    <p>In <strong>{latest_year}</strong>, the recorded average yearly temperature 
+                    (<strong>{latest_temp:.1f}°C</strong>) is about <strong>{latest_anomaly:+.1f}°C</strong> above 
+                    the 1961-1990 baseline (<strong>{baseline_temp:.1f}°C</strong>).</p>
+                    <p>This relates to <strong>SDG 13: Climate Action</strong> and 
+                    <strong>SDG 11: Sustainable Cities</strong>.</p>
+                    <p>Monitor trends closely and implement adaptation strategies.</p>
             </div>
             """
         else:
