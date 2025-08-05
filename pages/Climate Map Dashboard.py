@@ -871,7 +871,6 @@ st.markdown("""
     <div class="climate-info">
         <h4> About this analysis</h4>
         <p><strong>Historical Data:</strong> Temperature records from 1950-2025 showing long-term climate trends</p>
-        <p><strong>Prediction Data:</strong> Monthly forecasts from 2025-2029 using advanced climate modeling</p>
         <p><strong>Temperature Anomalies:</strong> Calculated relative to 1961-1990 baseline period (WMO standard)</p>
         <p><strong>Color Scale:</strong> Blue indicates cooler than average, red indicates warmer than average</p>
         <p>This tool supports <strong>SDG 13: Climate Action</strong> by providing accessible climate data for decision-making.</p>
