@@ -849,59 +849,6 @@ def display_city_analysis(city, df, df_pred):
         st.markdown(narrative, unsafe_allow_html=True)
         
     st.markdown("---")
-    
-    # Prediction Analysis Section
-    if not city_pred_data.empty:
-        st.markdown("### Future Predictions (2025-2029)")
-        
-        # Year selection dropdown
-        available_years = sorted(city_pred_data['year'].unique())
-        
-        col_year, col_space = st.columns([1, 3])
-        with col_year:
-            selected_year = st.selectbox(
-                f"Select year for {city}:",
-                available_years,
-                index=0,
-                key=f"year_selector_{city}"
-            )
-        
-        if selected_year:
-            # Display monthly analysis for selected year
-            col3, col4 = st.columns(2)
-            
-            with col3:
-                # Monthly trend chart
-                monthly_trend_chart = create_yearly_monthly_trend_chart(df_pred, city, selected_year)
-                if monthly_trend_chart:
-                    st.plotly_chart(monthly_trend_chart, use_container_width=True)
-            
-            with col4:
-                # Monthly heatmap
-                monthly_heatmap = create_yearly_monthly_heatmap(df_pred, city, selected_year)
-                if monthly_heatmap:
-                    st.plotly_chart(monthly_heatmap, use_container_width=True)
-            
-            # Year summary statistics
-            year_data = city_pred_data[city_pred_data['year'] == selected_year]
-            if not year_data.empty:
-                avg_temp = year_data['temperature'].mean()
-                avg_anomaly = year_data['temperature_anomaly'].mean()
-                hottest_month = year_data.loc[year_data['temperature'].idxmax(), 'month_name']
-                hottest_temp = year_data['temperature'].max()
-                coolest_month = year_data.loc[year_data['temperature'].idxmin(), 'month_name']
-                coolest_temp = year_data['temperature'].min()
-                
-                st.markdown(f"""
-                    <div class="climate-info">
-                        <h4> {selected_year} Summary for {city}</h4>
-                        <p><strong>Average Temperature:</strong> {avg_temp:.1f}°C</p>
-                        <p><strong>Average Anomaly:</strong> {avg_anomaly:+.1f}°C above 1961-1990 baseline</p>
-                        <p><strong>Hottest Month:</strong> {hottest_month} ({hottest_temp:.1f}°C)</p>
-                        <p><strong>Coolest Month:</strong> {coolest_month} ({coolest_temp:.1f}°C)</p>
-                        <p><strong>Temperature Range:</strong> {hottest_temp - coolest_temp:.1f}°C</p>
-                    </div>
-                """, unsafe_allow_html=True)
 
 # Display analysis for selected city from map click (only if actually clicked)
 if st.session_state.selected_city is not None:
