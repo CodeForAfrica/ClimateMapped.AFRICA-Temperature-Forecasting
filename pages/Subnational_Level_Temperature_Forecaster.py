@@ -36,7 +36,7 @@ df_pivot = df_pivot.sort_index()
 selected_country = st.selectbox('Select a country:', sorted(df['Country'].unique().tolist()))
 available_regions = df[df['Country'] == selected_country]['Area'].unique().tolist()
 selected_regions = st.multiselect('Select regions to forecast:', sorted(available_regions))
-year_range = st.slider("Select forecast range", 2023, 2050, (2023, 2030))
+year_range = st.slider("Select forecast range", 2025, 2030, (2025, 2030))
 num_months = 12 * (year_range[1] - year_range[0] + 1)
 
 # Define prediction function
