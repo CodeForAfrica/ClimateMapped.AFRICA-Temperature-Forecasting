@@ -123,7 +123,8 @@ html_code = """
   <div class="scrolly__content" id="scroll-content">
     <div class="step is-active" data-step="0">
       <h3>Step 1 Title</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at suscipit sapien.</p>
+      <p>In 2019, 99% of the world’s population was living in places where the WHO air quality guidelines levels were not met. Sadly, women and children bear the greatest health burden, with air pollution being one of the greatest environmental risks to child health. 
+      </p>
     </div>
     <div class="step" data-step="1">
       <h3>Step 2 Title</h3>
