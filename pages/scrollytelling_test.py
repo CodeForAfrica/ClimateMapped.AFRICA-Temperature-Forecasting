@@ -48,33 +48,16 @@ html_code = """
 
     /* Scrollable text content */
     .scrolly__content {
-      position: relative;
-      width: 100%;
-      max-width: 40vw;
-      margin-left: 2rem;
-      padding-top: 2rem;
-      z-index: 2;
-      overflow-y: auto;
-      height: 100vh;
+        max-width: 100vw;
+        margin-left: 0;
+        height: auto;
+        overflow-y: visible;
+        padding: 1rem;
+      }
+      .step {
+        min-height: auto;
+      }
     }
-
-    /* Each text step block */
-    .step {
-      margin-bottom: 3rem;
-      padding: 1rem;
-      border: 2px solid #104E8B;
-      background: rgba(255, 255, 255, 0.85);
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-      min-height: 70vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-sizing: border-box;
-      border-radius: 6px;
-      backdrop-filter: saturate(180%) blur(10px);
-    }
-
     /* Active step */
     .step.is-active {
       background-color: transparent !important;
