@@ -48,16 +48,33 @@ html_code = """
 
     /* Scrollable text content */
     .scrolly__content {
-        max-width: 100vw;
-        margin-left: 0;
-        height: auto;
-        overflow-y: visible;
-        padding: 1rem;
-      }
-      .step {
-        min-height: auto;
-      }
+      position: relative;
+      width: 100%;
+      max-width: 40vw;
+      margin-left: 2rem;
+      padding-top: 2rem;
+      z-index: 2;
+      overflow-y: auto;
+      height: 100vh;
     }
+
+    /* Each text step block */
+    .step {
+      margin-bottom: 3rem;
+      padding: 1rem;
+      border: 2px solid #104E8B;
+      background: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+      border-radius: 6px;
+      backdrop-filter: saturate(180%) blur(10px);
+    }
+
     /* Active step */
     .step.is-active {
       background-color: transparent !important;
@@ -88,23 +105,15 @@ html_code = """
         height: 50vh;
         box-shadow: none;
       }
-    .scrolly__content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        z-index: 2;
-        display: flex;
-        align-items: flex-start;  /* top-aligned vertically */
-        justify-content: center;  /* center horizontally */
-        padding-top: 3rem;        /* space from top */
-        box-sizing: border-box;
-        pointer-events: none;     /* let clicks through except on steps */
+      .scrolly__content {
+        max-width: 100vw;
+        margin-left: 0;
+        height: auto;
+        overflow-y: visible;
+        padding: 1rem;
       }
-      
       .step {
-        pointer-events: auto;     /* allow interaction */
+        min-height: auto;
       }
     }
 
@@ -182,12 +191,12 @@ html_code = """
 
       <div class="scrolly__content" id="scroll-content">
         <div class="step is-active" data-step="0">
-          <h3>Premature deaths</h3>
-          <p>89% of premature deaths occurred in low- and middle-income countries.</p>
+          <h3>Step 1 Title</h3>
+          <p>In 2019, 99% of the world’s population was living in places where the WHO air quality guidelines levels were not met. Sadly, women and children bear the greatest health burden, with air pollution being one of the greatest environmental risks to child health.</p>
         </div>
         <div class="step" data-step="1">
-          <h3>Children deaths</h3>
-          <p>Overlay: Over 237 000 deaths of children under the age of 5</p>
+          <h3>Step 2 Title</h3>
+          <p>Aliquam erat volutpat. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
         </div>
         <div class="step" data-step="2">
           <h3>Step 3 Title</h3>
