@@ -124,19 +124,22 @@ html_code = """
   </header>
   
   <style>
-    .app-header {
-    background-color: #104E8B;
-    color: white;
-    padding: 2rem 1rem;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(16, 78, 139, 0.3);
-    position: relative;  /* ou fixed si tu veux qu'il reste en haut en scroll */
-    z-index: 1000;
-  }
-
+       .app-header {
+      background-color: #104E8B;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      padding: 1.5rem 0;   /* padding vertical, pas horizontal */
+      margin: 0;           /* pas de marge */
+      width: 100vw;        /* largeur 100% de la fenêtre */
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(16, 78, 139, 0.3);
+    }
+    
     .wrapper {
-      padding-top: 140px; /* adapte la valeur selon la hauteur réelle du header */
+      padding-top: 3rem;  /* espace entre header et contenu, ajuste selon besoin */
     }
     .app-header h1 {
       font-weight: 700;
