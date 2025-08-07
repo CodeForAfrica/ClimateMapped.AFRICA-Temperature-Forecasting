@@ -114,6 +114,60 @@ html_code = """
 </head>
 <body>
 
+  <header class="app-header">
+    <div class="container">
+      <h1>Mon Application Data Story</h1>
+      <h2>Analyse interactive avec Scrollama et Flourish</h2>
+      <hr />
+      <p class="intro-text">Découvrez comment texte et graphiques interagissent harmonieusement pour raconter votre histoire.</p>
+    </div>
+  </header>
+  
+  <style>
+    .app-header {
+      background-color: #104E8B;
+      color: white;
+      padding: 2rem 1rem;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(16, 78, 139, 0.3);
+    }
+  
+    .app-header h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 0.3rem;
+      font-family: 'Lora', serif;
+    }
+  
+    .app-header h2 {
+      font-weight: 400;
+      font-size: 1.4rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+  
+    .app-header hr {
+      border: 0;
+      height: 1px;
+      background: white;
+      width: 40%;
+      margin: 0 auto 1.5rem auto;
+      opacity: 0.7;
+    }
+  
+    .app-header .intro-text {
+      font-size: 1rem;
+      font-style: italic;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+  </style>
+
+
+
 <div id="scrolly__section">
 
   <div class="scrolly__chart">
