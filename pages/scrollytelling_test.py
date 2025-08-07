@@ -2,82 +2,66 @@ import streamlit as st
 
 html_code = """
 <!doctype html>
-<html lang="fr">
+<html class="no-js" lang="">
 <head>
   <meta charset="utf-8">
-  <title>Data story with Flourish</title>
+  <title>Data story with flourish</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- CSS + Bootstrap + Fonts -->
+  <!-- Bootstrap + Fonts -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Lora&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
+      color: #1d1d1d;
     }
 
     .wrapper {
       padding: 96px 0;
     }
 
-    .text-block.is-active {
-      background-color: rgba(255, 223, 100, 0.95);
-    }
-
-    /* Section Scrollytelling */
-    #scrolly__section {
+    .scrolly-overlay {
       position: relative;
       width: 100%;
       height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    .scrolly__chart {
-      position: fixed;
+    .scrolly-overlay iframe {
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
-      z-index: 0;
-    }
-
-    .scrolly__chart iframe {
-      width: 100%;
       height: 100%;
+      z-index: 0;
       border: none;
     }
 
-    .scrolly__content {
+    .steps-container {
       position: relative;
-      z-index: 10;
+      z-index: 1;
       width: 100%;
-    }
-
-    .step {
-      height: 100vh;
+      height: 100%;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
       padding: 2rem;
     }
 
-    .text-block {
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 2rem;
-      max-width: 700px;
-      text-align: center;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    .step {
+      margin: 2rem auto;
+      padding: 1.5rem;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.85);
+      border-left: 5px solid #104E8B;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    /* Responsive tweaks */
-    @media (max-width: 768px) {
-      .text-block {
-        padding: 1.5rem;
-      }
+    .step.is-active {
+      background: goldenrod;
+      color: #3b3b3b;
     }
   </style>
 </head>
@@ -86,121 +70,62 @@ html_code = """
   <div class="wrapper">
     <div class="container py-5">
       <div class="row justify-content-center">
-        <div class="col-lg-7 col-11">
-          <p class="mb-5">
+        <div class="col-lg-8 col-12">
+          <p class="mb-4">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit dolorem iusto, vel, cum est architecto odit quia culpa sed ex ipsa praesentium alias ullam tempore numquam aliquid aspernatur, provident nesciunt!
           </p>
-
-          <img src="https://picsum.photos/640/280" alt="placeholder" width="100%" class="mb-5 py-2" />
-
-          <h3 class="mb-3">Sous-titre ici</h3>
-
-          <div class="flourish-embed flourish-chart mt-3" data-src="visualisation/6262784"></div>
-          <p class="text-center">caption: voici un graphique Flourish intégré via embed.</p>
-
-          <p class="mb-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis aut, cum reprehenderit obcaecati minima eius aperiam dolorem laboriosam ullam facere eaque earum voluptatibus, doloremque officiis quibusdam quae impedit ipsa sunt.
-          </p>
-
-          <hr class="my-5" />
-          <p class="blockquote font-italic text-center">“Block quote example”</p>
-          <hr class="my-5" />
-
-          <p class="mb-5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam architecto obcaecati alias delectus, illo non nam ad, accusamus magnam <em>italique ici</em> <a href="#" target="_blank">lien ici</a> ipsa accusantium ratione praesentium dolores nesciunt ab officia quisquam excepturi sunt?
-          </p>
-
-          <img src="https://picsum.photos/640/280" alt="placeholder" width="100%" class="mb-5 py-2" />
-
-          <h3 class="mb-3">Sous-titre ici</h3>
-
-          <p class="mb-4">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Error dolor, quos aut repellendus quia porro temporibus magni unde, rerum quasi aperiam, eligendi ducimus aliquam fugiat quas autem labore id consectetur.
-          </p>
+          <img src="https://picsum.photos/640/280" alt="placeholder" width=100% class="mb-4" />
         </div>
+      </div>
+    </div>
+
+    <!-- Nouveau bloc scrollytelling -->
+    <div class="scrolly-overlay">
+      <iframe id="storyframe" src="https://flo.uri.sh/story/872914/embed#slide-0" scrolling="no"></iframe>
+
+      <div class="steps-container" id="steps">
+        <div class="step" data-step="0">Step 1: Lorem ipsum dolor sit amet.</div>
+        <div class="step" data-step="1">Step 2: Consectetur adipiscing elit.</div>
+        <div class="step" data-step="2">Step 3: Sed do eiusmod tempor incididunt.</div>
+        <div class="step" data-step="3">Step 4: Ut labore et dolore magna aliqua.</div>
       </div>
     </div>
   </div>
 
-  <!-- ✅ SCROLLYTELLING SECTION -->
-  <div id="scrolly__section">
-    <div class="scrolly__chart">
-      <iframe scrolling="no" src="https://flo.uri.sh/story/872914/embed#slide-0"></iframe>
-    </div>
-
-    <div class="scrolly__content">
-      <div class="step" data-step="0">
-        <div class="text-block">
-          <h3>Slide 1</h3>
-          <p>Introduction au graphique. Ce que vous voyez ici est le début de l'histoire.</p>
-        </div>
-      </div>
-      <div class="step" data-step="1">
-        <div class="text-block">
-          <h3>Slide 2</h3>
-          <p>Un deuxième fait important illustré par cette slide du graphique.</p>
-        </div>
-      </div>
-      <div class="step" data-step="2">
-        <div class="text-block">
-          <h3>Slide 3</h3>
-          <p>Une troisième partie du récit, toujours synchronisée avec le graphique.</p>
-        </div>
-      </div>
-      <div class="step" data-step="3">
-        <div class="text-block">
-          <h3>Slide 4</h3>
-          <p>Dernière partie de l'analyse. Synthèse ou appel à l'action.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JS: Scrollama + Flourish -->
-  <script src="https://unpkg.com/d3@5.9.1/dist/d3.min.js"></script>
+  <!-- Scripts -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/intersection-observer"></script>
   <script src="https://unpkg.com/scrollama"></script>
-  <script src="https://public.flourish.studio/resources/embed.js"></script>
 
   <script>
-    var scrolly = d3.select("#scrolly__section");
-    var chart = scrolly.select(".scrolly__chart");
-    var content = scrolly.select(".scrolly__content");
-    var step = content.selectAll(".step");
-
     var scroller = scrollama();
+    var steps = d3.selectAll(".step");
+
+    function handleStepEnter(response) {
+      steps.classed("is-active", function(d, i) {
+        return i === response.index;
+      });
+
+      var iframe = document.getElementById("storyframe");
+      iframe.src = "https://flo.uri.sh/story/872914/embed#slide-" + response.index;
+    }
 
     function handleResize() {
-      step.style("height", window.innerHeight + "px");
       scroller.resize();
     }
 
-    function handleStepEnter(response) {
-      step.selectAll(".text-block")
-          .classed("is-active", (d, i) => i === response.index);
+    scroller
+      .setup({
+        step: ".step",
+        offset: 0.5,
+        debug: false
+      })
+      .onStepEnter(handleStepEnter);
 
-      const linkHead = 'https://flo.uri.sh/story/872914/embed#slide-';
-      const slide = response.index;
-      d3.select('.scrolly__chart iframe')
-        .attr('src', linkHead + slide);
-    }
-
-    function init() {
-      handleResize();
-      scroller
-        .setup({
-          step: "#scrolly__section .step",
-          offset: 0.6,
-          debug: false
-        })
-        .onStepEnter(handleStepEnter);
-
-      window.addEventListener("resize", handleResize);
-    }
-
-    init();
+    window.addEventListener("resize", handleResize);
   </script>
 </body>
 </html>
 """
 
-st.components.v1.html(html_code, height=3000, scrolling=True)
+st.components.v1.html(html_code, height=1600, scrolling=True)
