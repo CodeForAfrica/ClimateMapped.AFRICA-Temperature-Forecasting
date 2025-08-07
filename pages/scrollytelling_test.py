@@ -1,99 +1,128 @@
 import streamlit as st
 
 html_code = """
-<!DOCTYPE html>
-<html lang="fr">
+<!doctype html>
+<html class="no-js" lang="">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Scrollytelling Overlay</title>
+  <meta charset="utf-8">
+  <title>Data story with flourish</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap + Fonts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Lora&display=swap" rel="stylesheet">
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    body {
       font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
+      color: #1d1d1d;
     }
 
-    .graphic-container {
-      position: fixed;
+    .wrapper {
+      padding: 96px 0;
+    }
+
+    .scrolly-overlay {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .scrolly-overlay iframe {
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
-    }
-
-    .graphic-container iframe {
-      width: 100%;
-      height: 100%;
       border: none;
     }
 
-    .scroll-text {
+    .steps-container {
       position: relative;
+      z-index: 1;
       width: 100%;
-      z-index: 10;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
     .step {
-      width: 60%;
-      margin: 50vh auto;
-      padding: 2rem;
-      background-color: rgba(255, 255, 255, 0.85);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      transition: background-color 0.3s;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.85);
+      border-left: 5px solid #104E8B;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .step.is-active {
-      background-color: gold;
+      background: goldenrod;
+      color: #3b3b3b;
     }
   </style>
 </head>
+
 <body>
-  <div class="graphic-container">
-    <iframe src="https://flo.uri.sh/story/872914/embed#slide-0" id="flourish-graphic"></iframe>
+  <div class="wrapper">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-12">
+          <p class="mb-4">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit dolorem iusto, vel, cum est architecto odit quia culpa sed ex ipsa praesentium alias ullam tempore numquam aliquid aspernatur, provident nesciunt!
+          </p>
+          <img src="https://picsum.photos/640/280" alt="placeholder" width=100% class="mb-4" />
+        </div>
+      </div>
+    </div>
+
+    <div class="scrolly-overlay">
+      <iframe id="storyframe" src="https://flo.uri.sh/story/872914/embed#slide-0" scrolling="no"></iframe>
+
+      <div class="steps-container" id="steps">
+        <div class="step" data-step="0">Step 1: Lorem ipsum dolor sit amet.</div>
+        <div class="step" data-step="1">Step 2: Consectetur adipiscing elit.</div>
+        <div class="step" data-step="2">Step 3: Sed do eiusmod tempor incididunt.</div>
+        <div class="step" data-step="3">Step 4: Ut labore et dolore magna aliqua.</div>
+      </div>
+    </div>
   </div>
 
-  <div class="scroll-text">
-    <div class="step" data-step="0"><p>Étape 1 : Introduction au graphique interactif</p></div>
-    <div class="step" data-step="1"><p>Étape 2 : Analyse d'une tendance spécifique</p></div>
-    <div class="step" data-step="2"><p>Étape 3 : Comparaison entre les données</p></div>
-    <div class="step" data-step="3"><p>Étape 4 : Conclusion et recommandations</p></div>
-  </div>
-
-  <script src="https://unpkg.com/d3@5.9.1/dist/d3.min.js"></script>
+  <!-- Scripts -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/intersection-observer"></script>
   <script src="https://unpkg.com/scrollama"></script>
+
   <script>
     var scroller = scrollama();
+    var steps = d3.selectAll(".step");
 
     function handleStepEnter(response) {
-      d3.selectAll('.step').classed('is-active', (d, i) => i === response.index);
-
-      const slide = response.index;
-      document.getElementById('flourish-graphic').src = "https://flo.uri.sh/story/872914/embed#slide-" + slide;
+      steps.classed("is-active", (d, i) => i === response.index);
+      var iframe = document.getElementById("storyframe");
+      iframe.src = "https://flo.uri.sh/story/872914/embed#slide-" + response.index;
     }
 
-    function init() {
-      scroller
-        .setup({
-          step: ".step",
-          offset: 0.6,
-        })
-        .onStepEnter(handleStepEnter);
-
-      window.addEventListener("resize", scroller.resize);
+    function handleResize() {
+      scroller.resize();
     }
 
-    init();
+    scroller
+      .setup({
+        step: ".step",
+        offset: 0.5,
+        debug: false
+      })
+      .onStepEnter(handleStepEnter);
+
+    window.addEventListener("resize", handleResize);
   </script>
 </body>
 </html>
+
 """
 
 st.components.v1.html(html_code, height=3000, scrolling=True)
