@@ -71,10 +71,10 @@ html_code = """
     }
 
     .step.is-active {
-      background-color: goldenrod;
-      color: #3b3b3b;
-      border-color: goldenrod;
-    }
+    background-color: transparent;  /* plus de jaune */
+    color: #3b3b3b;
+    border-color: goldenrod;
+  }
 
     /* Scrollbar styling for content */
     .scrolly__content::-webkit-scrollbar {
