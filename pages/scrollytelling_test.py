@@ -71,10 +71,13 @@ html_code = """
     }
 
     .step.is-active {
-    background-color: transparent !important;  /* plus de jaune */
-    color: #3b3b3b;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
     border-color: goldenrod;
-  }
+    color: #3b3b3b;
+    }
 
     /* Scrollbar styling for content */
     .scrolly__content::-webkit-scrollbar {
