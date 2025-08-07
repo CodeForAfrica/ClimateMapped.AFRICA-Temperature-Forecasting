@@ -134,16 +134,6 @@ html_code = """
         .attr("src", `https://flo.uri.sh/story/872914/embed#slide-${slide}`);
     }
 
-    function updateProgress(progress) {
-      // progress en 0..100
-      window.parent.postMessage({streamlitScrollProgress: progress}, '*');
-    }
-    
-    // Par exemple dans handleStepEnter
-    const totalSteps = step.size();
-    const progressPercent = ((response.index + 1) / totalSteps) * 100;
-    updateProgress(progressPercent);
-
     function handleResize() {
       var stepH = Math.floor(window.innerHeight * 0.8);
       stepSel.style("height", stepH + "px");
