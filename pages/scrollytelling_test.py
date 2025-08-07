@@ -105,15 +105,23 @@ html_code = """
         height: 50vh;
         box-shadow: none;
       }
-      .scrolly__content {
-        max-width: 100vw;
-        margin-left: 0;
-        height: auto;
-        overflow-y: visible;
-        padding: 1rem;
+    .scrolly__content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 2;
+        display: flex;
+        align-items: flex-start;  /* top-aligned vertically */
+        justify-content: center;  /* center horizontally */
+        padding-top: 3rem;        /* space from top */
+        box-sizing: border-box;
+        pointer-events: none;     /* let clicks through except on steps */
       }
+      
       .step {
-        min-height: auto;
+        pointer-events: auto;     /* allow interaction */
       }
     }
 
