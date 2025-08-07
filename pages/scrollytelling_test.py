@@ -1,9 +1,6 @@
 import streamlit as st
 
 html_code = """
-import streamlit as st
-
-html_code = """
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +18,7 @@ html_code = """
       color: #1d1d1d;
     }
 
-    scrolly__section {
+    #scrolly__section {
       display: flex;
       max-width: 900px;
       margin: 0 auto;
