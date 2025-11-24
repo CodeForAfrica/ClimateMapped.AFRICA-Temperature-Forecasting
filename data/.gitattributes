@@ -1,0 +1,1 @@
+monthly_temp_2015-2025.csv filter=lfs diff=lfs merge=lfs -text
