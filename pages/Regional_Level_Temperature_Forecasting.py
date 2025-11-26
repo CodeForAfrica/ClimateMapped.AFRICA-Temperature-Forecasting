@@ -18,7 +18,6 @@ st.write("Select your country and region to explore historical and future temper
 # Load model + data
 # ---------------------------
 model = joblib.load("models/nixtla_forecast.pkl")
-model.static_features = []    
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 
 # ---------------------------
@@ -82,7 +81,7 @@ df_city = df[df["unique_id"] == selected_city]
 # ---------------------------
 # Model Forecast
 # ---------------------------
-model.fit(df)
+model.fit(df, static_features=[])
 future = model.predict(h=horizon)
 future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 
