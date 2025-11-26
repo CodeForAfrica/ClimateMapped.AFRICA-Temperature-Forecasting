@@ -11,13 +11,17 @@ import joblib
 st.set_page_config(layout="wide", page_title="Regions Level Temperature Forecasting")
 
 st.image("images/climatemap_logo.png", width=200)
-st.title("Regions Level Temperature Forecasting")
+st.title("🌡️ Regions Level Temperature Forecasting")
 st.write("Select your country and region to explore historical and future temperature trends.")
 
 # ---------------------------
 # Load model + data
 # ---------------------------
 model = joblib.load("models/nixtla_forecast.pkl")
+
+# ❗ FIX: ensure no static features
+model.static_features = []
+
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 
 # ---------------------------
@@ -62,15 +66,7 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-forecast_type = st.radio("Forecast Based On:", ["Number of future months", "Target future year"])
-
-if forecast_type == "Number of future months":
-    horizon = st.slider("Select number of future months", 1, 120, 36)
-else:
-    target_year = st.slider("Select future year to predict up to:", 2025, 2050, 2030)
-    last_date = df["ds"].max()
-    horizon = (pd.Timestamp(f"{target_year}-12-01") - last_date).days // 30
-
+horizon = st.slider("Select number of future months to predict:", 1, 120, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
@@ -81,20 +77,23 @@ df_city = df[df["unique_id"] == selected_city]
 # ---------------------------
 # Model Forecast
 # ---------------------------
-model.fit(df)
+# Keep only model-required columns
+df_model = df[["unique_id", "ds", "y"]]
+
+model.fit(df_model)
 future = model.predict(h=horizon)
 future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 
 future_city = future[future["unique_id"] == selected_city]
 
 # ---------------------------
-# Plot Line Chart + Trend
+# Plot Line Chart + Trend (PLOTLY)
 # ---------------------------
-st.subheader("Historical vs Predicted Temperature")
+st.subheader("📈 Historical vs Predicted Temperature")
 
 fig = go.Figure()
 
-# Historical
+# Historical data
 fig.add_trace(go.Scatter(
     x=df_city["ds"], 
     y=df_city["y"], 
@@ -103,7 +102,7 @@ fig.add_trace(go.Scatter(
     line=dict(color="blue")
 ))
 
-# Trend (Rolling Mean)
+# Trend line
 df_city["trend"] = df_city["y"].rolling(12).mean()
 fig.add_trace(go.Scatter(
     x=df_city["ds"], 
@@ -133,7 +132,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------
-# HEATMAP
+# PLOTLY HEATMAP
 # ---------------------------
 st.subheader("Monthly Temperature Heatmap (Historical + Forecast)")
 
@@ -142,9 +141,7 @@ heat_df["Year"] = heat_df["ds"].dt.year
 heat_df["Month"] = heat_df["ds"].dt.strftime("%b")
 
 pivot = heat_df.pivot_table(index="Year", columns="Month", values="y")
-
-# Ensure months appear in order
-pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"], fill_value=np.nan)
+pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
 
 heatmap_fig = go.Figure(
     data=go.Heatmap(
@@ -167,6 +164,6 @@ heatmap_fig.update_layout(
 st.plotly_chart(heatmap_fig, use_container_width=True)
 
 # ---------------------------
-# Done
+# End
 # ---------------------------
 st.success("Forecasting complete.")
