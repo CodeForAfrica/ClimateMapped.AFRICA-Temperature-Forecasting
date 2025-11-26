@@ -95,7 +95,7 @@ future_city = future_city.rename(columns={'LinearRegression': 'y'})
 future_city['y'] = future_city['y'].round(2)
 
 # ---------------------------
-# Plot Line Chart + Trend (PLOTLY)
+# Plot Line Chart + Trend 
 # ---------------------------
 st.subheader("Historical vs Predicted Temperature")
 
@@ -140,10 +140,12 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------
-# PLOTLY HEATMAP
+# HEATMAP
 # ---------------------------
 st.subheader("Predicted Monthly Temperature Heatmap")
 
+
+future_city = future_city[future_city['ds'] > "2025-12-01"]
 future_city['Year'] = future_city['ds'].dt.year
 future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
