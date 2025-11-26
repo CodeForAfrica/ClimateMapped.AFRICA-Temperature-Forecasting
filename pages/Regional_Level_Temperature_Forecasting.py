@@ -70,7 +70,7 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-horizon = st.slider("Select number of future months to predict:", 1, 120, 36)
+horizon = st.slider("Select number of future months to predict:", 1, 67, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
@@ -95,7 +95,7 @@ future_city = future_city.rename(columns={'LinearRegression': 'y'})
 future_city['y'] = future_city['y'].round(2)
 
 # ---------------------------
-# Plot Line Chart + Trend 
+# Plot Line Chart 
 # ---------------------------
 st.subheader("Historical vs Predicted Temperature")
 
@@ -108,16 +108,6 @@ fig.add_trace(go.Scatter(
     mode="lines",
     name="Historical",
     line=dict(color="blue")
-))
-
-# Trend line
-df_city["trend"] = df_city["y"].rolling(12).mean()
-fig.add_trace(go.Scatter(
-    x=df_city["ds"], 
-    y=df_city["trend"], 
-    mode="lines",
-    name="Historical Trend (12-mo avg)",
-    line=dict(color="orange", dash="dash")
 ))
 
 # Forecast
