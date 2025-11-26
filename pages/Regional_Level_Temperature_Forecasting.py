@@ -19,7 +19,7 @@ st.write("Select your country and region to explore historical and future temper
 # ---------------------------
 model = joblib.load("models/nixtla_forecast.pkl")
 
-# ❗ FIX: ensure no static features
+# ensure no static features
 model.static_features = []
 
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
@@ -73,14 +73,16 @@ st.info(f"Forecast horizon = **{horizon} months**")
 # ---------------------------
 # Filter Selected City
 # ---------------------------
-df_city = df[df["unique_id"] == selected_city]
+# Filter selected city
+df_city = df[df["unique_id"] == selected_city].copy()
+df_city = df_city.dropna(subset=["y"])  # remove missing values
 
 if df_city.empty:
-    st.error(f"No historical data found for city: {selected_city}")
+    st.error(f"No historical data available for {selected_city}. Cannot generate forecast.")
     st.stop()
 
-# Prepare model data
-df_model = df[["unique_id", "ds", "y"]].copy()
+# Use only selected city for model fitting
+df_model = df_city[["unique_id", "ds", "y"]].copy()
 
 if df_model.empty:
     st.error("No data available to train the model.")
