@@ -70,7 +70,7 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-horizon = st.slider("Select number of future months to predict:", 1, 67, 36)
+horizon = st.slider("Select number of future months to predict:", 1, 73, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
@@ -140,10 +140,8 @@ future_city['Year'] = future_city['ds'].dt.year
 future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
 # Pivot table: rows = months, columns = years
-future_only = future_city.copy()  # already filtered to predicted months
-pivot = future_only.pivot_table(index='Month', columns='Year', values='y')
-pivot = pivot.reindex(sorted(pivot.columns), axis=1)  # only years with data
-#pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
+
+pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
 
 # Ensure months are in chronological order
 months_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
