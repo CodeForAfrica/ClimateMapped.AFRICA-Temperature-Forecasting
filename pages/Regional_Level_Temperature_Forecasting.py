@@ -18,6 +18,7 @@ st.write("Select your country and region to explore historical and future temper
 # Load model + data
 # ---------------------------
 model = joblib.load("models/nixtla_forecast.pkl")
+model.static_features = []    
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 
 # ---------------------------
