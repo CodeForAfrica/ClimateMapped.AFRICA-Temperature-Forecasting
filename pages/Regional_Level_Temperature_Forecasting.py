@@ -70,7 +70,18 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-horizon = st.slider("Select number of future months to predict:", 1, 180, 36)
+last_date = df_city['ds'].max() 
+
+months_remaining = 12 - last_date.month
+
+horizon = st.slider(
+    "Select number of future months to predict:",
+    min_value=1,
+    max_value=months_remaining,
+    value=min(36, months_remaining) 
+)
+
+#horizon = st.slider("Select number of future months to predict:", 1, 180, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
@@ -97,6 +108,15 @@ future_city['y'] = future_city['y'].round(2)
 # ---------------------------
 # Plot Line Chart 
 # ---------------------------
+combined = pd.concat([df_city, future_city])
+
+combined['year_float'] = combined['ds'].dt.year + (combined['ds'].dt.month - 1) / 12
+
+z = np.polyfit(combined['year_float'], combined['y'], 1)
+p = np.poly1d(z)
+combined['trend'] = p(combined['year_float'])
+
+
 st.subheader("Historical vs Predicted Temperature")
 
 fig = go.Figure()
@@ -105,7 +125,7 @@ fig = go.Figure()
 fig.add_trace(go.Scatter(
     x=df_city["ds"], 
     y=df_city["y"], 
-    mode="lines",
+    mode="lines+markers",
     name="Historical",
     line=dict(color="blue")
 ))
@@ -114,11 +134,25 @@ fig.add_trace(go.Scatter(
 fig.add_trace(go.Scatter(
     x=future_city["ds"], 
     y=future_city["y"], 
-    mode="lines",
+    mode="lines+markers",
     name="Forecast",
-    line=dict(color="red")
+    line=dict(color="red", dash='dot')
 ))
 
+# Trend line (continue sur tout, style interrompu sur forecast)
+fig.add_trace(go.Scatter(
+    x=combined["ds"],
+    y=combined["trend"],
+    mode="lines",
+    name="Trend",
+    line=dict(color="green", width=3, dash='dash'),
+    hovertemplate='Date: %{x|%b %Y}<br>Trend: %{y:.2f}°C<extra></extra>'
+))
+
+# Fix Y-axis min if desired
+fig.update_yaxes(range=[23, max(combined['y'].max(), combined['trend'].max()) + 1])
+
+# Layout
 fig.update_layout(
     xaxis_title="Date",
     yaxis_title="Temperature (°C)",
