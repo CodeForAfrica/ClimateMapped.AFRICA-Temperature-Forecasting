@@ -75,17 +75,27 @@ st.info(f"Forecast horizon = **{horizon} months**")
 # ---------------------------
 df_city = df[df["unique_id"] == selected_city]
 
-# ---------------------------
-# Model Forecast
-# ---------------------------
-# Keep only model-required columns
-df_model = df[["unique_id", "ds", "y"]]
+if df_city.empty:
+    st.error(f"No historical data found for city: {selected_city}")
+    st.stop()
 
+# Prepare model data
+df_model = df[["unique_id", "ds", "y"]].copy()
+
+if df_model.empty:
+    st.error("No data available to train the model.")
+    st.stop()
+
+# Fit model
 model.fit(df_model)
+
+# Predict future
 future = model.predict(h=horizon)
 future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
-
 future_city = future[future["unique_id"] == selected_city]
+
+if future_city.empty:
+    st.warning("Forecast could not be generated for the selected city.")
 
 # ---------------------------
 # Plot Line Chart + Trend (PLOTLY)
