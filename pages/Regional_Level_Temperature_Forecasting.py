@@ -11,7 +11,7 @@ import joblib
 st.set_page_config(layout="wide", page_title="Regions Level Temperature Forecasting")
 
 st.image("images/climatemap_logo.png", width=200)
-st.title("🌡️ Regions Level Temperature Forecasting")
+st.title("Regions Level Temperature Forecasting")
 st.write("Select your country and region to explore historical and future temperature trends.")
 
 # ---------------------------
@@ -23,6 +23,7 @@ model = joblib.load("models/nixtla_forecast.pkl")
 model.static_features = []
 
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
+df.fillna("NA", inplace=True)
 
 # ---------------------------
 # Country Mapping
