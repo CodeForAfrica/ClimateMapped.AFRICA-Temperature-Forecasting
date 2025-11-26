@@ -140,7 +140,10 @@ future_city['Year'] = future_city['ds'].dt.year
 future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
 # Pivot table: rows = months, columns = years
-pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
+future_only = future_city.copy()  # already filtered to predicted months
+pivot = future_only.pivot_table(index='Month', columns='Year', values='y')
+pivot = pivot.reindex(sorted(pivot.columns), axis=1)  # only years with data
+#pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
 
 # Ensure months are in chronological order
 months_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
