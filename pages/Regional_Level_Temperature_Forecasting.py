@@ -70,7 +70,12 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-last_date = df_city['ds'].max() 
+# ---------------------------
+# Filter Selected City
+# ---------------------------
+df_city = df[df["unique_id"] == selected_city]
+
+last_date = df['ds'].max() 
 
 months_remaining = 12 - last_date.month
 
@@ -83,11 +88,6 @@ horizon = st.slider(
 
 #horizon = st.slider("Select number of future months to predict:", 1, 180, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
-
-# ---------------------------
-# Filter Selected City
-# ---------------------------
-df_city = df[df["unique_id"] == selected_city]
 
 # ---------------------------
 # Model Forecast
