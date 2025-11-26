@@ -17,7 +17,7 @@ st.write("Select your country and region to explore historical and future temper
 # ---------------------------
 # Load model + data
 # ---------------------------
-model = joblib.load("models/nixtla_forecast.pkl")
+model = joblib.load("nixtla_forecast.pkl")
 
 # ensure no static features
 model.static_features = []
