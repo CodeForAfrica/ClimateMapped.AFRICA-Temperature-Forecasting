@@ -81,14 +81,14 @@ df_city = df[df["unique_id"] == selected_city]
 # ---------------------------
 # Model Forecast
 # ---------------------------
-model.fit(df, static_features=[])
+model.fit(df)
 future = model.predict(h=horizon)
 future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 
 future_city = future[future["unique_id"] == selected_city]
 
 # ---------------------------
-# Plot Line Chart + Trend (PLOTLY)
+# Plot Line Chart + Trend
 # ---------------------------
 st.subheader("Historical vs Predicted Temperature")
 
