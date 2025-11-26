@@ -115,7 +115,7 @@ fig = go.Figure()
 fig.add_trace(go.Scatter(
     x=df_city["ds"], 
     y=df_city["y"], 
-    mode="lines+markers",
+    mode="lines",
     name="Historical",
     line=dict(color="blue")
 ))
@@ -124,7 +124,7 @@ fig.add_trace(go.Scatter(
 fig.add_trace(go.Scatter(
     x=future_city["ds"], 
     y=future_city["y"], 
-    mode="lines+markers",
+    mode="lines",
     name="Forecast",
     line=dict(color="red", dash='dot')
 ))
@@ -185,7 +185,7 @@ x_years = pivot.columns.astype(int).astype(str)
 heatmap_fig = go.Figure(
     data=go.Heatmap(
         z=pivot.values,
-        x=x_years,      # Use strings
+        x=x_years,     
         y=pivot.index,  # Months
         colorscale="RdBu",
         reversescale=True,
