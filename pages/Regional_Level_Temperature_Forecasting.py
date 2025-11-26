@@ -25,6 +25,7 @@ model.static_features = []
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 df.fillna("NA", inplace=True)
 
+
 # ---------------------------
 # Country Mapping
 # ---------------------------
@@ -57,6 +58,8 @@ df = df.rename(columns={
     "city": "unique_id"
 })
 
+df['y'] = df['y'].round(2)
+
 df["ds"] = pd.to_datetime(df["ds"])
 df = df.sort_values(["unique_id", "ds"])
 
@@ -88,6 +91,8 @@ future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 future_city = future[future["unique_id"] == selected_city]
 
 future_city = future_city.rename(columns={'LinearRegression': 'y'})
+
+future_city['y'] = future_city['y'].round(2)
 
 # ---------------------------
 # Plot Line Chart + Trend (PLOTLY)
@@ -137,15 +142,20 @@ st.plotly_chart(fig, use_container_width=True)
 # ---------------------------
 # PLOTLY HEATMAP
 # ---------------------------
-st.subheader("Monthly Temperature Heatmap (Historical + Forecast)")
+st.subheader("Predicted Monthly Temperature Heatmap")
 
-heat_df = pd.concat([df_city[["ds", "y"]], future_city[["ds", "y"]]])
-heat_df["Year"] = heat_df["ds"].dt.year
-heat_df["Month"] = heat_df["ds"].dt.strftime("%b")
+# Extract year and month
+future_city['Year'] = future_city['ds'].dt.year
+future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
-pivot = heat_df.pivot_table(index="Year", columns="Month", values="y")
-pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
+# Pivot table for heatmap
+pivot = future_city.pivot_table(index='Year', columns='Month', values='y')
 
+# Ensure months are in chronological order
+pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul",
+                               "Aug","Sep","Oct","Nov","Dec"], fill_value=np.nan)
+
+# Plotly heatmap
 heatmap_fig = go.Figure(
     data=go.Heatmap(
         z=pivot.values,
@@ -153,7 +163,9 @@ heatmap_fig = go.Figure(
         y=pivot.index,
         colorscale="RdBu",
         reversescale=True,
-        colorbar=dict(title="Temp (°C)")
+        colorbar=dict(title="Temp (°C)"),
+        zmin=pivot.values.min(),
+        zmax=pivot.values.max()
     )
 )
 
@@ -165,8 +177,3 @@ heatmap_fig.update_layout(
 )
 
 st.plotly_chart(heatmap_fig, use_container_width=True)
-
-# ---------------------------
-# End
-# ---------------------------
-st.success("Forecasting complete.")
