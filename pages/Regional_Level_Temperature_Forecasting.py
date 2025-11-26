@@ -2,11 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 from mlforecast import MLForecast
 import joblib
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # ---------------------------
 # Streamlit Configuration
@@ -77,7 +74,7 @@ else:
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
-# Filtering Selected City
+# Filter Selected City
 # ---------------------------
 df_city = df[df["unique_id"] == selected_city]
 
@@ -91,7 +88,7 @@ future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 future_city = future[future["unique_id"] == selected_city]
 
 # ---------------------------
-# Plot Line Chart + Trend
+# Plot Line Chart + Trend (PLOTLY)
 # ---------------------------
 st.subheader("Historical vs Predicted Temperature")
 
@@ -129,25 +126,45 @@ fig.update_layout(
     xaxis_title="Date",
     yaxis_title="Temperature (°C)",
     height=500,
-    template="plotly_white"
+    template="plotly_white",
+    legend=dict(orientation="h", y=1.1)
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------
-# Heatmap of Monthly Forecast
+# HEATMAP
 # ---------------------------
 st.subheader("Monthly Temperature Heatmap (Historical + Forecast)")
 
 heat_df = pd.concat([df_city[["ds", "y"]], future_city[["ds", "y"]]])
 heat_df["Year"] = heat_df["ds"].dt.year
-heat_df["Month"] = heat_df["ds"].dt.month
+heat_df["Month"] = heat_df["ds"].dt.strftime("%b")
 
 pivot = heat_df.pivot_table(index="Year", columns="Month", values="y")
 
-fig2, ax = plt.subplots(figsize=(12, 6))
-sns.heatmap(pivot, cmap="coolwarm", linewidths=0.5, annot=False, ax=ax)
-st.pyplot(fig2)
+# Ensure months appear in order
+pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"], fill_value=np.nan)
+
+heatmap_fig = go.Figure(
+    data=go.Heatmap(
+        z=pivot.values,
+        x=pivot.columns,
+        y=pivot.index,
+        colorscale="RdBu",
+        reversescale=True,
+        colorbar=dict(title="Temp (°C)")
+    )
+)
+
+heatmap_fig.update_layout(
+    xaxis_title="Month",
+    yaxis_title="Year",
+    height=600,
+    template="plotly_white"
+)
+
+st.plotly_chart(heatmap_fig, use_container_width=True)
 
 # ---------------------------
 # Done
