@@ -150,6 +150,8 @@ pivot = pivot.reindex(months_order)
 # Reverse months for Plotly (Jan at top, Dec at bottom)
 pivot = pivot[::-1]
 
+pivot.columns = pivot.columns.astype(int)  # ✅ Convert float to int
+
 # Round the temperatures
 pivot = pivot.round(2)
 
