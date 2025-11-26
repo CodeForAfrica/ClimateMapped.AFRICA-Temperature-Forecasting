@@ -106,6 +106,9 @@ z = np.polyfit(combined['year_float'], combined['y'], 1)
 p = np.poly1d(z)
 combined['trend'] = p(combined['year_float'])
 
+y_min = combined['y'].min()
+y_max = combined['y'].max()
+
 
 st.subheader("Historical vs Predicted Temperature")
 
@@ -139,7 +142,6 @@ fig.add_trace(go.Scatter(
     hovertemplate='Date: %{x|%b %Y}<br>Trend: %{y:.2f}°C<extra></extra>'
 ))
 
-# Fix Y-axis min if desired
 fig.update_yaxes(range=[23, max(combined['y'].max(), combined['trend'].max()) + 1])
 
 # Layout
@@ -149,6 +151,10 @@ fig.update_layout(
     height=500,
     template="plotly_white",
     legend=dict(orientation="h", y=1.1)
+)
+fig.update_yaxes(
+    range=[y_min, y_max], 
+    title_text="Temperature (°C)"
 )
 
 st.plotly_chart(fig, use_container_width=True)
