@@ -150,17 +150,19 @@ pivot = pivot.reindex(months_order)
 # Reverse months for Plotly (Jan at top, Dec at bottom)
 pivot = pivot[::-1]
 
-pivot.columns = pivot.columns.astype(int)  # ✅ Convert float to int
 
 # Round the temperatures
 pivot = pivot.round(2)
+
+# Convert years to strings for Plotly X-axis
+x_years = pivot.columns.astype(int).astype(str)  
 
 # Plotly heatmap
 heatmap_fig = go.Figure(
     data=go.Heatmap(
         z=pivot.values,
-        x=pivot.columns,  # Years
-        y=pivot.index,    # Months (Jan at top)
+        x=x_years,      # Use strings
+        y=pivot.index,  # Months
         colorscale="RdBu",
         reversescale=True,
         colorbar=dict(title="Temp (°C)"),
