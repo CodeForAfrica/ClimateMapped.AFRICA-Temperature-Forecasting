@@ -136,7 +136,7 @@ st.subheader("Predicted Monthly Temperature Heatmap")
 
 
 future_city = future_city[future_city['ds'] > "2025-12-01"]
-future_city['Year'] = future_city['ds'].dt.year
+future_city['Year'] = future_city['ds'].dt.year.astype(int)
 future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
 # Pivot table: rows = months, columns = years
