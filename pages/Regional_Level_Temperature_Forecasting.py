@@ -87,6 +87,8 @@ future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 
 future_city = future[future["unique_id"] == selected_city]
 
+future_city = future_city.rename(columns={'LinearRegression': 'y'})
+
 # ---------------------------
 # Plot Line Chart + Trend (PLOTLY)
 # ---------------------------
