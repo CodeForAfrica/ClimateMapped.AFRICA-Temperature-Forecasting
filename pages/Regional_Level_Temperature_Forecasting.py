@@ -144,23 +144,28 @@ st.plotly_chart(fig, use_container_width=True)
 # ---------------------------
 st.subheader("Predicted Monthly Temperature Heatmap")
 
-# Extract year and month
 future_city['Year'] = future_city['ds'].dt.year
 future_city['Month'] = future_city['ds'].dt.strftime("%b")
 
-# Pivot table for heatmap
-pivot = future_city.pivot_table(index='Year', columns='Month', values='y')
+# Pivot table: rows = months, columns = years
+pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
 
 # Ensure months are in chronological order
-pivot = pivot.reindex(columns=["Jan","Feb","Mar","Apr","May","Jun","Jul",
-                               "Aug","Sep","Oct","Nov","Dec"], fill_value=np.nan)
+months_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+pivot = pivot.reindex(months_order)
+
+# Reverse months for Plotly (Jan at top, Dec at bottom)
+pivot = pivot[::-1]
+
+# Round the temperatures
+pivot = pivot.round(2)
 
 # Plotly heatmap
 heatmap_fig = go.Figure(
     data=go.Heatmap(
         z=pivot.values,
-        x=pivot.columns,
-        y=pivot.index,
+        x=pivot.columns,  # Years
+        y=pivot.index,    # Months (Jan at top)
         colorscale="RdBu",
         reversescale=True,
         colorbar=dict(title="Temp (°C)"),
@@ -170,8 +175,8 @@ heatmap_fig = go.Figure(
 )
 
 heatmap_fig.update_layout(
-    xaxis_title="Month",
-    yaxis_title="Year",
+    xaxis_title="Year",
+    yaxis_title="Month",
     height=600,
     template="plotly_white"
 )
