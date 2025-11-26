@@ -70,7 +70,7 @@ selected_country = st.selectbox("Select Country", sorted(df["country_name"].drop
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-horizon = st.slider("Select number of future months to predict:", 1, 73, 36)
+horizon = st.slider("Select number of future months to predict:", 1, 120, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
 # ---------------------------
