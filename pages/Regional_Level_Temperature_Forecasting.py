@@ -5,7 +5,6 @@ import plotly.graph_objs as go
 from mlforecast import MLForecast
 import joblib
 
-# ---------------------------
 # Streamlit Configuration
 # ---------------------------
 st.set_page_config(layout="wide", page_title="Regions Level Temperature Forecasting")
@@ -14,7 +13,7 @@ st.image("images/climatemap_logo.png", width=200)
 st.title("Regions Level Temperature Forecasting")
 st.write("Select your country and region to explore historical and future temperature trends.")
 
-# ---------------------------
+
 # Load model + data
 # ---------------------------
 model = joblib.load("nixtla_forecast.pkl")
@@ -26,7 +25,7 @@ df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 df.fillna("NA", inplace=True)
 
 
-# ---------------------------
+
 # Country Mapping
 # ---------------------------
 country_mapping = {
@@ -49,7 +48,7 @@ country_mapping = {
 
 df["country_name"] = df["country"].map(country_mapping)
 
-# ---------------------------
+
 # Prepare Data
 # ---------------------------
 df = df.rename(columns={
@@ -63,14 +62,14 @@ df['y'] = df['y'].round(2)
 df["ds"] = pd.to_datetime(df["ds"])
 df = df.sort_values(["unique_id", "ds"])
 
-# ---------------------------
+
 # User Inputs
 # ---------------------------
 selected_country = st.selectbox("Select Country", sorted(df["country_name"].dropna().unique()))
 cities = df[df["country_name"] == selected_country]["unique_id"].unique()
 selected_city = st.selectbox("Select City/Region", sorted(cities))
 
-# ---------------------------
+
 # Filter Selected City
 # ---------------------------
 df_city = df[df["unique_id"] == selected_city]
@@ -79,7 +78,7 @@ df_city = df[df["unique_id"] == selected_city]
 horizon = st.slider("Select number of future months to predict:", 1, 180, 36)
 st.info(f"Forecast horizon = **{horizon} months**")
 
-# ---------------------------
+
 # Model Forecast
 # ---------------------------
 # Keep only model-required columns
@@ -95,7 +94,7 @@ future_city = future_city.rename(columns={'LinearRegression': 'y'})
 
 future_city['y'] = future_city['y'].round(2)
 
-# ---------------------------
+
 # Plot Line Chart 
 # ---------------------------
 combined = pd.concat([df_city, future_city])
@@ -159,7 +158,7 @@ fig.update_yaxes(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# ---------------------------
+
 # HEATMAP
 # ---------------------------
 st.subheader("Predicted Monthly Temperature Heatmap")
