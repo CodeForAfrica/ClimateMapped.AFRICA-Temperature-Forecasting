@@ -91,6 +91,10 @@ horizon = st.slider(
     step=12
 )
 
+years_equivalent = horizon // 12
+
+# Display short message to the user
+st.info(f"Forecast horizon selected: {horizon} months ({years_equivalent} year{'s' if years_equivalent > 1 else ''})")
 
 # Model Forecast
 # ---------------------------
