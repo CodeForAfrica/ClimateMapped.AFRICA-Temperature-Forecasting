@@ -73,7 +73,7 @@ selected_city = st.selectbox("Select City/Region", sorted(cities))
 
 # Filter Selected City
 # ---------------------------
-#df_city = df[df["unique_id"] == selected_city]
+df_city = df[df["unique_id"] == selected_city]
 
 
 #horizon = st.slider("Select number of future months to predict:", 1, 180, 36)
