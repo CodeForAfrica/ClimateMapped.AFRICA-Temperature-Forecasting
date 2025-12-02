@@ -23,6 +23,7 @@ model.static_features = []
 
 df = pd.read_csv("data/monthly_temp_2015-2025.csv")
 df.fillna("NA", inplace=True)
+df = df[df.date <= "2025-12-01"].copy()
 
 
 
