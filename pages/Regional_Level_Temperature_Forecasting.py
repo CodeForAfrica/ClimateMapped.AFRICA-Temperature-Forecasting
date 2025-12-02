@@ -96,7 +96,7 @@ years_equivalent = horizon // 12
 # Run prediction inside a spinner
 with st.spinner(f"Predicting {horizon} month(s)..."):
     # Call your MLForecast prediction
-    future_city = fcst.predict(h=horizon)
+    future_city = model.predict(h=horizon)
 
 # After prediction is done, you can display success message
 st.success(f"Prediction for {horizon} month(s) completed!")
