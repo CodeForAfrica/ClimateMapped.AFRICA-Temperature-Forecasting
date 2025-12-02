@@ -93,6 +93,8 @@ horizon = st.slider(
 
 years_equivalent = horizon // 12
 
+status_message = st.info(f"Predicting {horizon} month(s)...")
+
 # Display short message to the user
 st.info(f"Forecast horizon selected: {horizon} months ({years_equivalent} year{'s' if years_equivalent > 1 else ''})")
 
