@@ -122,8 +122,8 @@ z = np.polyfit(combined['year_float'], combined['y'], 1)
 p = np.poly1d(z)
 combined['trend'] = p(combined['year_float'])
 
-y_min = 0
-y_max = 40
+y_min = 4
+y_max = 45
 
 
 st.subheader("Historical vs Predicted Temperature")
