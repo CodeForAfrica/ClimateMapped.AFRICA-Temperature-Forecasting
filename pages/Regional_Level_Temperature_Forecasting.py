@@ -53,131 +53,125 @@ df = df.sort_values(["unique_id","ds"])
 # User Inputs
 # ---------------------------
 selected_country = st.selectbox("Select Country", sorted(df["country_name"].dropna().unique()))
-
+cities = df[df["country_name"] == selected_country]["unique_id"].unique()
+selected_city = st.selectbox("Select City/Region", sorted(cities))
 if selected_country:
-    cities = df[df["country_name"] == selected_country]["unique_id"].unique()
-    selected_city = st.selectbox("Select City/Region", sorted(cities))
+
+    # Filter Selected City data
+    df_city = df[df["unique_id"] == selected_city]
+    
+    # SLIDER (multiples of 12)
+    last_date = df_city['ds'].max()
+    max_horizon = 12 * ((12 - last_date.month) + 10*12)
+    
+    horizon = st.slider(
+        "Select number of future months to predict:",
+        min_value=12,
+        max_value=max_horizon,
+        value=12,
+        step=12
+    )
+    
+    years_equivalent = horizon // 12
+    
+    
+    # Spinner for prediction
+    with st.spinner(f"Predicting {horizon} month(s)..."):
+        future_city = model.predict(h=horizon)
+    
+    st.success(f"Prediction for {horizon} month(s) completed!")
+    st.info(f"Forecast horizon selected: {horizon} months ({years_equivalent} year{'s' if years_equivalent > 1 else ''})")
+    
+    # Model Forecast
+    df_model = df[["unique_id","ds","y"]]
+    model.fit(df_model)
+    future = model.predict(h=horizon)
+    future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
+    future_city = future[future["unique_id"] == selected_city]
+    future_city = future_city.rename(columns={'LinearRegression':'y'})
+    future_city['y'] = future_city['y'].round(2)
+    
+    
+    # ---------------------------
+    # PLOT: LINE CHART
+    # ---------------------------
+    combined = pd.concat([df_city, future_city])
+    combined['year_float'] = combined['ds'].dt.year + (combined['ds'].dt.month-1)/12
+    
+    # Trend line
+    z = np.polyfit(combined['year_float'], combined['y'], 1)
+    p = np.poly1d(z)
+    combined['trend'] = p(combined['year_float'])
+    
+    fig = go.Figure()
+    
+    # Historical
+    y_min_hist = df_city['y'].min()
+    y_max_hist = df_city['y'].max()
+    fig.add_trace(go.Scatter(
+        x=df_city["ds"], y=df_city["y"],
+        mode="lines+markers", name="Historical", line=dict(color="blue")
+    ))
+    
+    # Forecast
+    y_min_forecast = future_city['y'].min()
+    y_max_forecast = future_city['y'].max()
+    fig.add_trace(go.Scatter(
+        x=future_city["ds"], y=future_city["y"],
+        mode="lines+markers", name="Forecast",
+        line=dict(color="red", dash='dot')
+    ))
+    
+    # Trend line
+    fig.add_trace(go.Scatter(
+        x=combined["ds"], y=combined["trend"],
+        mode="lines", name="Trend",
+        line=dict(color="green", width=3, dash='dash')
+    ))
+    
+    fig.update_yaxes(
+        range=[min(y_min_hist, y_min_forecast), max(y_max_hist, y_max_forecast)]
+    )
+    
+    fig.update_layout(
+        xaxis_title="Date", yaxis_title="Temperature (°C)",
+        template="plotly_white", legend=dict(orientation="h", y=1.1),
+        height=500
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    
+    # ---------------------------
+    # HEATMAP
+    # ---------------------------
+    st.subheader("Predicted Monthly Temperature Heatmap")
+    
+    future_city = future_city[future_city['ds'] > "2025-12-01"]
+    future_city['Year'] = future_city['ds'].dt.year.astype(int)
+    future_city['Month'] = future_city['ds'].dt.strftime("%b")
+    
+    pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
+    months_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    pivot = pivot.reindex(months_order)[::-1]
+    pivot = pivot.round(2)
+    x_years = pivot.columns.astype(str)
+    
+    heatmap_fig = go.Figure(
+        data=go.Heatmap(
+            z=pivot.values, x=x_years, y=pivot.index,
+            colorscale="RdBu", reversescale=True,
+            colorbar=dict(title="Temp (°C)"),
+            zmin=pivot.values.min(), zmax=pivot.values.max()
+        )
+    )
+    
+    heatmap_fig.update_layout(
+        xaxis_title="Year", yaxis_title="Month",
+        height=600, template="plotly_white"
+    )
+    
+    st.plotly_chart(heatmap_fig, use_container_width=True)
+
 else:
     selected_city = None
-
-# 
-if not selected_country or not selected_city:
-    st.info("Please select a country and a city/region to continue.")
-    st.stop()
-
-
-# Filter Selected City data
-df_city = df[df["unique_id"] == selected_city]
-
-# SLIDER (multiples of 12)
-last_date = df_city['ds'].max()
-max_horizon = 12 * ((12 - last_date.month) + 10*12)
-
-horizon = st.slider(
-    "Select number of future months to predict:",
-    min_value=12,
-    max_value=max_horizon,
-    value=12,
-    step=12
-)
-
-years_equivalent = horizon // 12
-
-
-# Spinner for prediction
-with st.spinner(f"Predicting {horizon} month(s)..."):
-    future_city = model.predict(h=horizon)
-
-st.success(f"Prediction for {horizon} month(s) completed!")
-st.info(f"Forecast horizon selected: {horizon} months ({years_equivalent} year{'s' if years_equivalent > 1 else ''})")
-
-# Model Forecast
-df_model = df[["unique_id","ds","y"]]
-model.fit(df_model)
-future = model.predict(h=horizon)
-future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
-future_city = future[future["unique_id"] == selected_city]
-future_city = future_city.rename(columns={'LinearRegression':'y'})
-future_city['y'] = future_city['y'].round(2)
-
-
-# ---------------------------
-# PLOT: LINE CHART
-# ---------------------------
-combined = pd.concat([df_city, future_city])
-combined['year_float'] = combined['ds'].dt.year + (combined['ds'].dt.month-1)/12
-
-# Trend line
-z = np.polyfit(combined['year_float'], combined['y'], 1)
-p = np.poly1d(z)
-combined['trend'] = p(combined['year_float'])
-
-fig = go.Figure()
-
-# Historical
-y_min_hist = df_city['y'].min()
-y_max_hist = df_city['y'].max()
-fig.add_trace(go.Scatter(
-    x=df_city["ds"], y=df_city["y"],
-    mode="lines+markers", name="Historical", line=dict(color="blue")
-))
-
-# Forecast
-y_min_forecast = future_city['y'].min()
-y_max_forecast = future_city['y'].max()
-fig.add_trace(go.Scatter(
-    x=future_city["ds"], y=future_city["y"],
-    mode="lines+markers", name="Forecast",
-    line=dict(color="red", dash='dot')
-))
-
-# Trend line
-fig.add_trace(go.Scatter(
-    x=combined["ds"], y=combined["trend"],
-    mode="lines", name="Trend",
-    line=dict(color="green", width=3, dash='dash')
-))
-
-fig.update_yaxes(
-    range=[min(y_min_hist, y_min_forecast), max(y_max_hist, y_max_forecast)]
-)
-
-fig.update_layout(
-    xaxis_title="Date", yaxis_title="Temperature (°C)",
-    template="plotly_white", legend=dict(orientation="h", y=1.1),
-    height=500
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-
-# ---------------------------
-# HEATMAP
-# ---------------------------
-st.subheader("Predicted Monthly Temperature Heatmap")
-
-future_city = future_city[future_city['ds'] > "2025-12-01"]
-future_city['Year'] = future_city['ds'].dt.year.astype(int)
-future_city['Month'] = future_city['ds'].dt.strftime("%b")
-
-pivot = future_city.pivot_table(index='Month', columns='Year', values='y')
-months_order = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-pivot = pivot.reindex(months_order)[::-1]
-pivot = pivot.round(2)
-x_years = pivot.columns.astype(str)
-
-heatmap_fig = go.Figure(
-    data=go.Heatmap(
-        z=pivot.values, x=x_years, y=pivot.index,
-        colorscale="RdBu", reversescale=True,
-        colorbar=dict(title="Temp (°C)"),
-        zmin=pivot.values.min(), zmax=pivot.values.max()
-    )
-)
-
-heatmap_fig.update_layout(
-    xaxis_title="Year", yaxis_title="Month",
-    height=600, template="plotly_white"
-)
-
-st.plotly_chart(heatmap_fig, use_container_width=True)
