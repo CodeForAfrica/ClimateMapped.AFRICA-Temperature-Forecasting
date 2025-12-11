@@ -21,18 +21,7 @@ df.fillna("NA", inplace=True)
 df = df[df.date <= "2024-12-01"].copy()
 
 # Country Mapping
-country_mapping = {
-    'DZ': 'Algeria','AO': 'Angola','BJ': 'Benin','BW': 'Botswana','BF': 'Burkina Faso','BI': 'Burundi',
-    'CM': 'Cameroon','CV': 'Cape Verde','CF': 'Central African Republic','TD': 'Chad','KM': 'Comoros',
-    'CG': 'Congo','CD': 'Democratic Republic of Congo','CI': "Côte d'Ivoire",'DJ': 'Djibouti','EG': 'Egypt',
-    'EH': 'Western Sahara','GQ': 'Equatorial Guinea','ER': 'Eritrea','ET': 'Ethiopia','GA': 'Gabon',
-    'GM': 'Gambia','GH': 'Ghana','GN': 'Guinea','GW': 'Guinea-Bissau','KE': 'Kenya','LS': 'Lesotho',
-    'LR': 'Liberia','LY': 'Libya','MG': 'Madagascar','MW': 'Malawi','ML': 'Mali','MR': 'Mauritania',
-    'MU': 'Mauritius','MA': 'Morocco','MZ': 'Mozambique','NA': 'Namibia','NE': 'Niger','NG': 'Nigeria',
-    'RW': 'Rwanda','ST': 'São Tomé and Príncipe','SN': 'Senegal','SC': 'Seychelles','SL': 'Sierra Leone',
-    'SO': 'Somalia','ZA': 'South Africa','SS': 'South Sudan','SD': 'Sudan','SZ': 'Eswatini','TZ': 'Tanzania',
-    'TG': 'Togo','TN': 'Tunisia','UG': 'Uganda','ZM': 'Zambia','ZW': 'Zimbabwe'
-}
+country_mapping = {...}  # keep your mapping as-is
 
 df["country_name"] = df["country"].map(country_mapping)
 
@@ -42,35 +31,28 @@ df["y"] = df["y"].round(2)
 df["ds"] = pd.to_datetime(df["ds"])
 df = df.sort_values(["unique_id","ds"])
 
-# -----------------------------------------
-# USER INPUTS — now with placeholders
-# -----------------------------------------
+# ---------------------------
+# USER INPUTS
+# ---------------------------
 
-country_list = ["-- Select Country --"] + sorted(df["country_name"].dropna().unique())
-selected_country = st.selectbox("Select Country", country_list)
+selected_country = st.selectbox("Select Country", sorted(df["country_name"].dropna().unique()))
 
-# Stop until user selects a REAL country
-if selected_country == "-- Select Country --":
-    st.info("Please select a country to continue.")
+if selected_country:
+    cities = df[df["country_name"] == selected_country]["unique_id"].unique()
+    selected_city = st.selectbox("Select City/Region", sorted(cities))
+else:
+    selected_city = None
+
+# STOP HERE IF CITY IS NOT SELECTED
+if not selected_city:
+    st.warning("Please select a city/region to continue.")
     st.stop()
 
-# City selection AFTER a valid country is chosen
-cities = df[df["country_name"] == selected_country]["unique_id"].unique()
-city_list = ["-- Select City/Region --"] + sorted(cities)
-selected_city = st.selectbox("Select City/Region", city_list)
-
-# Stop until user selects a REAL city
-if selected_city == "-- Select City/Region --":
-    st.info("Please select a city/region to continue.")
-    st.stop()
-
-# -----------------------------------------
-# From here on → both selections VALID
-# -----------------------------------------
-
+# ---------------------------
+# HORIZON SLIDER (after city selection)
+# ---------------------------
 df_city = df[df["unique_id"] == selected_city]
 
-# SLIDER (multiples of 12)
 last_date = df_city['ds'].max()
 max_horizon = 12 * ((12 - last_date.month) + 10*12)
 
@@ -83,18 +65,19 @@ horizon = st.slider(
 )
 
 years_equivalent = horizon // 12
-
-# Spinner for prediction
-with st.spinner(f"Predicting {horizon} month(s)..."):
-    future_city = model.predict(h=horizon)
-
-st.success(f"Prediction for {horizon} month(s) completed!")
 st.info(f"Forecast horizon selected: {horizon} months ({years_equivalent} year{'s' if years_equivalent > 1 else ''})")
 
-# Model Forecast
-df_model = df[["unique_id","ds","y"]]
-model.fit(df_model)
-future = model.predict(h=horizon)
+# ---------------------------
+# RUN MODEL ONLY AFTER HORIZON SELECTED
+# ---------------------------
+with st.spinner(f"Predicting {horizon} month(s)..."):
+    df_model = df[["unique_id","ds","y"]]
+    model.fit(df_model)
+    future = model.predict(h=horizon)
+
+st.success("Prediction completed!")
+
+# Clean prediction
 future["ds"] = future["ds"].dt.to_period("M").dt.to_timestamp()
 future_city = future[future["unique_id"] == selected_city]
 future_city = future_city.rename(columns={'LinearRegression':'y'})
@@ -107,6 +90,7 @@ future_city['y'] = future_city['y'].round(2)
 combined = pd.concat([df_city, future_city])
 combined['year_float'] = combined['ds'].dt.year + (combined['ds'].dt.month-1)/12
 
+# Trend line
 z = np.polyfit(combined['year_float'], combined['y'], 1)
 p = np.poly1d(z)
 combined['trend'] = p(combined['year_float'])
@@ -126,14 +110,13 @@ fig.add_trace(go.Scatter(
     line=dict(color="red", dash='dot')
 ))
 
-# Trend line
+# Trend
 fig.add_trace(go.Scatter(
     x=combined["ds"], y=combined["trend"],
     mode="lines", name="Trend",
     line=dict(color="green", width=3, dash='dash')
 ))
 
-# Individual Y-axis range
 fig.update_yaxes(
     range=[combined['y'].min(), combined['y'].max()]
 )
@@ -162,14 +145,10 @@ pivot = pivot.round(2)
 
 heatmap_fig = go.Figure(
     data=go.Heatmap(
-        z=pivot.values,
-        x=pivot.columns.astype(str),
-        y=pivot.index,
-        colorscale="RdBu",
-        reversescale=True,
+        z=pivot.values, x=pivot.columns.astype(str), y=pivot.index,
+        colorscale="RdBu", reversescale=True,
         colorbar=dict(title="Temp (°C)"),
-        zmin=pivot.values.min(),
-        zmax=pivot.values.max()
+        zmin=pivot.values.min(), zmax=pivot.values.max()
     )
 )
 
