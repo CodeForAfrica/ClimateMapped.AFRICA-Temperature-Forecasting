@@ -52,23 +52,22 @@ df = df.sort_values(["unique_id","ds"])
 # ---------------------------
 # USER INPUTS
 # ---------------------------
-country_options = ["-- Select Country --"] + sorted(df["country_name"].dropna().unique())
+country_options = ["Select Country"] + sorted(df["country_name"].dropna().unique())
 selected_country = st.selectbox("Select Country", country_options)
 
-if selected_country == "-- Select Country --":
+if selected_country == "Select Country":
     st.info("Please select a country to continue.")
     st.stop()
 
-# City selector
-city_options = ["-- Select City/Region --"] + sorted(df[df["country_name"] == selected_country]["unique_id"].unique())
+city_options = ["Select City/Region"] + sorted(df[df["country_name"] == selected_country]["unique_id"].unique())
 selected_city = st.selectbox("Select City/Region", city_options)
 
-if selected_city == "-- Select City/Region --":
+if selected_city == "Select City/Region":
     st.info("Please select a city/region to continue.")
     st.stop()
 
 # ---------------------------
-# Horizon slider (only after city selection)
+# HORIZON SLIDER
 # ---------------------------
 df_city = df[df["unique_id"] == selected_city]
 last_date = df_city['ds'].max()
@@ -124,6 +123,7 @@ fig.add_trace(go.Scatter(
     x=combined["ds"], y=combined["trend"],
     mode="lines", name="Trend", line=dict(color="green", width=3, dash='dash')
 ))
+
 fig.update_yaxes(range=[combined['y'].min(), combined['y'].max()])
 fig.update_layout(
     xaxis_title="Date", yaxis_title="Temperature (°C)",
@@ -137,7 +137,10 @@ st.plotly_chart(fig, use_container_width=True)
 # ---------------------------
 st.subheader("Predicted Monthly Temperature Heatmap")
 
-future_city_heat = future_city[future_city['ds'] > "2025-12-01"].copy()
+# Use last historical date to filter future predictions
+last_hist_date = df_city['ds'].max()
+future_city_heat = future_city[future_city['ds'] > last_hist_date].copy()
+
 future_city_heat['Year'] = future_city_heat['ds'].dt.year.astype(int)
 future_city_heat['Month'] = future_city_heat['ds'].dt.strftime("%b")
 
